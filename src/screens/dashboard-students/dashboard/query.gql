@@ -1,0 +1,65 @@
+query TrackerCurrentStep {
+    trackerCurrentStep {
+        devfScholarship {
+            ...TrackerCurrentStepScholarship
+        }
+        devfPostulation {
+            ...TrackerCurrentStepPostulation
+        }
+        devfForm {
+            ...TrackerCurrentStepForm
+        }
+        platziScholarship {
+            ...TrackerCurrentStepScholarship
+            platziCompletedMandatoryCourses
+        }
+        platziPostulation {
+            ...TrackerCurrentStepPostulation
+        }
+        platziForm {
+            ...TrackerCurrentStepForm
+        }
+        platziTalk {
+            uuid
+            startDate
+            endDate
+            type
+            speakers
+            myInscription {
+                number
+            }
+            convocatory {
+                kind
+                form {
+                    uuid
+                    openDate
+                    closeDate
+                }
+            }
+        }
+    }
+}
+
+fragment TrackerCurrentStepScholarship on Scholarship {
+    currentStatus {
+        status
+        observations
+    }
+}
+
+fragment TrackerCurrentStepPostulation on Application {
+    currentStatus {
+        status
+        observations
+    }
+    form {
+        uuid
+        termsAcceptanceCloseDate
+    }
+}
+
+fragment TrackerCurrentStepForm on Form {
+    uuid
+    openDate
+    closeDate
+}

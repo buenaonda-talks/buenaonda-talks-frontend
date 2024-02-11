@@ -1,0 +1,3 @@
+mutation deleteConvocatory($id: Int!) {
+    deleteConvocatory(id: $id)
+}

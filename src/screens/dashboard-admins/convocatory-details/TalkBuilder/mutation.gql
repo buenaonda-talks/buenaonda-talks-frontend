@@ -1,0 +1,11 @@
+mutation createTalk($input: TalkInput!) {
+    createTalk(input: $input) {
+        id
+    }
+}
+
+mutation updateTalk($id: Int!, $input: TalkInput!) {
+    updateTalk(id: $id, input: $input) {
+        id
+    }
+}

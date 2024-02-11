@@ -1,0 +1,15 @@
+mutation UpdateScholarshipApplicationStatus(
+    $applicationId: Int!
+    $status: ApplicationStatus!
+    $observations: String
+    $sendEmail: Boolean
+) {
+    updateScholarshipApplicationStatus(
+        applicationId: $applicationId
+        status: $status
+        observations: $observations
+        sendEmail: $sendEmail
+    ) {
+        id
+    }
+}

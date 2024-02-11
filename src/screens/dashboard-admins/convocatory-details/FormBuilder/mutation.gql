@@ -1,0 +1,11 @@
+mutation createForm($input: FormInput!) {
+    createForm(input: $input) {
+        id
+    }
+}
+
+mutation updateForm($id: Int!, $input: FormInput!, $fieldsIDsToDelete: [Int!]!) {
+    updateForm(id: $id, input: $input, fieldsIDsToDelete: $fieldsIDsToDelete) {
+        id
+    }
+}

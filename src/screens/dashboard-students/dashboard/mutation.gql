@@ -1,0 +1,21 @@
+mutation signUpToTalk($uuid: String!) {
+    signUpToTalk(talkUuid: $uuid) {
+        ... on TalkInscription {
+            number
+        }
+        ... on ApiError {
+            message
+        }
+    }
+}
+
+mutation assistToTalk($talkUuid: String!) {
+    assistToTalk(talkUuid: $talkUuid) {
+        ... on AssistToTalkLink {
+            url
+        }
+        ... on ApiError {
+            message
+        }
+    }
+}

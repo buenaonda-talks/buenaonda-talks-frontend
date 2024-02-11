@@ -1,0 +1,78 @@
+query adminStats($convocatory: Int) {
+    convocatories {
+        id
+        privateLabel
+        order
+    }
+    adminStats(convocatory: $convocatory) {
+        maxPlatziScholarships
+        maxDevfScholarships
+        studentsCount
+        assistancesToTalks
+        postulationSubmissionsCount
+        scholarshipsCount
+        stats {
+            convocatory {
+                id
+                order
+                privateLabel
+                countAddingsFromDate
+                countAddingsTillDate
+                kind
+                lessonsStartDate
+                talk {
+                    startDate
+                }
+            }
+            addedStudents
+            signedUpStudents
+            talkInscriptions
+            talkAssistants
+            postulationSubmissions
+            postulationSubmissionsAccepted
+            postulationSubmissionsRejected {
+                reason
+                count
+            }
+            postulationSubmissionsPending {
+                reason
+                count
+            }
+            postulationSubmissionsAcceptedTerms
+            postulationSubmissionsRejectedTerms
+            postulationSubmissionsPendingTerms
+            postulationSubmissionsUnansweredTerms
+            scholarships
+            scholarshipsWithdrawn
+            scholarshipsFinished
+            scholarshipsStudying
+            scholarshipsByConvocatorySource {
+                convocatory {
+                    id
+                    privateLabel
+                    countAddingsFromDate
+                    countAddingsTillDate
+                }
+                scholarships
+                scholarshipsWithdrawn
+            }
+        }
+    }
+}
+
+query adminStudentsCountByDate($startDate: Date, $endDate: Date, $convocatory: Int) {
+    adminStudentsCountByDate(
+        convocatory: $convocatory
+        startDate: $startDate
+        endDate: $endDate
+    ) {
+        joinedAtItems {
+            date
+            count
+        }
+        signedUpAtItems {
+            date
+            count
+        }
+    }
+}

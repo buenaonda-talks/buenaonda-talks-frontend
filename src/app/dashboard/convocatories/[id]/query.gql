@@ -1,0 +1,80 @@
+mutation UpdateConvocatory($id: Int!, $input: ConvocatoryInput!) {
+    updateConvocatory(id: $id, input: $input) {
+        id
+    }
+}
+
+query convocatoryByIdForUpdate($id: Int!) {
+    convocatoryById(id: $id) {
+        id
+        countAddingsFromDate
+        countAddingsTillDate
+        devfInformedGraduates
+        devfInformedNotAssisted
+        devfInformedPaused
+        devfInformedResigned
+        devfInformedStudying
+        isWithdrawable
+        kind
+        lessonsEndDate
+        lessonsStartDate
+        maximumWithdrawalDate
+        order
+        privateLabel
+    }
+}
+
+query convocatoryByIdForm($id: Int!) {
+    convocatoryById(id: $id) {
+        form {
+            id
+            openDate
+            closeDate
+            title
+            termsAcceptanceOpenDate
+            termsAcceptanceCloseDate
+            resultsPublicationDate
+            fields {
+                id
+                order
+                title
+                description
+                type
+                isRequired
+                minLength
+                maxLength
+                dependsOnFieldId
+                dependsOnFieldOptionId
+                isImportant
+                options {
+                    id
+                    label
+                    order
+                    automaticResult
+                    automaticResultObservations
+                }
+            }
+        }
+    }
+}
+
+query convocatoryByIdTalk($id: Int!) {
+    convocatoryById(id: $id) {
+        talk {
+            id
+            description
+            speakers
+            startDate
+            endDate
+            type
+            zoomApiKey
+            zoomApiSecret
+            zoomId
+            zoomRegisterUrl
+            convocatoryId
+            forOrganizationId
+            isVisible
+            internalLabel
+        }
+    }
+}

@@ -1,0 +1,44 @@
+query adminApplicationById($id: Int!) {
+    applicationById(id: $id) {
+        user {
+            email
+            firstName
+            lastName
+        }
+        currentStatus {
+            status
+            observations
+        }
+        form {
+            title
+            fields {
+                id
+                order
+                title
+                description
+                type
+                isRequired
+                minLength
+                maxLength
+                dependsOnFieldId
+                dependsOnFieldOptionId
+                options {
+                    id
+                    label
+                    order
+                    automaticResult
+                    automaticResultObservations
+                }
+                isImportant
+            }
+            myApplication {
+                id
+            }
+        }
+        answers {
+            id
+            fieldId
+            value
+        }
+    }
+}

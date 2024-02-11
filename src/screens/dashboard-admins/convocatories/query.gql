@@ -1,0 +1,18 @@
+query adminConvocatoriesTable {
+    convocatories {
+        id
+        form {
+            id
+            uuid
+        }
+        kind
+        order
+        privateLabel
+        talk {
+            startDate
+            endDate
+        }
+        countAddingsFromDate
+        countAddingsTillDate
+    }
+}

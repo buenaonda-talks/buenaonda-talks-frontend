@@ -1,0 +1,12 @@
+mutation ApplyToScholarship($uuid: String!, $answers: [FormFieldAnswerInput!]!) {
+    applyToScholarship(uuid: $uuid, answers: $answers) {
+        ... on Application {
+            __typename
+            id
+        }
+        ... on ApiError {
+            __typename
+            message
+        }
+    }
+}

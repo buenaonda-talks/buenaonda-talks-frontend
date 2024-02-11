@@ -1,0 +1,5 @@
+mutation CreateConvocatory($input: ConvocatoryInput!) {
+    createConvocatory(input: $input) {
+        id
+    }
+}

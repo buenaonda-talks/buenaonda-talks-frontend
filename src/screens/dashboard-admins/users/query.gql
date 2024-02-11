@@ -1,0 +1,25 @@
+query adminUsersTable(
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+    $filter: UsersFilter!
+) {
+    users(after: $after, before: $before, first: $first, last: $last, filter: $filter) {
+        pageInfo {
+            hasNextPage
+            hasPreviousPage
+            endCursor
+        }
+        edges {
+            cursor
+            node {
+                id
+                dateJoined
+                email
+                firstName
+                lastName
+            }
+        }
+    }
+}

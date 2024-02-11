@@ -1,0 +1,6 @@
+query createTalkFields {
+    convocatories {
+        id
+        privateLabel
+    }
+}

@@ -1,0 +1,12 @@
+query adminTalksTable {
+    talks {
+        id
+        convocatory {
+            privateLabel
+        }
+        startDate
+        endDate
+        internalLabel
+        isVisible
+    }
+}

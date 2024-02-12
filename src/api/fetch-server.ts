@@ -37,5 +37,6 @@ export const fetchServer = async <T, V>(query: TypedDocumentNode<T, V>, variable
         console.error(json.errors);
         throw new Error('Failed to fetch API');
     }
+
     return json.data as T;
 };

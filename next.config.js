@@ -33,8 +33,8 @@ const nextConfig = {
             destination: `${process.env.API_HOST}/admin`,
         },
         {
-            source: '/admin/login',
-            destination: `${process.env.API_HOST}/admin/login`,
+            source: '/admin/:path*',
+            destination: `${process.env.API_HOST}/admin/:path*`,
         },
     ],
 };

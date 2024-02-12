@@ -4,8 +4,13 @@ import { LandingHeroDocument } from '@/api/graphql';
 import { LandingHeroCurrentTalkDetails } from './CurrentTalkDetails';
 
 const getCurrentPlatziTalk = async () => {
-    const response = await fetchServer(LandingHeroDocument, {});
-    return response.currentPlatziTalk;
+    try {
+        const response = await fetchServer(LandingHeroDocument, {});
+        return response.currentPlatziTalk;
+    } catch (error) {
+        console.error('Error getting current talk', error);
+        return null;
+    }
 };
 
 const LandingHero = async () => {

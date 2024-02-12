@@ -23,6 +23,16 @@ const nextConfig = {
     typescript: {
         ignoreBuildErrors: true,
     },
+    rewrites: async () => [
+        {
+            source: '/graphql',
+            destination: `${process.env.API_HOST}/graphql`,
+        },
+        {
+            source: '/admin',
+            destination: `${process.env.API_HOST}/admin`,
+        },
+    ],
 };
 
 module.exports = nextConfig;

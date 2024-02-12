@@ -30,6 +30,10 @@ export const metadata: Metadata = {
         type: 'website',
     },
     metadataBase: new URL(process.env.NEXT_PUBLIC_APP_HOST || 'http://localhost:3000'),
+    robots: {
+        index: process.env.NEXT_PUBLIC_APP_ENV === 'production',
+        follow: process.env.NEXT_PUBLIC_APP_ENV === 'production',
+    },
 };
 
 export const dynamic = 'force-dynamic';

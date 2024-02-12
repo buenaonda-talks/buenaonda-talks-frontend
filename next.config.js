@@ -32,6 +32,10 @@ const nextConfig = {
             source: '/admin',
             destination: `${process.env.API_HOST}/admin`,
         },
+        {
+            source: '/admin/login',
+            destination: `${process.env.API_HOST}/admin/login`,
+        },
     ],
 };
 

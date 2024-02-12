@@ -8,10 +8,6 @@
         "start": "next start",
         "lint": "next lint && tsc --noEmit",
         "gen": "graphql-codegen --config codegen.ts",
-        "pages:build": "npx @cloudflare/next-on-pages",
-        "pages:deploy": "yarn pages:build && wrangler pages deploy .vercel/output/static",
-        "pages:watch": "npx @cloudflare/next-on-pages --watch",
-        "pages:dev": "npx wrangler pages dev .vercel/output/static --compatibility-date=2024-02-12 --compatibility-flag=nodejs_compat",
         "lint:fix": "eslint --fix src",
         "format:fix": "prettier --write 'src/**/*.ts' 'src/**/*.tsx'",
         "fix:all": "yarn lint:fix && yarn format:fix && yarn lint"
@@ -66,13 +62,13 @@
         "react-hook-form": "^7.49.3",
         "react-intersection-observer": "^9.7.0",
         "recharts": "^2.10.4",
+        "sharp": "^0.33.2",
         "tailwind-merge": "^2.2.0",
         "tailwindcss-animate": "^1.0.7",
         "truncate-html": "^1.0.4",
         "zod": "^3.22.4"
     },
     "devDependencies": {
-        "@cloudflare/next-on-pages": "^1.8.5",
         "@graphql-codegen/cli": "^3.3.1",
         "@graphql-codegen/introspection": "^3.0.1",
         "@graphql-codegen/typed-document-node": "^4.0.1",
@@ -101,11 +97,8 @@
         "prettier": "^3.0.3",
         "prettier-plugin-tailwindcss": "^0.5.5",
         "sass": "^1.69.7",
-        "scss": "^0.2.4",
         "tailwindcss": "^3.4.1",
         "typescript": "^5.3.3",
-        "vercel": "^33.0.2",
-        "wrangler": "3.28.1",
         "yarn-upgrade-all": "^0.7.2"
     }
 }

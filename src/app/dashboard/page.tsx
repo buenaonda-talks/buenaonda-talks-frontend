@@ -1,13 +1,13 @@
+import { fetchUserServer } from '@/api/query/fetch-user-server';
 import { DashboardAdminsPageContent } from '@/screens/dashboard-admins/dashboard';
 import { AdminsLayout } from '@/screens/dashboard-admins/shared/layout';
 import { DashboardStudentsHome } from '@/screens/dashboard-students/dashboard';
 import { StudentsLayout } from '@/screens/dashboard-students/shared/layout';
-import { currentUser } from '@clerk/nextjs';
 
 const Page = async () => {
-    const user = await currentUser();
+    const user = await fetchUserServer();
 
-    if (user?.publicMetadata.roles.includes('admin')) {
+    if (user?.user.isAdmin) {
         return (
             <AdminsLayout>
                 <DashboardAdminsPageContent />
@@ -15,7 +15,7 @@ const Page = async () => {
         );
     }
 
-    if (user?.publicMetadata.roles.includes('student')) {
+    if (user?.user.isStudent) {
         return (
             <StudentsLayout>
                 <DashboardStudentsHome />

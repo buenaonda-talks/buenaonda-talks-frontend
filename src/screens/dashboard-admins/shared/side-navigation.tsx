@@ -1,11 +1,12 @@
 'use client';
 
+import { useUserQuery as useUserQuery } from '@/api/query/fetch-user-client';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import routesBuilder from '@/lib/routes';
 
 import { cn } from '@/lib/utils';
-import { SignedIn, UserButton, useUser } from '@clerk/nextjs';
+import { SignedIn, UserButton } from '@clerk/nextjs';
 import {
     Apple,
     GraduationCap,
@@ -34,7 +35,7 @@ const ButtonLink = ({ href, children }: { href: string; children: React.ReactNod
 };
 
 export const AdminDashboardSideNavigation = ({ className }: SidebarProps) => {
-    const { user, isLoaded } = useUser();
+    const userQuery = useUserQuery();
 
     return (
         <div className={cn('border-r', className)}>
@@ -76,7 +77,7 @@ export const AdminDashboardSideNavigation = ({ className }: SidebarProps) => {
                         </div>
                     </div>
 
-                    {user?.publicMetadata.roles.includes('superadmin') && (
+                    {userQuery.data?.user.isSuperAdmin && (
                         <div className="space-y-2">
                             <p className="text-sm font-bold">Super Administración</p>
 
@@ -101,17 +102,17 @@ export const AdminDashboardSideNavigation = ({ className }: SidebarProps) => {
 
                 <div className="mt-auto px-3 py-2">
                     <div className="relative">
-                        {isLoaded && user ? (
+                        {userQuery.data?.user ? (
                             <div className="flex items-center">
                                 <SignedIn>
                                     <UserButton afterSignOutUrl="/" />
                                 </SignedIn>
 
                                 <div className="ml-2">
-                                    <p className="text-sm">{user.firstName}</p>
                                     <p className="text-sm">
-                                        {user.primaryEmailAddress?.emailAddress}
+                                        {userQuery.data.user.firstName}
                                     </p>
+                                    <p className="text-sm">{userQuery.data.user.email}</p>
                                 </div>
                             </div>
                         ) : (

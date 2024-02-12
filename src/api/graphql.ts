@@ -681,6 +681,10 @@ export type User = {
     email: Scalars['String'];
     firstName: Scalars['String'];
     id: Scalars['ID'];
+    isAdmin: Scalars['Boolean'];
+    isStudent: Scalars['Boolean'];
+    isSuperAdmin: Scalars['Boolean'];
+    isTeacher: Scalars['Boolean'];
     lastName: Scalars['String'];
     phoneCode: Maybe<Scalars['String']>;
     phoneNumber: Maybe<Scalars['String']>;
@@ -689,6 +693,23 @@ export type User = {
 
 export type UsersFilter = {
     query: InputMaybe<Scalars['String']>;
+};
+
+export type UserQueryVariables = Exact<{ [key: string]: never }>;
+
+export type UserQuery = {
+    __typename?: 'Query';
+    user: {
+        __typename?: 'User';
+        id: string;
+        email: string;
+        firstName: string;
+        lastName: string;
+        isStudent: boolean;
+        isTeacher: boolean;
+        isAdmin: boolean;
+        isSuperAdmin: boolean;
+    };
 };
 
 export type UpdateConvocatoryMutationVariables = Exact<{
@@ -1544,6 +1565,56 @@ export const TrackerCurrentStepFormFragmentDoc = {
         },
     ],
 } as unknown as DocumentNode<TrackerCurrentStepFormFragment, unknown>;
+export const UserDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'user' },
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'isStudent' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'isTeacher' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'isAdmin' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'isSuperAdmin' },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
 export const UpdateConvocatoryDocument = {
     kind: 'Document',
     definitions: [

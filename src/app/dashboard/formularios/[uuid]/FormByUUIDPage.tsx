@@ -7,6 +7,7 @@ import {
     FormByUuidQuery,
     FormFieldType,
 } from '@/api/graphql';
+import { fetchUserServer } from '@/api/query/fetch-user-server';
 import { ButtonWithSpinner } from '@/components/button-with-spinner';
 import {
     Form,
@@ -23,7 +24,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import routesBuilder from '@/lib/routes';
-import { UserButton, useAuth, useUser } from '@clerk/nextjs';
+import { UserButton, useAuth } from '@clerk/nextjs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -120,8 +121,8 @@ const Header = () => {
     );
 };
 
-const FillableForm = ({ form, uuid }: FillableFormProps) => {
-    const { user } = useUser();
+const FillableForm = async ({ form, uuid }: FillableFormProps) => {
+    const user = await fetchUserServer();
     const formMethods = useForm<FormValues>({
         defaultValues: {
             fields: {},
@@ -138,7 +139,7 @@ const FillableForm = ({ form, uuid }: FillableFormProps) => {
             return;
         }
 
-        if (user.publicMetadata.roles.includes('admin')) {
+        if (user.user.isAdmin) {
             toast({
                 title: 'No puedes aplicar como administrador',
                 description: 'Para aplicar a una beca, utiliza una cuenta de estudiante.',
@@ -390,7 +391,7 @@ const FillableForm = ({ form, uuid }: FillableFormProps) => {
                 </div>
             </main>
 
-            {user?.publicMetadata.roles.includes('admin') && (
+            {user?.user.isAdmin && (
                 <div className="fixed inset-x-0 bottom-0 border-t border-gray-100 bg-muted py-4 text-muted-foreground">
                     <div className="container text-center text-sm">
                         <p>
@@ -409,10 +410,10 @@ type Props = {
     data: FormByUuidQuery;
 };
 
-export const FormByUUIDPage = ({ uuid, data }: Props) => {
+export const FormByUUIDPage = async ({ uuid, data }: Props) => {
     const { toast } = useToast();
     const router = useRouter();
-    const { user } = useUser();
+    const user = await fetchUserServer();
 
     useEffect(() => {
         if (!user) {
@@ -430,7 +431,7 @@ export const FormByUUIDPage = ({ uuid, data }: Props) => {
         }
 
         if (data.formByUUID?.myApplication) {
-            if (user.publicMetadata.roles.includes('admin')) {
+            if (user.user.isAdmin) {
                 return;
             }
 
@@ -477,7 +478,7 @@ export const FormByUUIDPage = ({ uuid, data }: Props) => {
         );
     }
 
-    if (data.formByUUID.myApplication && !user.publicMetadata.roles.includes('admin')) {
+    if (data.formByUUID.myApplication && !user.user.isAdmin) {
         return (
             <>
                 <Header />

@@ -29,6 +29,7 @@ export const metadata: Metadata = {
     openGraph: {
         type: 'website',
     },
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_HOST || 'http://localhost:3000'),
 };
 
 export const runtime = 'edge';

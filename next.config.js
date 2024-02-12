@@ -20,9 +20,6 @@ const nextConfig = {
             },
         ],
     },
-    typescript: {
-        ignoreBuildErrors: true,
-    },
     rewrites: async () => [
         {
             source: '/graphql',

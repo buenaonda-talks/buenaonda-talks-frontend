@@ -8,9 +8,9 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { docsConfig } from '../dashboard-students/shared/docs-config';
-import { siteConfig } from '../dashboard-students/shared/site-config';
-import { Icons } from '../dashboard-students/shared/icons';
+import { docsConfig } from '../dashboard/student/shared/docs-config';
+import { siteConfig } from '../dashboard/student/shared/site-config';
+import { Icons } from '../dashboard/student/shared/icons';
 
 export function NewLandingHeaderNavMobile() {
     const [open, setOpen] = React.useState(false);

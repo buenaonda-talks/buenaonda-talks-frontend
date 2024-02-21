@@ -4,6 +4,8 @@ export const routesBuilder = {
     home: '/',
     dashboard: '/dashboard',
 
+    teacherUpcomingTalk: '/dashboard/proxima-charla',
+
     signupStudent: '/dashboard?signup=student',
     signupTeacher: '/dashboard?signup=teacher',
 

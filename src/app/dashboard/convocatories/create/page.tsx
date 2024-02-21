@@ -1,6 +1,6 @@
 'use client';
 
-import { AdminsLayout } from '@/screens/dashboard-admins/shared/layout';
+import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
 import { TypographyAdminH1 } from '@/components/typography';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import {
     ConvocatoryGeneralFormValues,
     ConvocatoryGeneralTabContent,
-} from '@/screens/dashboard-admins/convocatory-details/GeneralTabContent';
+} from '@/screens/dashboard/admin/convocatory-details/GeneralTabContent';
 import { useRouter } from 'next/navigation';
 import routesBuilder from '@/lib/routes';
 

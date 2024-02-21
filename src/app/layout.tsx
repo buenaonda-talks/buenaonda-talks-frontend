@@ -1,10 +1,11 @@
 import { Metadata } from 'next';
 import { Inter, Poppins, Roboto } from 'next/font/google';
 import '../styles/globals.scss';
-import { ClerkProvider } from '@clerk/nextjs';
+import { ClerkLoaded, ClerkLoading, ClerkProvider } from '@clerk/nextjs';
 import AppClientProviders from './layout-client-providers';
 import { esES } from '@clerk/localizations';
 import { Toaster } from '@/components/ui/toaster';
+import { LoadingSpinner } from '@/components/loading-spinner';
 
 const inter = Inter({
     variable: '--font-inter',
@@ -47,8 +48,16 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
                 <body
                     className={`${inter.variable} ${poppins.variable} ${roboto.variable} font-sans`}
                 >
-                    <AppClientProviders>{children}</AppClientProviders>
-                    <Toaster />
+                    <ClerkLoading>
+                        <div className="flex min-h-screen items-center justify-center">
+                            <LoadingSpinner />
+                        </div>
+                    </ClerkLoading>
+
+                    <ClerkLoaded>
+                        <AppClientProviders>{children}</AppClientProviders>
+                        <Toaster />
+                    </ClerkLoaded>
                 </body>
             </html>
         </ClerkProvider>

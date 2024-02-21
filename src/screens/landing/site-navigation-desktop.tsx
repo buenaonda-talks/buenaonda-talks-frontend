@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/utils';
-import { siteConfig } from '../dashboard-students/shared/site-config';
+import { siteConfig } from '../dashboard/student/shared/site-config';
 
 export function NewLandingHeaderNavDesktop() {
     const pathname = usePathname();

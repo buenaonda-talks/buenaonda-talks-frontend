@@ -8,5 +8,6 @@ export default authMiddleware({
 });
 
 export const config = {
-    matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/dashboard', '/admin'],
+    // Only catch routes under /dashboard, we should use javascript regex, example: '/((?!.+\\.[\\w]+$|_next).*)'
+    matcher: ['/dashboard/:path*'],
 };

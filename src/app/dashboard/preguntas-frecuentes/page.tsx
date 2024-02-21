@@ -1,6 +1,8 @@
 import { fetchUserServer } from '@/api/query/fetch-user-server';
-import { DashboardStudentFaq } from '@/screens/dashboard-students/faq';
-import { StudentsLayout } from '@/screens/dashboard-students/shared/layout';
+import { DashboardStudentFaq } from '@/screens/dashboard/student/faq';
+import { StudentsLayout } from '@/screens/dashboard/student/shared/layout';
+import { DashboardTeacherFaq } from '@/screens/dashboard/teacher/faq';
+import { TeacherLayout } from '@/screens/dashboard/teacher/shared/layout';
 
 const Page = async () => {
     const user = await fetchUserServer();
@@ -10,6 +12,14 @@ const Page = async () => {
             <StudentsLayout>
                 <DashboardStudentFaq />
             </StudentsLayout>
+        );
+    }
+
+    if (user?.user.isTeacher) {
+        return (
+            <TeacherLayout>
+                <DashboardTeacherFaq />
+            </TeacherLayout>
         );
     }
 

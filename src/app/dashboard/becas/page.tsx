@@ -1,5 +1,5 @@
-import { AdminScholarshipsTableContainer } from '@/screens/dashboard-admins/scholarships/table';
-import { AdminsLayout } from '@/screens/dashboard-admins/shared/layout';
+import { AdminScholarshipsTableContainer } from '@/screens/dashboard/admin/scholarships/table';
+import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
 
 const Page = () => {
     return (

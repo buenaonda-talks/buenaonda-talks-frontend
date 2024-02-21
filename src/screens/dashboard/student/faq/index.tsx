@@ -136,18 +136,27 @@ const PLATZI_FAQ = [
 
                     <ul className="list-inside list-disc space-y-1">
                         <li>
-                            <a className="underline hover:opacity-60" href="#/">
+                            <a
+                                className="underline hover:opacity-60"
+                                href="https://platzi.com/cursos/programacion-basica"
+                            >
                                 <strong>Curso de Programación Básica</strong>
                             </a>
                             : Este curso te enseñará los fundamentos de la programación y
                             te preparará para los cursos más avanzados.
                         </li>
                         <li>
-                            <a className="underline hover:opacity-60" href="#/">
-                                <strong>Curso de Inglés Técnico</strong>
+                            <a
+                                className="underline hover:opacity-60"
+                                href="https://platzi.com/cursos/aprender"
+                            >
+                                <strong>
+                                    Curso para Aprender en Línea Efectivamente
+                                </strong>
                             </a>
-                            : Este curso te enseñará inglés técnico para que puedas leer y
-                            entender la documentación técnica.
+                            : Este curso te enseñará los métodos de estudio más efectivos
+                            para sacar el máximo provecho a las plataformas de aprendizaje
+                            en línea.
                         </li>
                     </ul>
                 </div>
@@ -392,6 +401,15 @@ export const DashboardStudentFaq = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {[COMMON_FAQ, PLATZI_FAQ, DEVF_FAQ].flat().map((faq) => {
+                            return (
+                                <div key={faq.key} className="mb-12">
+                                    ## {faq.title}
+                                    {faq.content}
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>

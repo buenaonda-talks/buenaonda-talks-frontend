@@ -9,19 +9,19 @@ import {
     ScholarshipConvocatoryKind,
 } from '@/api/graphql';
 import { useParams } from 'next/navigation';
-import { AdminsLayout } from '@/screens/dashboard-admins/shared/layout';
+import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
 import { TypographyAdminH1 } from '@/components/typography';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AdminBadgeConvocatoryKind } from '@/screens/dashboard-admins/shared/badge';
+import { AdminBadgeConvocatoryKind } from '@/screens/dashboard/admin/shared/badge';
 
 import { useForm } from 'react-hook-form';
 
-import { ConvocatoryFormTabContent } from '@/screens/dashboard-admins/convocatory-details/FormTabContent';
-import { ConvocatoryTalkTabContent } from '@/screens/dashboard-admins/convocatory-details/TalkTabContent';
+import { ConvocatoryFormTabContent } from '@/screens/dashboard/admin/convocatory-details/FormTabContent';
+import { ConvocatoryTalkTabContent } from '@/screens/dashboard/admin/convocatory-details/TalkTabContent';
 import {
     ConvocatoryGeneralFormValues,
     ConvocatoryGeneralTabContent,
-} from '@/screens/dashboard-admins/convocatory-details/GeneralTabContent';
+} from '@/screens/dashboard/admin/convocatory-details/GeneralTabContent';
 import { useState } from 'react';
 
 type EditorProps = {

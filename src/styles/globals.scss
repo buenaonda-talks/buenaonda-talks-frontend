@@ -264,3 +264,7 @@ input[type='number'] {
         @apply bg-background text-foreground;
     }
 }
+
+html {
+    @apply bg-white;
+}

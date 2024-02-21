@@ -1,8 +1,10 @@
 import { fetchUserServer } from '@/api/query/fetch-user-server';
-import { DashboardAdminsPageContent } from '@/screens/dashboard-admins/dashboard';
-import { AdminsLayout } from '@/screens/dashboard-admins/shared/layout';
-import { DashboardStudentsHome } from '@/screens/dashboard-students/dashboard';
-import { StudentsLayout } from '@/screens/dashboard-students/shared/layout';
+import { DashboardAdminsPageContent } from '@/screens/dashboard/admin/dashboard';
+import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
+import { DashboardErrorScreen } from '@/screens/dashboard/shared/dashboard-error-screen';
+import { DashboardStudentsHome } from '@/screens/dashboard/student/dashboard';
+import { StudentsLayout } from '@/screens/dashboard/student/shared/layout';
+import { TeacherLayout } from '@/screens/dashboard/teacher/shared/layout';
 
 const Page = async () => {
     const user = await fetchUserServer();
@@ -23,11 +25,11 @@ const Page = async () => {
         );
     }
 
-    return (
-        <div>
-            <h1>Dashboard</h1>
-        </div>
-    );
+    if (user?.user.isTeacher) {
+        return <TeacherLayout></TeacherLayout>;
+    }
+
+    return <DashboardErrorScreen />;
 };
 
 export default Page;

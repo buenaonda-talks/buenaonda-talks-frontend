@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { NewLandingHeaderNavMobile } from './site-navigation-mobile';
-import { siteConfig } from '../dashboard-students/shared/site-config';
+import { siteConfig } from '../dashboard/student/shared/site-config';
 import { NewLandingHeaderNavDesktop } from './site-navigation-desktop';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Icons } from '../dashboard-students/shared/icons';
+import { Icons } from '../dashboard/student/shared/icons';
 
 export function NewLandingHeader() {
     return (

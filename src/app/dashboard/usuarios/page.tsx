@@ -1,5 +1,5 @@
-import { AdminsLayout } from '@/screens/dashboard-admins/shared/layout';
-import { AdminUsersTableContainer } from '@/screens/dashboard-admins/users/table';
+import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
+import { AdminUsersTableContainer } from '@/screens/dashboard/admin/users/table';
 
 const Page = () => {
     return (

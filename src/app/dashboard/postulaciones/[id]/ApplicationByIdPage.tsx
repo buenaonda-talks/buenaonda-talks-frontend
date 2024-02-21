@@ -44,7 +44,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import routesBuilder from '@/lib/routes';
 import { cn } from '@/lib/utils';
-import { ADMIN_APPLICATIONS_TABLE_KEY } from '@/screens/dashboard-admins/applications/query';
+import { ADMIN_APPLICATIONS_TABLE_KEY } from '@/screens/dashboard/admin/applications/query';
 import { UserButton, useAuth, useUser } from '@clerk/nextjs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';

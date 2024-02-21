@@ -1,5 +1,5 @@
-import { AdminConvocatoriesTable } from '@/screens/dashboard-admins/convocatories/table';
-import { AdminsLayout } from '@/screens/dashboard-admins/shared/layout';
+import { AdminConvocatoriesTable } from '@/screens/dashboard/admin/convocatories/table';
+import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
 
 const Page = () => {
     return (

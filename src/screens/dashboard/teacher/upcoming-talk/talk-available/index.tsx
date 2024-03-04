@@ -7,15 +7,15 @@ import { useCountdown } from '@/hooks/useCountdown';
 import { getDayName, getHHMM12FormatText, getMonthName } from '@/lib/date-fns';
 import { getDate } from 'date-fns';
 import { TrackerCurrentStepQuery } from '@/api/graphql';
-import { useAssistToTalk } from '../../../../mutation';
 import { DeprecatedCountdownTimer } from '@/components/deprecated-countdown-timer';
 import { TrackerStep1TalkAvailableTicketInscription } from './TicketInscription';
+import { useAssistToTalk } from '@/screens/mutation';
 
 type Props = {
     talk: NonNullable<TrackerCurrentStepQuery['trackerCurrentStep']['platziTalk']>;
 };
 
-export const TrackerStep1TalkAvailable: React.FC<Props> = ({ talk }) => {
+export const TeacherTalkAvailable: React.FC<Props> = ({ talk }) => {
     const inscription = talk.myInscription;
 
     const startDate = new Date(talk.startDate);
@@ -54,8 +54,6 @@ export const TrackerStep1TalkAvailable: React.FC<Props> = ({ talk }) => {
 
     return (
         <div>
-            <h2 className="text-xl font-bold">1. Charla</h2>
-
             <div className="text-muted-foreground">
                 <p>
                     Inscríbete y participa de una charla informativa sobre como obtener

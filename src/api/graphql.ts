@@ -177,6 +177,14 @@ export type CollegeTeacherRelation = {
     teacherid: Scalars['ID'];
 };
 
+/** Representation of a commune */
+export type Commune = {
+    __typename?: 'Commune';
+    id: Scalars['ID'];
+    name: Scalars['String'];
+    regionId: Scalars['ID'];
+};
+
 /** Representation of a convocatory */
 export type Convocatory = {
     __typename?: 'Convocatory';
@@ -326,10 +334,11 @@ export type Mutation = {
     assistToTalk: AssistToTalk;
     createConvocatory: Convocatory;
     createForm: Form;
+    createStudent: Student;
     createTalk: Talk;
+    createTeacher: Teacher;
     createTestConvocatory: Scalars['Boolean'];
     deleteConvocatory: Scalars['Int'];
-    helloWorld: Scalars['String'];
     signUpToTalk: SignUpToTalk;
     updateConvocatory: Convocatory;
     updateForm: Form;
@@ -355,8 +364,21 @@ export type MutationCreateFormArgs = {
     input: FormInput;
 };
 
+export type MutationCreateStudentArgs = {
+    collegeId: InputMaybe<Scalars['Int']>;
+    communeId: Scalars['Int'];
+    newCollegeName: InputMaybe<Scalars['String']>;
+};
+
 export type MutationCreateTalkArgs = {
     input: TalkInput;
+};
+
+export type MutationCreateTeacherArgs = {
+    collegeId: InputMaybe<Scalars['Int']>;
+    communeId: Scalars['Int'];
+    newCollegeName: InputMaybe<Scalars['String']>;
+    role: Scalars['String'];
 };
 
 export type MutationDeleteConvocatoryArgs = {
@@ -412,18 +434,23 @@ export type Query = {
     applicationById: Maybe<Application>;
     applications: QueryApplicationsConnection;
     colleges: Array<College>;
+    collegesByCommune: Array<College>;
+    communes: Array<Commune>;
+    communesByRegion: Array<Commune>;
     convocatories: Array<Convocatory>;
     convocatoryById: Maybe<Convocatory>;
     currentPlatziTalk: Maybe<Talk>;
     formByUUID: Maybe<Form>;
     forms: Array<Form>;
+    myStudents: QueryMyStudentsConnection;
     organizations: Array<Organization>;
+    regions: Array<Region>;
     scholarships: QueryScholarshipsConnection;
     students: QueryStudentsConnection;
     talkById: Maybe<Talk>;
     talks: Array<Talk>;
     trackerCurrentStep: TrackerCurrentStep;
-    user: User;
+    user: Maybe<User>;
     users: QueryUsersConnection;
 };
 
@@ -449,12 +476,27 @@ export type QueryApplicationsArgs = {
     last: InputMaybe<Scalars['Int']>;
 };
 
+export type QueryCollegesByCommuneArgs = {
+    communeId: Scalars['Int'];
+};
+
+export type QueryCommunesByRegionArgs = {
+    regionId: Scalars['Int'];
+};
+
 export type QueryConvocatoryByIdArgs = {
     id: Scalars['Int'];
 };
 
 export type QueryFormByUuidArgs = {
     uuid: Scalars['String'];
+};
+
+export type QueryMyStudentsArgs = {
+    after: InputMaybe<Scalars['String']>;
+    before: InputMaybe<Scalars['String']>;
+    first: InputMaybe<Scalars['Int']>;
+    last: InputMaybe<Scalars['Int']>;
 };
 
 export type QueryScholarshipsArgs = {
@@ -497,6 +539,18 @@ export type QueryApplicationsConnectionEdge = {
     node: Application;
 };
 
+export type QueryMyStudentsConnection = {
+    __typename?: 'QueryMyStudentsConnection';
+    edges: Array<Maybe<QueryMyStudentsConnectionEdge>>;
+    pageInfo: PageInfo;
+};
+
+export type QueryMyStudentsConnectionEdge = {
+    __typename?: 'QueryMyStudentsConnectionEdge';
+    cursor: Scalars['String'];
+    node: User;
+};
+
 export type QueryScholarshipsConnection = {
     __typename?: 'QueryScholarshipsConnection';
     edges: Array<Maybe<QueryScholarshipsConnectionEdge>>;
@@ -531,6 +585,14 @@ export type QueryUsersConnectionEdge = {
     __typename?: 'QueryUsersConnectionEdge';
     cursor: Scalars['String'];
     node: User;
+};
+
+/** Representation of a region */
+export type Region = {
+    __typename?: 'Region';
+    communes: Array<Commune>;
+    id: Scalars['ID'];
+    name: Scalars['String'];
 };
 
 /** Representation of a scholarship form field option */
@@ -594,6 +656,9 @@ export type Student = {
     collegeId: Maybe<Scalars['ID']>;
     convocatoryId: Maybe<Scalars['ID']>;
     id: Scalars['ID'];
+    lastDevfApplication: Maybe<Application>;
+    lastPlatziApplication: Maybe<Application>;
+    lastPlatziTalkInscription: Maybe<TalkInscription>;
     user: User;
 };
 
@@ -662,6 +727,13 @@ export enum TalkType {
     FirstPlatziRevindication = 'FIRST_PLATZI_REVINDICATION',
 }
 
+/** Representation of a teacher */
+export type Teacher = {
+    __typename?: 'Teacher';
+    id: Scalars['ID'];
+    user: User;
+};
+
 /** Representation of the current step of the user */
 export type TrackerCurrentStep = {
     __typename?: 'TrackerCurrentStep';
@@ -709,7 +781,7 @@ export type UserQuery = {
         isTeacher: boolean;
         isAdmin: boolean;
         isSuperAdmin: boolean;
-    };
+    } | null;
 };
 
 export type UpdateConvocatoryMutationVariables = Exact<{
@@ -883,6 +955,29 @@ export type FormByUuidQuery = {
     } | null;
 };
 
+export type CreateStudentMutationVariables = Exact<{
+    communeId: Scalars['Int'];
+    collegeId: InputMaybe<Scalars['Int']>;
+    newCollegeName: InputMaybe<Scalars['String']>;
+}>;
+
+export type CreateStudentMutation = {
+    __typename?: 'Mutation';
+    createStudent: { __typename?: 'Student'; id: string };
+};
+
+export type CreateTeacherMutationVariables = Exact<{
+    communeId: Scalars['Int'];
+    role: Scalars['String'];
+    collegeId: InputMaybe<Scalars['Int']>;
+    newCollegeName: InputMaybe<Scalars['String']>;
+}>;
+
+export type CreateTeacherMutation = {
+    __typename?: 'Mutation';
+    createTeacher: { __typename?: 'Teacher'; id: string };
+};
+
 export type UpdateScholarshipApplicationStatusMutationVariables = Exact<{
     applicationId: Scalars['Int'];
     status: ApplicationStatus;
@@ -943,6 +1038,27 @@ export type AdminApplicationByIdQuery = {
             value: string | null;
         }>;
     } | null;
+};
+
+export type CreateProfileRegionsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type CreateProfileRegionsQuery = {
+    __typename?: 'Query';
+    regions: Array<{
+        __typename?: 'Region';
+        id: string;
+        name: string;
+        communes: Array<{ __typename?: 'Commune'; id: string; name: string }>;
+    }>;
+};
+
+export type CollegesByCommuneQueryVariables = Exact<{
+    communeId: Scalars['Int'];
+}>;
+
+export type CollegesByCommuneQuery = {
+    __typename?: 'Query';
+    collegesByCommune: Array<{ __typename?: 'College'; id: string; name: string }>;
 };
 
 export type AdminApplicationsTableQueryVariables = Exact<{
@@ -1322,28 +1438,6 @@ export type AdminUsersTableQuery = {
     };
 };
 
-export type SignUpToTalkMutationVariables = Exact<{
-    uuid: Scalars['String'];
-}>;
-
-export type SignUpToTalkMutation = {
-    __typename?: 'Mutation';
-    signUpToTalk:
-        | { __typename?: 'ApiError'; message: string }
-        | { __typename?: 'TalkInscription'; number: number };
-};
-
-export type AssistToTalkMutationVariables = Exact<{
-    talkUuid: Scalars['String'];
-}>;
-
-export type AssistToTalkMutation = {
-    __typename?: 'Mutation';
-    assistToTalk:
-        | { __typename?: 'ApiError'; message: string }
-        | { __typename?: 'AssistToTalkLink'; url: string };
-};
-
 export type TrackerCurrentStepQueryVariables = Exact<{ [key: string]: never }>;
 
 export type TrackerCurrentStepQuery = {
@@ -1453,11 +1547,111 @@ export type TrackerCurrentStepFormFragment = {
     closeDate: string | null;
 };
 
+export type MyStudentsTableQueryVariables = Exact<{
+    after: InputMaybe<Scalars['String']>;
+    before: InputMaybe<Scalars['String']>;
+    first: InputMaybe<Scalars['Int']>;
+    last: InputMaybe<Scalars['Int']>;
+}>;
+
+export type MyStudentsTableQuery = {
+    __typename?: 'Query';
+    myStudents: {
+        __typename?: 'QueryMyStudentsConnection';
+        pageInfo: {
+            __typename?: 'PageInfo';
+            hasNextPage: boolean;
+            hasPreviousPage: boolean;
+            endCursor: string | null;
+        };
+        edges: Array<{
+            __typename?: 'QueryMyStudentsConnectionEdge';
+            cursor: string;
+            node: {
+                __typename?: 'User';
+                id: string;
+                dateJoined: string;
+                email: string;
+                firstName: string;
+                lastName: string;
+                studentProfile: {
+                    __typename?: 'Student';
+                    lastPlatziTalkInscription: {
+                        __typename?: 'TalkInscription';
+                        assisted: boolean | null;
+                    } | null;
+                    lastPlatziApplication: {
+                        __typename?: 'Application';
+                        currentStatus: {
+                            __typename?: 'ApplicationHistory';
+                            status: ApplicationStatus;
+                        } | null;
+                    } | null;
+                    lastDevfApplication: {
+                        __typename?: 'Application';
+                        currentStatus: {
+                            __typename?: 'ApplicationHistory';
+                            status: ApplicationStatus;
+                        } | null;
+                    } | null;
+                };
+            };
+        } | null>;
+    };
+};
+
+export type TeacherUpcomingTalkQueryVariables = Exact<{ [key: string]: never }>;
+
+export type TeacherUpcomingTalkQuery = {
+    __typename?: 'Query';
+    currentPlatziTalk: {
+        __typename?: 'Talk';
+        uuid: string;
+        startDate: string;
+        endDate: string;
+        type: TalkType;
+        speakers: string;
+        myInscription: { __typename?: 'TalkInscription'; number: number } | null;
+        convocatory: {
+            __typename?: 'Convocatory';
+            kind: ScholarshipConvocatoryKind;
+            form: {
+                __typename?: 'Form';
+                uuid: string;
+                openDate: string | null;
+                closeDate: string | null;
+            } | null;
+        };
+    } | null;
+};
+
 export type LandingHeroQueryVariables = Exact<{ [key: string]: never }>;
 
 export type LandingHeroQuery = {
     __typename?: 'Query';
     currentPlatziTalk: { __typename?: 'Talk'; startDate: string; endDate: string } | null;
+};
+
+export type SignUpToTalkMutationVariables = Exact<{
+    uuid: Scalars['String'];
+}>;
+
+export type SignUpToTalkMutation = {
+    __typename?: 'Mutation';
+    signUpToTalk:
+        | { __typename?: 'ApiError'; message: string }
+        | { __typename?: 'TalkInscription'; number: number };
+};
+
+export type AssistToTalkMutationVariables = Exact<{
+    talkUuid: Scalars['String'];
+}>;
+
+export type AssistToTalkMutation = {
+    __typename?: 'Mutation';
+    assistToTalk:
+        | { __typename?: 'ApiError'; message: string }
+        | { __typename?: 'AssistToTalkLink'; url: string };
 };
 
 export const TrackerCurrentStepScholarshipFragmentDoc = {
@@ -2519,6 +2713,185 @@ export const FormByUuidDocument = {
         },
     ],
 } as unknown as DocumentNode<FormByUuidQuery, FormByUuidQueryVariables>;
+export const CreateStudentDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'CreateStudent' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'communeId' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'collegeId' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'newCollegeName' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createStudent' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'communeId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'communeId' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'collegeId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'collegeId' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'newCollegeName' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'newCollegeName' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<CreateStudentMutation, CreateStudentMutationVariables>;
+export const CreateTeacherDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'CreateTeacher' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'communeId' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'role' } },
+                    type: {
+                        kind: 'NonNullType',
+                        type: {
+                            kind: 'NamedType',
+                            name: { kind: 'Name', value: 'String' },
+                        },
+                    },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'collegeId' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'newCollegeName' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createTeacher' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'communeId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'communeId' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'role' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'role' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'collegeId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'collegeId' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'newCollegeName' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'newCollegeName' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<CreateTeacherMutation, CreateTeacherMutationVariables>;
 export const UpdateScholarshipApplicationStatusDocument = {
     kind: 'Document',
     definitions: [
@@ -2904,6 +3277,101 @@ export const AdminApplicationByIdDocument = {
     AdminApplicationByIdQuery,
     AdminApplicationByIdQueryVariables
 >;
+export const CreateProfileRegionsDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'createProfileRegions' },
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'regions' },
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'communes' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'id' },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'name' },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<
+    CreateProfileRegionsQuery,
+    CreateProfileRegionsQueryVariables
+>;
+export const CollegesByCommuneDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'collegesByCommune' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'communeId' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'collegesByCommune' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'communeId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'communeId' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<CollegesByCommuneQuery, CollegesByCommuneQueryVariables>;
 export const AdminApplicationsTableDocument = {
     kind: 'Document',
     definitions: [
@@ -4963,167 +5431,6 @@ export const AdminUsersTableDocument = {
         },
     ],
 } as unknown as DocumentNode<AdminUsersTableQuery, AdminUsersTableQueryVariables>;
-export const SignUpToTalkDocument = {
-    kind: 'Document',
-    definitions: [
-        {
-            kind: 'OperationDefinition',
-            operation: 'mutation',
-            name: { kind: 'Name', value: 'signUpToTalk' },
-            variableDefinitions: [
-                {
-                    kind: 'VariableDefinition',
-                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'uuid' } },
-                    type: {
-                        kind: 'NonNullType',
-                        type: {
-                            kind: 'NamedType',
-                            name: { kind: 'Name', value: 'String' },
-                        },
-                    },
-                },
-            ],
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'signUpToTalk' },
-                        arguments: [
-                            {
-                                kind: 'Argument',
-                                name: { kind: 'Name', value: 'talkUuid' },
-                                value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'uuid' },
-                                },
-                            },
-                        ],
-                        selectionSet: {
-                            kind: 'SelectionSet',
-                            selections: [
-                                {
-                                    kind: 'InlineFragment',
-                                    typeCondition: {
-                                        kind: 'NamedType',
-                                        name: { kind: 'Name', value: 'TalkInscription' },
-                                    },
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {
-                                                kind: 'Field',
-                                                name: { kind: 'Name', value: 'number' },
-                                            },
-                                        ],
-                                    },
-                                },
-                                {
-                                    kind: 'InlineFragment',
-                                    typeCondition: {
-                                        kind: 'NamedType',
-                                        name: { kind: 'Name', value: 'ApiError' },
-                                    },
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {
-                                                kind: 'Field',
-                                                name: { kind: 'Name', value: 'message' },
-                                            },
-                                        ],
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
-        },
-    ],
-} as unknown as DocumentNode<SignUpToTalkMutation, SignUpToTalkMutationVariables>;
-export const AssistToTalkDocument = {
-    kind: 'Document',
-    definitions: [
-        {
-            kind: 'OperationDefinition',
-            operation: 'mutation',
-            name: { kind: 'Name', value: 'assistToTalk' },
-            variableDefinitions: [
-                {
-                    kind: 'VariableDefinition',
-                    variable: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'talkUuid' },
-                    },
-                    type: {
-                        kind: 'NonNullType',
-                        type: {
-                            kind: 'NamedType',
-                            name: { kind: 'Name', value: 'String' },
-                        },
-                    },
-                },
-            ],
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'assistToTalk' },
-                        arguments: [
-                            {
-                                kind: 'Argument',
-                                name: { kind: 'Name', value: 'talkUuid' },
-                                value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'talkUuid' },
-                                },
-                            },
-                        ],
-                        selectionSet: {
-                            kind: 'SelectionSet',
-                            selections: [
-                                {
-                                    kind: 'InlineFragment',
-                                    typeCondition: {
-                                        kind: 'NamedType',
-                                        name: { kind: 'Name', value: 'AssistToTalkLink' },
-                                    },
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {
-                                                kind: 'Field',
-                                                name: { kind: 'Name', value: 'url' },
-                                            },
-                                        ],
-                                    },
-                                },
-                                {
-                                    kind: 'InlineFragment',
-                                    typeCondition: {
-                                        kind: 'NamedType',
-                                        name: { kind: 'Name', value: 'ApiError' },
-                                    },
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {
-                                                kind: 'Field',
-                                                name: { kind: 'Name', value: 'message' },
-                                            },
-                                        ],
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
-        },
-    ],
-} as unknown as DocumentNode<AssistToTalkMutation, AssistToTalkMutationVariables>;
 export const TrackerCurrentStepDocument = {
     kind: 'Document',
     definitions: [
@@ -5444,6 +5751,373 @@ export const TrackerCurrentStepDocument = {
         },
     ],
 } as unknown as DocumentNode<TrackerCurrentStepQuery, TrackerCurrentStepQueryVariables>;
+export const MyStudentsTableDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'myStudentsTable' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'after' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'before' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'first' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'myStudents' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'after' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'after' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'before' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'before' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'first' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'first' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'last' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'last' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'pageInfo' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'hasNextPage',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'hasPreviousPage',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'endCursor',
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'edges' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'cursor' },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'node' },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'id',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'dateJoined',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'email',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'firstName',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'lastName',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'studentProfile',
+                                                            },
+                                                            selectionSet: {
+                                                                kind: 'SelectionSet',
+                                                                selections: [
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: {
+                                                                            kind: 'Name',
+                                                                            value: 'lastPlatziTalkInscription',
+                                                                        },
+                                                                        selectionSet: {
+                                                                            kind: 'SelectionSet',
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: 'Field',
+                                                                                    name: {
+                                                                                        kind: 'Name',
+                                                                                        value: 'assisted',
+                                                                                    },
+                                                                                },
+                                                                            ],
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: {
+                                                                            kind: 'Name',
+                                                                            value: 'lastPlatziApplication',
+                                                                        },
+                                                                        selectionSet: {
+                                                                            kind: 'SelectionSet',
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: 'Field',
+                                                                                    name: {
+                                                                                        kind: 'Name',
+                                                                                        value: 'currentStatus',
+                                                                                    },
+                                                                                    selectionSet:
+                                                                                        {
+                                                                                            kind: 'SelectionSet',
+                                                                                            selections:
+                                                                                                [
+                                                                                                    {
+                                                                                                        kind: 'Field',
+                                                                                                        name: {
+                                                                                                            kind: 'Name',
+                                                                                                            value: 'status',
+                                                                                                        },
+                                                                                                    },
+                                                                                                ],
+                                                                                        },
+                                                                                },
+                                                                            ],
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: {
+                                                                            kind: 'Name',
+                                                                            value: 'lastDevfApplication',
+                                                                        },
+                                                                        selectionSet: {
+                                                                            kind: 'SelectionSet',
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: 'Field',
+                                                                                    name: {
+                                                                                        kind: 'Name',
+                                                                                        value: 'currentStatus',
+                                                                                    },
+                                                                                    selectionSet:
+                                                                                        {
+                                                                                            kind: 'SelectionSet',
+                                                                                            selections:
+                                                                                                [
+                                                                                                    {
+                                                                                                        kind: 'Field',
+                                                                                                        name: {
+                                                                                                            kind: 'Name',
+                                                                                                            value: 'status',
+                                                                                                        },
+                                                                                                    },
+                                                                                                ],
+                                                                                        },
+                                                                                },
+                                                                            ],
+                                                                        },
+                                                                    },
+                                                                ],
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<MyStudentsTableQuery, MyStudentsTableQueryVariables>;
+export const TeacherUpcomingTalkDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'teacherUpcomingTalk' },
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'currentPlatziTalk' },
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'uuid' } },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'startDate' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'endDate' },
+                                },
+                                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'speakers' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'myInscription' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'number' },
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'convocatory' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'kind' },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'form' },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'uuid',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'openDate',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'closeDate',
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<TeacherUpcomingTalkQuery, TeacherUpcomingTalkQueryVariables>;
 export const LandingHeroDocument = {
     kind: 'Document',
     definitions: [
@@ -5476,3 +6150,164 @@ export const LandingHeroDocument = {
         },
     ],
 } as unknown as DocumentNode<LandingHeroQuery, LandingHeroQueryVariables>;
+export const SignUpToTalkDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'signUpToTalk' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'uuid' } },
+                    type: {
+                        kind: 'NonNullType',
+                        type: {
+                            kind: 'NamedType',
+                            name: { kind: 'Name', value: 'String' },
+                        },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'signUpToTalk' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'talkUuid' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'uuid' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                        kind: 'NamedType',
+                                        name: { kind: 'Name', value: 'TalkInscription' },
+                                    },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'number' },
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                        kind: 'NamedType',
+                                        name: { kind: 'Name', value: 'ApiError' },
+                                    },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'message' },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<SignUpToTalkMutation, SignUpToTalkMutationVariables>;
+export const AssistToTalkDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'assistToTalk' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'talkUuid' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: {
+                            kind: 'NamedType',
+                            name: { kind: 'Name', value: 'String' },
+                        },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'assistToTalk' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'talkUuid' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'talkUuid' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                        kind: 'NamedType',
+                                        name: { kind: 'Name', value: 'AssistToTalkLink' },
+                                    },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'url' },
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                        kind: 'NamedType',
+                                        name: { kind: 'Name', value: 'ApiError' },
+                                    },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'message' },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<AssistToTalkMutation, AssistToTalkMutationVariables>;

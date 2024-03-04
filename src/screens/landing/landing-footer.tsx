@@ -1,6 +1,7 @@
 'use client';
 
 import { getYear } from 'date-fns';
+import Link from 'next/link';
 
 const WhatsappButton = () => (
     <a
@@ -135,9 +136,18 @@ const LandingFooter = () => {
 
             <div className="bg-[#2B2B2B] py-6 text-sm">
                 <div className="container lg:flex lg:items-center lg:justify-between">
-                    <span className="mb-4 block text-xs text-gray-300 lg:mb-0">
-                        Av. Los Conquistadores 1700, Piso 16, Providencia
-                    </span>
+                    <div>
+                        <span className="mb-4 block text-xs text-gray-300 lg:mb-0">
+                            Av. Los Conquistadores 1700, Piso 16, Providencia
+                        </span>
+
+                        <Link
+                            href="/terminos-y-condiciones"
+                            className="text-xs text-gray-300 underline lg:mb-0"
+                        >
+                            Términos y Condiciones
+                        </Link>
+                    </div>
 
                     <span>
                         Copyright Ⓒ {getYear(new Date())}. Todos los derechos reservados.

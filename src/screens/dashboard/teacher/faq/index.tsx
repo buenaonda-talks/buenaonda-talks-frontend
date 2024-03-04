@@ -401,15 +401,6 @@ export const DashboardTeacherFaq = () => {
                                 </div>
                             </div>
                         </div>
-
-                        {[COMMON_FAQ, PLATZI_FAQ, DEVF_FAQ].flat().map((faq) => {
-                            return (
-                                <div key={faq.key} className="mb-12">
-                                    ## {faq.title}
-                                    {faq.content}
-                                </div>
-                            );
-                        })}
                     </div>
                 </div>
             </div>

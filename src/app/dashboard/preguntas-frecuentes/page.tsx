@@ -7,7 +7,7 @@ import { TeacherLayout } from '@/screens/dashboard/teacher/shared/layout';
 const Page = async () => {
     const user = await fetchUserServer();
 
-    if (user?.user.isStudent) {
+    if (user?.user?.isStudent) {
         return (
             <StudentsLayout>
                 <DashboardStudentFaq />
@@ -15,7 +15,7 @@ const Page = async () => {
         );
     }
 
-    if (user?.user.isTeacher) {
+    if (user?.user?.isTeacher) {
         return (
             <TeacherLayout>
                 <DashboardTeacherFaq />

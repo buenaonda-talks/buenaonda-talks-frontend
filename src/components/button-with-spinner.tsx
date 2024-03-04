@@ -12,11 +12,12 @@ export const ButtonWithSpinner = ({
     showSpinner,
     children,
     className,
+    disabled,
     ...props
 }: Props) => (
     <Button
         {...props}
-        disabled={showSpinner}
+        disabled={showSpinner || disabled}
         className={cn(className, 'relative')}
         type="submit"
     >

@@ -24,6 +24,13 @@ type Props<TData extends string | number | Record<string, any>> = {
     disabled?: boolean;
 };
 
+const normalize = (str: string) => {
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+};
+
 export function Combobox<TData extends string | number | Record<string, any>>(
     props: Props<TData>,
 ) {
@@ -33,6 +40,7 @@ export function Combobox<TData extends string | number | Record<string, any>>(
         options,
         placeholder = 'Selecciona una opción',
         noOptionsMessage = 'No se encontraron resultados',
+        disabled,
     } = props;
     const [open, setOpen] = React.useState(false);
 
@@ -44,6 +52,7 @@ export function Combobox<TData extends string | number | Record<string, any>>(
                     role="combobox"
                     aria-expanded={open}
                     className="min-w-[200px] justify-between text-left"
+                    disabled={disabled}
                 >
                     <span className="inline-block w-[90%] overflow-hidden text-ellipsis text-left">
                         {value
@@ -60,9 +69,9 @@ export function Combobox<TData extends string | number | Record<string, any>>(
                         const item = options.find((option) => option.key === value);
                         if (item === undefined) return 0;
 
-                        const matches = item.label
-                            .toLowerCase()
-                            .includes(search?.toLowerCase());
+                        const matches = normalize(item.label).includes(
+                            normalize(search || ''),
+                        );
 
                         if (matches) {
                             return 1;

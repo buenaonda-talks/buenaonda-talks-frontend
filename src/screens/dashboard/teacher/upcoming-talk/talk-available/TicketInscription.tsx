@@ -7,8 +7,8 @@ import { padNumber } from '@/lib/utils';
 import { getDate, getYear } from 'date-fns';
 import { TrackerCurrentStep, TrackerCurrentStepQuery } from '@/api/graphql';
 import { useToast } from '@/components/ui/use-toast';
-import { useSignUpToTalkMutation } from '../../../../mutation';
 import { getMonthName } from '@/lib/date-fns';
+import { useSignUpToTalkMutation } from '@/screens/mutation';
 
 type TicketDetailsProps = {
     startDate: Date;

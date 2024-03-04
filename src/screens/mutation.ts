@@ -9,7 +9,7 @@ import {
     TrackerCurrentStepQuery,
 } from '@/api/graphql';
 import { UseMutationOptions, useMutation, useQueryClient } from '@tanstack/react-query';
-import { TRACKER_CURRENT_STEP_QUERY_KEY } from './query';
+import { TRACKER_CURRENT_STEP_QUERY_KEY } from './dashboard/student/dashboard/query';
 import { useAuth } from '@clerk/nextjs';
 
 type UseSignUpToTalkMutation = UseMutationOptions<

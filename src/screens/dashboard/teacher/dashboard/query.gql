@@ -1,0 +1,34 @@
+query myStudentsTable($after: String, $before: String, $first: Int, $last: Int) {
+    myStudents(after: $after, before: $before, first: $first, last: $last) {
+        pageInfo {
+            hasNextPage
+            hasPreviousPage
+            endCursor
+        }
+        edges {
+            cursor
+            node {
+                id
+                dateJoined
+                email
+                firstName
+                lastName
+                studentProfile {
+                    lastPlatziTalkInscription {
+                        assisted
+                    }
+                    lastPlatziApplication {
+                        currentStatus {
+                            status
+                        }
+                    }
+                    lastDevfApplication {
+                        currentStatus {
+                            status
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

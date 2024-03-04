@@ -391,7 +391,7 @@ const FillableForm = async ({ form, uuid }: FillableFormProps) => {
                 </div>
             </main>
 
-            {user?.user.isAdmin && (
+            {user?.user?.isAdmin && (
                 <div className="fixed inset-x-0 bottom-0 border-t border-gray-100 bg-muted py-4 text-muted-foreground">
                     <div className="container text-center text-sm">
                         <p>

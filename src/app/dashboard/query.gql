@@ -1,0 +1,17 @@
+query createProfileRegions {
+    regions {
+        id
+        name
+        communes {
+            id
+            name
+        }
+    }
+}
+
+query collegesByCommune($communeId: Int!) {
+    collegesByCommune(communeId: $communeId) {
+        id
+        name
+    }
+}

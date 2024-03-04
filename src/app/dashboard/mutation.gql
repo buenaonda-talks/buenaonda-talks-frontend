@@ -1,0 +1,25 @@
+mutation CreateStudent($communeId: Int!, $collegeId: Int, $newCollegeName: String) {
+    createStudent(
+        communeId: $communeId
+        collegeId: $collegeId
+        newCollegeName: $newCollegeName
+    ) {
+        id
+    }
+}
+
+mutation CreateTeacher(
+    $communeId: Int!
+    $role: String!
+    $collegeId: Int
+    $newCollegeName: String
+) {
+    createTeacher(
+        communeId: $communeId
+        role: $role
+        collegeId: $collegeId
+        newCollegeName: $newCollegeName
+    ) {
+        id
+    }
+}

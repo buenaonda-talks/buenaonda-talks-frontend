@@ -1,0 +1,20 @@
+query teacherUpcomingTalk {
+    currentPlatziTalk {
+        uuid
+        startDate
+        endDate
+        type
+        speakers
+        myInscription {
+            number
+        }
+        convocatory {
+            kind
+            form {
+                uuid
+                openDate
+                closeDate
+            }
+        }
+    }
+}

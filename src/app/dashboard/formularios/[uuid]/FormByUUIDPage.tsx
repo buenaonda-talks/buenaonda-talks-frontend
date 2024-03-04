@@ -139,7 +139,7 @@ const FillableForm = async ({ form, uuid }: FillableFormProps) => {
             return;
         }
 
-        if (user.user.isAdmin) {
+        if (user.user?.isAdmin) {
             toast({
                 title: 'No puedes aplicar como administrador',
                 description: 'Para aplicar a una beca, utiliza una cuenta de estudiante.',
@@ -431,7 +431,7 @@ export const FormByUUIDPage = async ({ uuid, data }: Props) => {
         }
 
         if (data.formByUUID?.myApplication) {
-            if (user.user.isAdmin) {
+            if (user.user?.isAdmin) {
                 return;
             }
 
@@ -478,7 +478,7 @@ export const FormByUUIDPage = async ({ uuid, data }: Props) => {
         );
     }
 
-    if (data.formByUUID.myApplication && !user.user.isAdmin) {
+    if (data.formByUUID.myApplication && !user.user?.isAdmin) {
         return (
             <>
                 <Header />

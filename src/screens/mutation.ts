@@ -23,10 +23,13 @@ export const useSignUpToTalkMutation = ({
     ...options
 }: UseSignUpToTalkMutation = {}) => {
     const client = useQueryClient();
+    const { getToken } = useAuth();
 
     return useMutation<SignUpToTalkMutation, Error, SignUpToTalkMutationVariables>({
         mutationFn: (data) => {
-            return fetchClient(SignUpToTalkDocument, data);
+            return fetchClient(SignUpToTalkDocument, data, {
+                getToken,
+            });
         },
         onSuccess: (data, variables, context) => {
             const signUpToTalk =

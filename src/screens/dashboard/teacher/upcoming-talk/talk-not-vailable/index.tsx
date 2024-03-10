@@ -1,13 +1,13 @@
+import { DashboardContentSafeSpace } from '@/screens/dashboard/shared/dashboard-content-safe-space';
+
 export const TeacherNoTalkAvailable: React.FC = () => {
     return (
-        <div className="flex flex-col items-center">
-            <div className="flex items-center gap-2">
-                <div className="font-semibold">Charla</div>
-            </div>
+        <DashboardContentSafeSpace containerClassName="flex 2xl:min-h-screen flex-col justify-center items-center text-center">
+            <h1 className="text-3xl font-semibold">Charla</h1>
 
-            <div className="text-sm text-muted-foreground">
-                No hay ninguna charla disponible
+            <div className="text-muted-foreground">
+                Aún no hay ninguna charla disponible
             </div>
-        </div>
+        </DashboardContentSafeSpace>
     );
 };

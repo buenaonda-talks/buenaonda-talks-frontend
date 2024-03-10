@@ -1639,8 +1639,8 @@ export type SignUpToTalkMutationVariables = Exact<{
 export type SignUpToTalkMutation = {
     __typename?: 'Mutation';
     signUpToTalk:
-        | { __typename?: 'ApiError'; message: string }
-        | { __typename?: 'TalkInscription'; number: number };
+        | { __typename: 'ApiError'; message: string }
+        | { __typename: 'TalkInscription'; number: number };
 };
 
 export type AssistToTalkMutationVariables = Exact<{
@@ -1650,8 +1650,8 @@ export type AssistToTalkMutationVariables = Exact<{
 export type AssistToTalkMutation = {
     __typename?: 'Mutation';
     assistToTalk:
-        | { __typename?: 'ApiError'; message: string }
-        | { __typename?: 'AssistToTalkLink'; url: string };
+        | { __typename: 'ApiError'; message: string }
+        | { __typename: 'AssistToTalkLink'; url: string };
 };
 
 export const TrackerCurrentStepScholarshipFragmentDoc = {
@@ -6200,6 +6200,13 @@ export const SignUpToTalkDocument = {
                                         selections: [
                                             {
                                                 kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: '__typename',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
                                                 name: { kind: 'Name', value: 'number' },
                                             },
                                         ],
@@ -6214,6 +6221,13 @@ export const SignUpToTalkDocument = {
                                     selectionSet: {
                                         kind: 'SelectionSet',
                                         selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: '__typename',
+                                                },
+                                            },
                                             {
                                                 kind: 'Field',
                                                 name: { kind: 'Name', value: 'message' },
@@ -6282,6 +6296,13 @@ export const AssistToTalkDocument = {
                                         selections: [
                                             {
                                                 kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: '__typename',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
                                                 name: { kind: 'Name', value: 'url' },
                                             },
                                         ],
@@ -6296,6 +6317,13 @@ export const AssistToTalkDocument = {
                                     selectionSet: {
                                         kind: 'SelectionSet',
                                         selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: '__typename',
+                                                },
+                                            },
                                             {
                                                 kind: 'Field',
                                                 name: { kind: 'Name', value: 'message' },

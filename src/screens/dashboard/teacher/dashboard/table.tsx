@@ -33,6 +33,7 @@ import {
     AdminTableInifiteQueryLoader,
     AdminTableWrapper,
 } from '../../admin/shared/table';
+import { DashboardContentSafeSpace } from '../../shared/dashboard-content-safe-space';
 
 type User = NonNullable<MyStudentsTableQuery['myStudents']['edges'][number]>['node'];
 
@@ -190,13 +191,13 @@ const useUsersFilters = () => {
 
 const Wrapper = ({ children }: PropsWithChildren) => {
     return (
-        <div className="px-6 pb-8 pt-6">
+        <DashboardContentSafeSpace>
             <div className="mb-4 flex items-center justify-between">
                 <TypographyAdminH1>Usuarios</TypographyAdminH1>
             </div>
 
             {children}
-        </div>
+        </DashboardContentSafeSpace>
     );
 };
 

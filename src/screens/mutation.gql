@@ -1,9 +1,11 @@
 mutation signUpToTalk($uuid: String!) {
     signUpToTalk(talkUuid: $uuid) {
         ... on TalkInscription {
+            __typename
             number
         }
         ... on ApiError {
+            __typename
             message
         }
     }
@@ -12,9 +14,11 @@ mutation signUpToTalk($uuid: String!) {
 mutation assistToTalk($talkUuid: String!) {
     assistToTalk(talkUuid: $talkUuid) {
         ... on AssistToTalkLink {
+            __typename
             url
         }
         ... on ApiError {
+            __typename
             message
         }
     }

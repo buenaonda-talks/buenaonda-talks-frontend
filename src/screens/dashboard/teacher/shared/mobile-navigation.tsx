@@ -1,5 +1,13 @@
 'use client';
 
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from '@/components/ui/sheet';
+
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { WHATSAPP_HREF } from '@/constants';
@@ -10,6 +18,8 @@ import { SignedIn, UserButton, useUser } from '@clerk/nextjs';
 import { HelpCircle, Megaphone, PanelsTopLeft } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { HamburgerMenuIcon } from '@radix-ui/react-icons';
+import { useState } from 'react';
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -19,7 +29,7 @@ const ButtonLink = ({ href, children }: { href: string; children: React.ReactNod
     return (
         <Button
             variant={pathname === href ? 'secondary' : 'ghost'}
-            className="w-full justify-start space-x-2"
+            className="flex w-full justify-start space-x-2"
             asChild
         >
             {children}
@@ -27,42 +37,67 @@ const ButtonLink = ({ href, children }: { href: string; children: React.ReactNod
     );
 };
 
-export const TeacherDashboardSideNavigation = ({ className }: SidebarProps) => {
+export const TeacherDashboardMobileNavigation = ({ className }: SidebarProps) => {
     const { user, isLoaded } = useUser();
+    const [sheetOpen, setSheetOpen] = useState(false);
 
     return (
-        <div className={cn('border-r', className)}>
-            <div className="flex h-screen flex-col py-4">
-                <div className="px-3 py-2">
-                    <div className="space-y-1">
-                        <ButtonLink href={routesBuilder.dashboard}>
-                            <Link href={routesBuilder.dashboard}>
-                                <PanelsTopLeft className="h-4 w-4" />
-                                <span>Estudiantes</span>
-                            </Link>
-                        </ButtonLink>
+        <Sheet modal={false} onOpenChange={setSheetOpen} open={sheetOpen}>
+            <div className={cn('border-b border-border py-2 shadow-sm', className)}>
+                <div className="container flex items-center justify-between">
+                    <span className="text-sm font-bold tracking-wider">
+                        BUENAONDA TALKS
+                    </span>
 
-                        <ButtonLink href={routesBuilder.teacherUpcomingTalk}>
-                            <Link href={routesBuilder.teacherUpcomingTalk}>
-                                <Megaphone className="h-4 w-4" />
-                                <span>Próxima charla</span>
-                            </Link>
-                        </ButtonLink>
+                    <SheetTrigger>
+                        <Button>
+                            <HamburgerMenuIcon className="h-6 w-6" />
+                        </Button>
+                    </SheetTrigger>
+                </div>
+            </div>
 
-                        <ButtonLink href={routesBuilder.faq}>
-                            <Link href={routesBuilder.faq}>
-                                <HelpCircle className="h-4 w-4" />
-                                <span>Preguntas Frecuentes</span>
-                            </Link>
-                        </ButtonLink>
-                    </div>
+            {sheetOpen && (
+                <div
+                    className={cn(
+                        'fixed inset-0 z-50 bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+                    )}
+                />
+            )}
+
+            <SheetContent className="flex flex-col px-3 sm:px-4" side="left">
+                <SheetHeader className="mb-4 pt-4 text-left">
+                    <SheetTitle className="text-sm font-bold tracking-wider">
+                        BUENAONDA TALKS
+                    </SheetTitle>
+                </SheetHeader>
+
+                <div className="space-y-1">
+                    <ButtonLink href={routesBuilder.dashboard}>
+                        <Link href={routesBuilder.dashboard}>
+                            <PanelsTopLeft className="h-4 w-4" />
+                            <span className="min-w-0 flex-1">Estudiantes</span>
+                        </Link>
+                    </ButtonLink>
+
+                    <ButtonLink href={routesBuilder.teacherUpcomingTalk}>
+                        <Link href={routesBuilder.teacherUpcomingTalk}>
+                            <Megaphone className="h-4 w-4" />
+                            <span className="min-w-0 flex-1">Próxima charla</span>
+                        </Link>
+                    </ButtonLink>
+
+                    <ButtonLink href={routesBuilder.faq}>
+                        <Link href={routesBuilder.faq}>
+                            <HelpCircle className="h-4 w-4" />
+                            <span className="min-w-0 flex-1">Preguntas Frecuentes</span>
+                        </Link>
+                    </ButtonLink>
                 </div>
 
-                <div className="mt-auto px-3 py-2">
+                <div className="mt-auto py-2">
                     <div>
-                        <h2 className="mb-2 px-4 font-semibold tracking-tight">
-                            Escríbenos
-                        </h2>
+                        <h2 className="mb-2 font-semibold tracking-tight">Escríbenos</h2>
 
                         <div className="space-y-1">
                             <ButtonLink href={WHATSAPP_HREF}>
@@ -91,9 +126,16 @@ export const TeacherDashboardSideNavigation = ({ className }: SidebarProps) => {
                         <div className="relative">
                             {isLoaded && user ? (
                                 <div className="flex items-center">
-                                    <SignedIn>
-                                        <UserButton afterSignOutUrl="/" />
-                                    </SignedIn>
+                                    <div
+                                        className="h-8 w-8"
+                                        // onClick={() => {
+                                        //     setSheetOpen(false);
+                                        // }}
+                                    >
+                                        <SignedIn>
+                                            <UserButton afterSignOutUrl="/" />
+                                        </SignedIn>
+                                    </div>
 
                                     <div className="ml-2">
                                         <p className="text-sm">{user.firstName}</p>
@@ -115,7 +157,7 @@ export const TeacherDashboardSideNavigation = ({ className }: SidebarProps) => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </SheetContent>
+        </Sheet>
     );
 };

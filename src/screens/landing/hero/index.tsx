@@ -1,20 +1,12 @@
 import { LandingHeroRegisterToNextTalk } from './CurrentTalkDetails/RegisterToNextTalk';
-import { fetchServer } from '@/api/fetch-server';
-import { LandingHeroDocument } from '@/api/graphql';
 import { LandingHeroCurrentTalkDetails } from './CurrentTalkDetails';
+import { LandingHeroQuery } from '@/api/graphql';
 
-const getCurrentPlatziTalk = async () => {
-    try {
-        const response = await fetchServer(LandingHeroDocument, {});
-        return response.currentPlatziTalk;
-    } catch (error) {
-        return null;
-    }
+type LandingHeroProps = {
+    currentPlatziTalk: LandingHeroQuery['currentPlatziTalk'];
 };
 
-const LandingHero = async () => {
-    const talk = await getCurrentPlatziTalk();
-
+const LandingHero = async ({ currentPlatziTalk }: LandingHeroProps) => {
     return (
         <div className="flex items-center bg-[#430AA4] pt-24 text-white">
             <div className="container py-24 xl:flex xl:space-x-8">
@@ -29,8 +21,8 @@ const LandingHero = async () => {
                     </p>
                 </div>
 
-                {talk ? (
-                    <LandingHeroCurrentTalkDetails talk={talk} />
+                {currentPlatziTalk ? (
+                    <LandingHeroCurrentTalkDetails talk={currentPlatziTalk} />
                 ) : (
                     <LandingHeroRegisterToNextTalk />
                 )}

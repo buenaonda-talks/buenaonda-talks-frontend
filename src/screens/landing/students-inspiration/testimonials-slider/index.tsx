@@ -1,11 +1,16 @@
 'use client';
 
-import clsx from 'clsx';
-import useEmblaCarousel from 'embla-carousel-react';
-
 import Image, { StaticImageData } from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import landingStudentsTestimonials from './constants';
+import LANDING_STUDENTS_TESTIMONIALS from './constants';
+import {
+    Carousel,
+    CarouselApi,
+    CarouselContent,
+    CarouselItem,
+} from '@/components/ui/carousel';
+import Autoplay, { AutoplayType } from 'embla-carousel-autoplay';
+import { cn } from '@/lib/utils';
 
 type StudentTestimonialItemProps = {
     image: StaticImageData;
@@ -65,84 +70,60 @@ const StudentTestimonialItem: React.FC<StudentTestimonialItemProps> = ({
 );
 
 const LandingStudentTestimonialsSlider = () => {
-    const [emblaRef, emblaApi] = useEmblaCarousel();
-
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
-    const [selectedSlideIndex, setSelectedSlideIndex] = useState(0);
+    const [api, setApi] = useState<CarouselApi>();
+    const [current, setCurrent] = useState(0);
+    const autoplay = useRef<AutoplayType>(
+        Autoplay({
+            delay: 4000,
+            stopOnInteraction: false,
+            rootNode: (a: any) => a.parentElement,
+        }),
+    );
 
     useEffect(() => {
-        setSelectedSlideIndex(0);
-    }, []);
+        if (!api) {
+            return;
+        }
 
-    useEffect(() => {
-        if (!emblaApi) return;
+        setCurrent(api.selectedScrollSnap() + 1);
 
-        const onScroll = () => {
-            setSelectedSlideIndex(emblaApi.selectedScrollSnap() || 0);
-        };
-
-        emblaApi.on('scroll', onScroll);
-
-        intervalRef.current = setInterval(() => {
-            if (emblaApi.canScrollNext()) {
-                emblaApi.scrollNext();
-            } else {
-                emblaApi.scrollTo(0);
-            }
-        }, 4000);
-
-        const onPointerDown = () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
-        };
-
-        emblaApi.on('pointerDown', onPointerDown);
-
-        return () => {
-            emblaApi.off('scroll', onScroll);
-            emblaApi.off('pointerDown', onPointerDown);
-
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
-        };
-    }, [emblaApi]);
+        api.on('select', () => {
+            setCurrent(api.selectedScrollSnap() + 1);
+        });
+    }, [api]);
 
     const onScrollPrev = () => {
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-        }
-        emblaApi?.scrollPrev();
+        autoplay.current.stop();
+        api?.scrollPrev();
     };
 
     const onScrollNext = () => {
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-        }
-        emblaApi?.scrollNext();
+        autoplay.current.stop();
+        api?.scrollNext();
     };
 
     return (
         <div>
-            <div className="mb-4 overflow-hidden" ref={emblaRef}>
-                <div className="flex space-x-8">
-                    {landingStudentsTestimonials.map((testimony, index) => (
-                        <div className="shrink-0 grow-0 basis-full" key={index}>
-                            <StudentTestimonialItem key={index} {...testimony} />
-                        </div>
-                    ))}
-                </div>
+            <div className="mb-4">
+                <Carousel className="w-full" setApi={setApi} plugins={[autoplay.current]}>
+                    <CarouselContent>
+                        {LANDING_STUDENTS_TESTIMONIALS.map((testimony, index) => (
+                            <CarouselItem key={index}>
+                                <StudentTestimonialItem key={index} {...testimony} />
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+                </Carousel>
             </div>
 
             <div className="flex justify-center">
-                {landingStudentsTestimonials.length > 1 && (
+                {LANDING_STUDENTS_TESTIMONIALS.length > 1 && (
                     <div className="flex items-center space-x-6">
                         <button
+                            aria-label="Testimonio anterior"
                             onClick={onScrollPrev}
-                            className={clsx(
-                                !emblaApi?.canScrollPrev() &&
-                                    'pointer-events-none opacity-20',
+                            className={cn(
+                                !api?.canScrollPrev() && 'pointer-events-none opacity-20',
                             )}
                         >
                             <svg
@@ -160,50 +141,35 @@ const LandingStudentTestimonialsSlider = () => {
                         </button>
 
                         <ul className="flex items-center justify-center space-x-3">
-                            {landingStudentsTestimonials.map((_, index) => {
-                                const isSelected = selectedSlideIndex === index;
+                            {LANDING_STUDENTS_TESTIMONIALS.map((_, index) => {
+                                const isSelected = current === index + 1;
 
                                 return (
                                     <li key={index}>
-                                        {isSelected ? (
-                                            <button
-                                                onClick={() => {
-                                                    if (intervalRef.current) {
-                                                        clearInterval(
-                                                            intervalRef.current,
-                                                        );
-                                                    }
-                                                    emblaApi?.scrollTo(index);
-                                                }}
-                                                className="h-6 w-6 rounded bg-[#2C0866] text-white"
-                                            >
-                                                {index + 1}
-                                            </button>
-                                        ) : (
-                                            <button
-                                                onClick={() => {
-                                                    if (intervalRef.current) {
-                                                        clearInterval(
-                                                            intervalRef.current,
-                                                        );
-                                                    }
-                                                    emblaApi?.scrollTo(index);
-                                                }}
-                                                className="h-6 w-6"
-                                            >
-                                                {index + 1}
-                                            </button>
-                                        )}
+                                        <button
+                                            aria-label={`Ir al testimonio ${index + 1}`}
+                                            onClick={() => {
+                                                autoplay.current.stop();
+                                                api?.scrollTo(index);
+                                            }}
+                                            className={cn(
+                                                'h-6 w-6 rounded',
+                                                isSelected && 'bg-[#2C0866] text-white',
+                                                !isSelected && 'text-[#2C0866]',
+                                            )}
+                                        >
+                                            {index + 1}
+                                        </button>
                                     </li>
                                 );
                             })}
                         </ul>
 
                         <button
+                            aria-label="Siguiente testimonio"
                             onClick={onScrollNext}
-                            className={clsx(
-                                !emblaApi?.canScrollNext() &&
-                                    'pointer-events-none opacity-20',
+                            className={cn(
+                                !api?.canScrollNext() && 'pointer-events-none opacity-20',
                             )}
                         >
                             <svg

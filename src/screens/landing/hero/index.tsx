@@ -9,15 +9,14 @@ type LandingHeroProps = {
 const LandingHero = async ({ currentPlatziTalk }: LandingHeroProps) => {
     return (
         <div className="flex items-center bg-[#430AA4] pt-24 text-white">
-            <div className="container py-24 xl:flex xl:space-x-8">
+            <div className="container py-24 xl:flex xl:space-x-12">
                 <div className="xl:w-1/2">
                     <h1 className="mb-4 text-5xl font-bold">
-                        INGRESA AL MUNDO TECNOLÓGICO
+                        UNA COMUNIDAD QUE TE AYUDA A ENTRAR AL MUNDO TECNOLÓGICO
                     </h1>
                     <p className="font-light lg:text-xl">
-                        Becas gratuitas para que estudiantes de 3° y 4° medio ingresen al
-                        mundo de la tecnología aprendiendo a programar junto a líderes de
-                        empresas tecnológicas chilenas.
+                        Becas gratuitas para aprender a programar junto a líderes de
+                        empresas tecnológicas chilenas
                     </p>
                 </div>
 

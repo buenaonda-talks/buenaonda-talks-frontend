@@ -9,7 +9,7 @@ export type StudentTestimony = {
     description: string;
 };
 
-export const landingStudentsTestimonials: ReadonlyArray<StudentTestimony> = [
+export const LANDING_STUDENTS_TESTIMONIALS: ReadonlyArray<StudentTestimony> = [
     {
         image: dreyco,
         name: 'Dreyco Román',
@@ -30,4 +30,4 @@ export const landingStudentsTestimonials: ReadonlyArray<StudentTestimony> = [
     },
 ];
 
-export default landingStudentsTestimonials;
+export default LANDING_STUDENTS_TESTIMONIALS;

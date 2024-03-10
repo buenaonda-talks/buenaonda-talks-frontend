@@ -34,8 +34,8 @@ const LandingHabilities = () => {
     return (
         <section className="py-20">
             <div className="container">
-                <h2 className="mb-12 text-center text-5xl font-bold text-[#430AA4]">
-                    ADQUIERE HABILIDADES CLAVE
+                <h2 className="mb-12 text-center text-5xl font-extrabold text-[#430AA4]">
+                    Con las Buena Onda Talks (BOT) podrás adquirir
                 </h2>
 
                 <ul className="grid gap-y-8 md:grid-cols-2 md:gap-8 xl:grid-cols-4 xl:gap-x-7 xl:gap-y-0">

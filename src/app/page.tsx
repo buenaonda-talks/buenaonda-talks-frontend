@@ -1,5 +1,3 @@
-import LandingProcess from '@/screens/landing/the-process';
-import LandingUniqueOpportunity from '@/screens/landing/unique-opportunity';
 import LandingHabilities from '@/screens/landing/habilities';
 import LandingHero from '@/screens/landing/hero';
 import LandingHeader from '@/screens/landing/header';
@@ -30,8 +28,6 @@ const Page = async () => {
             <LandingHero currentPlatziTalk={currentPlatziTalk} />
             <LandingStats />
             <LandingHabilities />
-            <LandingUniqueOpportunity />
-            <LandingProcess />
             <LandingTechLeadersTestimonials />
             <LandingTheyTalkAboutUs />
             <LandingStudentsInspiration />

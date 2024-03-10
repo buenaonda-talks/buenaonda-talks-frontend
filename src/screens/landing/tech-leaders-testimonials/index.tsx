@@ -140,6 +140,7 @@ export const LandingTechLeadersTestimonials: React.FC = () => {
                         return (
                             <li key={index}>
                                 <button
+                                    aria-label={`Ir a la diapositiva ${index + 1}`}
                                     onClick={() => {
                                         autoplay.current.stop();
                                         api?.scrollTo(index);

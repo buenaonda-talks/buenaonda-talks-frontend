@@ -16,13 +16,11 @@ export const LANDING_HABILITIES: LandingHabilityType[] = [
                 />
             </svg>
         ),
-        label: 'LOS FUNDAMENTOS',
+        label: 'FUNDAMENTOS DE ESTUDIO',
         description: (
             <>
-                Conoce los fundamentos de la web.
-                <br />
-                Aprende las bases de HTML y CSS y las herramientas con las que se
-                construye un sitio web.
+                Un curso necesario para triunfar en los estudios que te propongas para tu
+                desarrollo laboral.
             </>
         ),
     },
@@ -42,13 +40,11 @@ export const LANDING_HABILITIES: LandingHabilityType[] = [
                 />
             </svg>
         ),
-        label: 'ABC DE JAVASCRIPT',
+        label: 'EL ABC DE LA PROGRAMACIÓN',
         description: (
             <>
-                Da vida a tu sitio web.
-                <br />
-                Aprenderás que es y como usarlo para convertir tus proyectos en
-                aplicaciones.
+                Accede a múltiples cursos donde podrás aprender javascript, implementación
+                de sitios web, así como creación de aplicaciones para móviles.
             </>
         ),
     },
@@ -71,12 +67,12 @@ export const LANDING_HABILITIES: LandingHabilityType[] = [
                 />
             </svg>
         ),
-        label: 'LA MAGIA DE LA INTERFAZ',
+        label: 'UNA COMUNIDAD ACORDE A TUS INTERESES',
         description: (
             <>
-                Construye una interfaz atractiva.
-                <br />
-                Con React podrás crear dinamismo a las interacciones de tus usuarios.
+                Nuestra plataforma también ofrece espacios de interacción con otros
+                usuarios, a través de canales de WhatsApp y Discord que ayudarán a
+                mantenerte informado y motivado.
             </>
         ),
     },
@@ -105,13 +101,11 @@ export const LANDING_HABILITIES: LandingHabilityType[] = [
                 />
             </svg>
         ),
-        label: 'MUCHO MÁS QUE PROGRAMAR',
+        label: 'LA POSIBILIDAD DE TRABAJAR EN STARTUPS CHILENAS',
         description: (
             <>
-                Prepara tu CV.
-                <br />
-                Enfrentate a entrevistas laborales simuladas y aprende técnicas de manejo
-                del estrés y negociación.
+                Si terminas los cursos, tu CV irá a las principales startups chilenas,
+                donde podrás postular y seguir avanzando en este camino.
             </>
         ),
     },

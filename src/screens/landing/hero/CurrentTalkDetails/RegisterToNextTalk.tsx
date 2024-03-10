@@ -4,8 +4,8 @@ export const LandingHeroRegisterToNextTalk = () => {
         <div className="pt-8 xl:w-1/2 xl:pt-0">
             <div className="rounded-2xl border-2 border-[#17CEA9] p-10">
                 <h2 className="mb-4 text-center">
-                    <span className="mb-4 block font-sans text-2xl">
-                        REGISTRATE PARA RECIBIR INFORMACIÓN SOBRE LA PRÓXIMA CHARLA
+                    <span className="mb-4 block font-sans text-2xl uppercase">
+                        Quiero asistir a la próxima charla de becas tecnológicas
                     </span>
                 </h2>
 

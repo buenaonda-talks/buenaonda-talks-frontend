@@ -8,7 +8,6 @@ const getCurrentPlatziTalk = async () => {
         const response = await fetchServer(LandingHeroDocument, {});
         return response.currentPlatziTalk;
     } catch (error) {
-        console.error('Error getting current talk', error);
         return null;
     }
 };

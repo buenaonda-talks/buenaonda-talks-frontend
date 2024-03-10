@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { DISCORD_HREF, WHATSAPP_HREF } from '@/constants';
 import routesBuilder from '@/lib/routes';
 
 import { cn } from '@/lib/utils';
@@ -57,8 +58,12 @@ export const StudentDashboardSideNavigation = ({ className }: SidebarProps) => {
                         </h2>
 
                         <div className="space-y-1">
-                            <ButtonLink href="/#">
-                                <a href="/#">
+                            <ButtonLink href={DISCORD_HREF}>
+                                <a
+                                    href={DISCORD_HREF}
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
                                     <svg
                                         className="h-4 w-4"
                                         role="img"
@@ -73,8 +78,12 @@ export const StudentDashboardSideNavigation = ({ className }: SidebarProps) => {
                                 </a>
                             </ButtonLink>
 
-                            <ButtonLink href="/#">
-                                <a href="/#">
+                            <ButtonLink href={WHATSAPP_HREF}>
+                                <a
+                                    href={WHATSAPP_HREF}
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
                                     <svg
                                         className="h-4 w-4"
                                         role="img"

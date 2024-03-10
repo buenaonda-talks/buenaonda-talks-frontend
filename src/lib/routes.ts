@@ -3,6 +3,7 @@ export type TypedRoute = string;
 export const routesBuilder = {
     home: '/',
     dashboard: '/dashboard',
+    theProcess: '/becas-y-procesos',
 
     teacherUpcomingTalk: '/dashboard/proxima-charla',
 

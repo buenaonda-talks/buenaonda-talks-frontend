@@ -63,16 +63,16 @@ const LandingHeader = () => {
                         Inicio
                     </Link>
 
-                    {/* <Link
-                        href={routesBuilder.process}
+                    <Link
                         className={clsx(
                             'flex h-24 w-full items-center justify-center px-8 text-center uppercase text-white lg:w-auto',
-                            pathname === routesBuilder.process &&
+                            pathname === routesBuilder.theProcess &&
                                 'font-bold shadow-[0_4px_15px_0px_rgba(0,0,0,0.3)_inset]',
                         )}
+                        href={routesBuilder.theProcess}
                     >
-                        Becas y proceso
-                    </Link> */}
+                        Becas y Proceso
+                    </Link>
 
                     <Link
                         href={routesBuilder.dashboard}

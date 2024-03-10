@@ -1,5 +1,6 @@
 import { ScholarshipStatus, TrackerCurrentStepQuery } from '@/api/graphql';
 import { PLATZI_FAQ } from '../step-2-platzi-form-open';
+import { DISCORD_HREF } from '@/constants';
 
 type Props = {
     scholarship: NonNullable<
@@ -20,10 +21,7 @@ export const TrackerStep5PlatziGranted: React.FC<Props> = ({ scholarship }) => {
                         Estamos creando tu cuenta en Platzi, pronto te llegará un correo
                         con las credenciales de acceso. Si tienes alguna duda puedes
                         escribirnos en{' '}
-                        <a
-                            className="text-primary-v2 underline"
-                            href="https://discord.gg/QpkPeKRskA"
-                        >
+                        <a className="text-primary-v2 underline" href={DISCORD_HREF}>
                             Discord
                         </a>
                         .

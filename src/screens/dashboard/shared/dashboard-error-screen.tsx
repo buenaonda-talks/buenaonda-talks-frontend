@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { SignedIn, UserButton, useUser } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { DISCORD_HREF, WHATSAPP_HREF } from '@/constants';
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -37,8 +38,12 @@ const SideNavigation = ({ className }: SidebarProps) => {
                         </h2>
 
                         <div className="space-y-1">
-                            <ButtonLink href="/#">
-                                <a href="/#">
+                            <ButtonLink href={DISCORD_HREF}>
+                                <a
+                                    href={DISCORD_HREF}
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
                                     <svg
                                         className="h-4 w-4"
                                         role="img"
@@ -53,8 +58,12 @@ const SideNavigation = ({ className }: SidebarProps) => {
                                 </a>
                             </ButtonLink>
 
-                            <ButtonLink href="/#">
-                                <a href="/#">
+                            <ButtonLink href={WHATSAPP_HREF}>
+                                <a
+                                    href={WHATSAPP_HREF}
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
                                     <svg
                                         className="h-4 w-4"
                                         role="img"

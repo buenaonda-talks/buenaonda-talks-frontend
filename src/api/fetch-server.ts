@@ -40,3 +40,25 @@ export const fetchServer = async <T, V>(query: TypedDocumentNode<T, V>, variable
 
     return json.data as T;
 };
+
+type FetchDataResult<T> = {
+    data: T | null;
+    error: Error | null;
+};
+
+export const fetchServerInitialData = async <T, V>(
+    document: TypedDocumentNode<T, V>,
+    variables: V,
+): Promise<FetchDataResult<T>> => {
+    let data = null;
+    let error = null;
+
+    try {
+        data = await fetchServer(document, variables);
+    } catch (e) {
+        console.error(e);
+        error = e as Error;
+    }
+
+    return { data, error };
+};

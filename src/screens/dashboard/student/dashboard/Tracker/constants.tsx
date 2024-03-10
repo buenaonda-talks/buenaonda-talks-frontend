@@ -2,6 +2,7 @@ import { StaticImageData } from 'next/image';
 
 import devfLogo from './devf-logo.jpg';
 import platziLogo from './platzi-logo.jpg';
+import { DISCORD_HREF } from '@/constants';
 
 export enum TrackerStepNumber {
     STEP_1_PLATZI_TALK = 1,
@@ -83,10 +84,7 @@ export const TRACKER_PLATZI_STEPS: TrackerStep[] = [
                     </span>
                     , pronto te llegará un correo con las credenciales de acceso. Si
                     tienes alguna duda puedes escribirnos en{' '}
-                    <a
-                        className="font-bold text-white underline"
-                        href="https://discord.gg/QpkPeKRskA"
-                    >
+                    <a className="font-bold underline" href={DISCORD_HREF}>
                         Discord
                     </a>
                     .

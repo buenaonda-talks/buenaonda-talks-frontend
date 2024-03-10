@@ -1,5 +1,6 @@
 'use client';
 
+import { WHATSAPP_HREF } from '@/constants';
 import { getYear } from 'date-fns';
 import Link from 'next/link';
 
@@ -9,7 +10,9 @@ const WhatsappButton = () => (
         style={{
             background: 'linear-gradient(90deg, #00B09B 0%, #96C93D 100%)',
         }}
-        href="https://wa.me/56966716128"
+        href={WHATSAPP_HREF}
+        target="_blank"
+        rel="noreferrer noopener"
     >
         <svg
             width="30"

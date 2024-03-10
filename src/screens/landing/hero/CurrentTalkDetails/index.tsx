@@ -4,7 +4,7 @@ import { LandingHeroQuery } from '@/api/graphql';
 import { useCountdown } from '@/hooks/useCountdown';
 import { LandingHeroCountdown } from './Countdown';
 import { LandingHeroJoinNow } from './JoinNow';
-import { TalkEndedSoRegisterToNextTalk } from '../TalkEndedSoRegisterToNextTalk';
+import { LandingTalkEndedSoRegisterToNextTalk } from '../LandingTalkEndedSoRegisterToNextTalk';
 
 type CurrentTalkDetailsProps = {
     talk: NonNullable<LandingHeroQuery['currentPlatziTalk']>;
@@ -27,5 +27,5 @@ export const LandingHeroCurrentTalkDetails = ({ talk }: CurrentTalkDetailsProps)
         return <LandingHeroJoinNow />;
     }
 
-    return <TalkEndedSoRegisterToNextTalk />;
+    return <LandingTalkEndedSoRegisterToNextTalk />;
 };

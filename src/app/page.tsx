@@ -7,9 +7,9 @@ import LandingFooter from '@/screens/landing/landing-footer';
 import LandingStudentsInspiration from '@/screens/landing/students-inspiration';
 import LandingStats from '@/screens/landing/stats';
 import LandingTheyTalkAboutUs from '@/screens/landing/they-talk-about-us';
-import LandingTechLeadersTestimonials from '@/screens/landing/tech-leaders-testimonials';
 import { LandingHeroDocument } from '@/api/graphql';
 import { fetchServer } from '@/api/fetch-server';
+import { LandingTechLeadersTestimonials } from '@/screens/landing/tech-leaders-testimonials';
 
 const getCurrentPlatziTalk = async () => {
     try {

@@ -9,5 +9,5 @@ export default authMiddleware({
 
 export const config = {
     // Only catch routes under /dashboard, we should use javascript regex, example: '/((?!.+\\.[\\w]+$|_next).*)'
-    matcher: ['/dashboard/:path*'],
+    matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|graphql)(.*)'],
 };

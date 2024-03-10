@@ -80,9 +80,9 @@ export const TrackerStep1TalkAvailable: React.FC<Props> = ({ talk }) => {
                     <p>
                         Acompáñanos este{' '}
                         <span className="font-bold">
-                            {getDayName(new Date())} {getDate(new Date())} de{' '}
-                            {getMonthName(new Date())} a las{' '}
-                            {getHHMM12FormatText(new Date())} PM
+                            {getDayName(startDate)} {getDate(startDate)} de{' '}
+                            {getMonthName(startDate)} a las{' '}
+                            {getHHMM12FormatText(startDate)} PM
                         </span>{' '}
                         (hora de Santiago).
                     </p>

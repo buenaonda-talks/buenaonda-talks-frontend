@@ -13,6 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons';
+import { useState } from 'react';
 
 type Props = {
     title: string;
@@ -33,6 +34,8 @@ export const AdminTableFilter = ({
     options,
     onSelect,
 }: Props) => {
+    const [query, setQuery] = useState('');
+
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -77,50 +80,60 @@ export const AdminTableFilter = ({
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0" align="start">
-                <Command>
-                    <CommandInput placeholder={title} />
+                <Command shouldFilter={false}>
+                    <CommandInput placeholder={title} onValueChange={setQuery} />
                     <CommandList>
                         <CommandEmpty>No hay resultados.</CommandEmpty>
                         <CommandGroup>
-                            {options.map((option) => {
-                                const isSelected = selectedValues?.includes(option.value);
-                                return (
-                                    <CommandItem
-                                        key={option.value}
-                                        onSelect={() => {
-                                            if (isSelected) {
-                                                onSelect?.(
-                                                    selectedValues?.filter(
-                                                        (v) => v !== option.value,
-                                                    ) || [],
-                                                );
-                                            } else {
-                                                onSelect?.([
-                                                    ...(selectedValues || []),
-                                                    option.value,
-                                                ]);
-                                            }
-                                        }}
-                                    >
-                                        <div
-                                            className={cn(
-                                                'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
-                                                isSelected
-                                                    ? 'bg-primary text-primary-foreground'
-                                                    : 'opacity-50 [&_svg]:invisible',
-                                            )}
+                            {options
+                                .filter((option) => {
+                                    if (!query) return true;
+
+                                    return option.label
+                                        .toLowerCase()
+                                        .includes(query.toLowerCase());
+                                })
+                                .map((option) => {
+                                    const isSelected = selectedValues?.includes(
+                                        option.value,
+                                    );
+                                    return (
+                                        <CommandItem
+                                            key={option.value}
+                                            onSelect={() => {
+                                                if (isSelected) {
+                                                    onSelect?.(
+                                                        selectedValues?.filter(
+                                                            (v) => v !== option.value,
+                                                        ) || [],
+                                                    );
+                                                } else {
+                                                    onSelect?.([
+                                                        ...(selectedValues || []),
+                                                        option.value,
+                                                    ]);
+                                                }
+                                            }}
                                         >
-                                            <CheckIcon className="h-4 w-4" />
-                                        </div>
+                                            <div
+                                                className={cn(
+                                                    'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                                                    isSelected
+                                                        ? 'bg-primary text-primary-foreground'
+                                                        : 'opacity-50 [&_svg]:invisible',
+                                                )}
+                                            >
+                                                <CheckIcon className="h-4 w-4" />
+                                            </div>
 
-                                        {option.icon && (
-                                            <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-                                        )}
+                                            {option.icon && (
+                                                <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                                            )}
 
-                                        <span>{option.label}</span>
-                                    </CommandItem>
-                                );
-                            })}
+                                            <span>{option.label}</span>
+                                        </CommandItem>
+                                    );
+                                })}
                         </CommandGroup>
 
                         {selectedValues && selectedValues.length > 0 && (

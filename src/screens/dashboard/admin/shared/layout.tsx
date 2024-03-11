@@ -66,7 +66,7 @@ const TopLinks = () => {
                         <DashboardButtonLink
                             link={{
                                 icon: MegaphoneIcon,
-                                href: routesBuilder.students,
+                                href: routesBuilder.convocatories,
                                 label: 'Convocatorias',
                             }}
                         />

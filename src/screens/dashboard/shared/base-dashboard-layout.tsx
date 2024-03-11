@@ -176,7 +176,7 @@ const UserPreview = () => {
     const { user, isLoaded } = useUser();
 
     return (
-        <div className="relative">
+        <div className="relative pb-3">
             {isLoaded && user ? (
                 <div className="flex items-center">
                     <SignedIn>

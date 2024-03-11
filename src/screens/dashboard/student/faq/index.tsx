@@ -4,6 +4,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from '@/components/ui/accordion';
+import { DashboardContentSafeSpace } from '../../shared/dashboard-content-safe-space';
 
 const COMMON_FAQ = [
     {
@@ -284,126 +285,112 @@ const DEVF_FAQ = [
 
 export const DashboardStudentFaq = () => {
     return (
-        <div className="flex min-h-screen">
-            <div className="mx-auto w-full px-6 pt-6">
-                <div className="relative lg:gap-10 xl:grid xl:grid-cols-[1fr_300px]">
-                    <div className="pb-20">
-                        <div className="mb-12">
-                            <h1 className="mb-2 scroll-m-20 text-4xl font-bold tracking-tight">
-                                Preguntas Frecuentes
-                            </h1>
+        <DashboardContentSafeSpace containerClassName="relative lg:gap-10 xl:grid xl:grid-cols-[1fr_300px]">
+            <div className="pb-20">
+                <div className="mb-12">
+                    <h1 className="mb-2 scroll-m-20 text-4xl font-bold tracking-tight">
+                        Preguntas Frecuentes
+                    </h1>
 
-                            <div className="space-y-2">
-                                <p className="text-lg text-muted-foreground">
-                                    Aquí encontrarás las preguntas más frecuentes sobre
-                                    BuenaOnda Talks. Si tienes alguna otra pregunta, no
-                                    dudes en contactarnos mediante Discord.
-                                </p>
-                            </div>
-                        </div>
+                    <div className="space-y-2">
+                        <p className="text-lg text-muted-foreground">
+                            Aquí encontrarás las preguntas más frecuentes sobre BuenaOnda
+                            Talks. Si tienes alguna otra pregunta, no dudes en
+                            contactarnos mediante Discord.
+                        </p>
+                    </div>
+                </div>
 
-                        <div className="space-y-12">
-                            <div id="general">
-                                <h2 className="mb-1 border-b border-gray-300 pb-4 text-2xl font-bold tracking-tight">
-                                    Preguntas generales
-                                </h2>
+                <div className="space-y-12">
+                    <div id="general">
+                        <h2 className="mb-1 border-b border-gray-300 pb-4 text-2xl font-bold tracking-tight">
+                            Preguntas generales
+                        </h2>
 
-                                <Accordion type="single" collapsible>
-                                    {COMMON_FAQ.map((faq) => (
-                                        <AccordionItem key={faq.key} value={faq.key}>
-                                            <AccordionTrigger>
-                                                {faq.title}
-                                            </AccordionTrigger>
-                                            <AccordionContent>
-                                                {faq.content}
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    ))}
-                                </Accordion>
-                            </div>
-
-                            <div id="platzi">
-                                <h2 className="mb-1 border-b border-gray-300 pb-4 text-2xl font-bold tracking-tight">
-                                    Sobre Platzi
-                                </h2>
-
-                                <Accordion type="single" collapsible>
-                                    {PLATZI_FAQ.map((faq) => (
-                                        <AccordionItem key={faq.key} value={faq.key}>
-                                            <AccordionTrigger>
-                                                {faq.title}
-                                            </AccordionTrigger>
-                                            <AccordionContent>
-                                                {faq.content}
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    ))}
-                                </Accordion>
-                            </div>
-
-                            <div id="devf">
-                                <h2 className="mb-1 border-b border-gray-300 pb-4 text-2xl font-bold tracking-tight">
-                                    Sobre DEV.F
-                                </h2>
-
-                                <Accordion type="single" collapsible>
-                                    {DEVF_FAQ.map((faq) => (
-                                        <AccordionItem key={faq.key} value={faq.key}>
-                                            <AccordionTrigger>
-                                                {faq.title}
-                                            </AccordionTrigger>
-                                            <AccordionContent>
-                                                {faq.content}
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    ))}
-                                </Accordion>
-                            </div>
-                        </div>
+                        <Accordion type="single" collapsible>
+                            {COMMON_FAQ.map((faq) => (
+                                <AccordionItem key={faq.key} value={faq.key}>
+                                    <AccordionTrigger className="text-left">
+                                        {faq.title}
+                                    </AccordionTrigger>
+                                    <AccordionContent>{faq.content}</AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
                     </div>
 
-                    <div className="hidden text-sm xl:block">
-                        <div className="sticky top-0 -mt-12 pt-4">
-                            <div dir="ltr" className="relative overflow-hidden pb-10">
-                                <div>
-                                    <div className="sticky top-8 -mt-8 h-[calc(100vh-3.5rem)] py-12">
-                                        <div className="space-y-2">
-                                            <p className="font-medium">En esta página</p>
+                    <div id="platzi">
+                        <h2 className="mb-1 border-b border-gray-300 pb-4 text-2xl font-bold tracking-tight">
+                            Sobre Platzi
+                        </h2>
 
-                                            <ul className="m-0 list-none">
-                                                <li className="mt-0 pt-2">
-                                                    <a
-                                                        href="#general"
-                                                        className="inline-block font-medium text-foreground no-underline transition-colors hover:text-foreground"
-                                                    >
-                                                        Preguntas generales
-                                                    </a>
-                                                </li>
-                                                <li className="mt-0 pt-2">
-                                                    <a
-                                                        href="#platzi"
-                                                        className="inline-block text-muted-foreground no-underline transition-colors hover:text-foreground"
-                                                    >
-                                                        Sobre Platzi
-                                                    </a>
-                                                </li>
-                                                <li className="mt-0 pt-2">
-                                                    <a
-                                                        href="#devf"
-                                                        className="inline-block text-muted-foreground no-underline transition-colors hover:text-foreground"
-                                                    >
-                                                        Sobre DEV.F
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                        <Accordion type="single" collapsible>
+                            {PLATZI_FAQ.map((faq) => (
+                                <AccordionItem key={faq.key} value={faq.key}>
+                                    <AccordionTrigger>{faq.title}</AccordionTrigger>
+                                    <AccordionContent>{faq.content}</AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    </div>
+
+                    <div id="devf">
+                        <h2 className="mb-1 border-b border-gray-300 pb-4 text-2xl font-bold tracking-tight">
+                            Sobre DEV.F
+                        </h2>
+
+                        <Accordion type="single" collapsible>
+                            {DEVF_FAQ.map((faq) => (
+                                <AccordionItem key={faq.key} value={faq.key}>
+                                    <AccordionTrigger>{faq.title}</AccordionTrigger>
+                                    <AccordionContent>{faq.content}</AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    </div>
+                </div>
+            </div>
+
+            <div className="hidden text-sm xl:block">
+                <div className="sticky top-0 -mt-12 pt-4">
+                    <div dir="ltr" className="relative overflow-hidden pb-10">
+                        <div>
+                            <div className="sticky top-8 -mt-8 h-[calc(100vh-3.5rem)] py-12">
+                                <div className="space-y-2">
+                                    <p className="font-medium">En esta página</p>
+
+                                    <ul className="m-0 list-none">
+                                        <li className="mt-0 pt-2">
+                                            <a
+                                                href="#general"
+                                                className="inline-block font-medium text-foreground no-underline transition-colors hover:text-foreground"
+                                            >
+                                                Preguntas generales
+                                            </a>
+                                        </li>
+                                        <li className="mt-0 pt-2">
+                                            <a
+                                                href="#platzi"
+                                                className="inline-block text-muted-foreground no-underline transition-colors hover:text-foreground"
+                                            >
+                                                Sobre Platzi
+                                            </a>
+                                        </li>
+                                        <li className="mt-0 pt-2">
+                                            <a
+                                                href="#devf"
+                                                className="inline-block text-muted-foreground no-underline transition-colors hover:text-foreground"
+                                            >
+                                                Sobre DEV.F
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </DashboardContentSafeSpace>
     );
 };

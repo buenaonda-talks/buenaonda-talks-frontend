@@ -1,17 +1,58 @@
+'use client';
+
 import { PropsWithChildren } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { TeacherDashboardDesktopNavigation } from './desktop-navigation';
-import { TeacherDashboardMobileNavigation } from './mobile-navigation';
+import {
+    BaseDashboardLayout,
+    DashboardButtonLink,
+} from '../../shared/base-dashboard-layout';
+import { WhatsAppIcon } from '@/components/icons/WhatsappIcon';
+import { DashboardLinkType, WHATSAPP_HREF } from '@/constants';
+import { HelpCircleIcon, MegaphoneIcon, PanelsTopLeftIcon } from 'lucide-react';
+import routesBuilder from '@/lib/routes';
 
-export const TeacherLayout = ({ children }: PropsWithChildren) => {
-    return (
-        <div className="2xl:flex 2xl:h-screen 2xl:overflow-hidden">
-            <TeacherDashboardDesktopNavigation className="hidden 2xl:block 2xl:w-[270px]" />
-            <TeacherDashboardMobileNavigation className="2xl:hidden" />
+const TEACHER_DASHBOARD_LINKS: DashboardLinkType[] = [
+    {
+        icon: PanelsTopLeftIcon,
+        href: routesBuilder.dashboard,
+        label: 'Estudiantes',
+    },
+    {
+        icon: MegaphoneIcon,
+        href: routesBuilder.teacherUpcomingTalk,
+        label: 'Próxima charla',
+    },
+    {
+        icon: HelpCircleIcon,
+        href: routesBuilder.faq,
+        label: 'Preguntas Frecuentes',
+    },
+];
 
-            <main className="2xl:flex-1">
-                <ScrollArea className="2xl:h-screen">{children}</ScrollArea>
-            </main>
+const TopLinks = () => (
+    <>
+        <div className="space-y-1">
+            {TEACHER_DASHBOARD_LINKS.map((link) => (
+                <DashboardButtonLink key={link.href} link={link} />
+            ))}
         </div>
-    );
-};
+    </>
+);
+
+export const TeacherLayout = ({ children }: PropsWithChildren) => (
+    <BaseDashboardLayout
+        navigationProps={{
+            communicationLinks: [
+                {
+                    href: WHATSAPP_HREF,
+                    icon: WhatsAppIcon,
+                    label: 'WhatsApp',
+                    openInNewTab: true,
+                    withNativeTag: true,
+                },
+            ],
+            TopLinks,
+        }}
+    >
+        {children}
+    </BaseDashboardLayout>
+);

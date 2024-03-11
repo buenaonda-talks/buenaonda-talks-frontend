@@ -1,11 +1,11 @@
 import { AdminConvocatoriesTable } from '@/screens/dashboard/admin/convocatories/table';
-import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
+import { AdminLayout } from '@/screens/dashboard/admin/shared/layout';
 
 const Page = () => {
     return (
-        <AdminsLayout>
+        <AdminLayout>
             <AdminConvocatoriesTable />
-        </AdminsLayout>
+        </AdminLayout>
     );
 };
 

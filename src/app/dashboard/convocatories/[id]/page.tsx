@@ -9,7 +9,7 @@ import {
     ScholarshipConvocatoryKind,
 } from '@/api/graphql';
 import { useParams } from 'next/navigation';
-import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
+import { AdminLayout } from '@/screens/dashboard/admin/shared/layout';
 import { TypographyAdminH1 } from '@/components/typography';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AdminBadgeConvocatoryKind } from '@/screens/dashboard/admin/shared/badge';
@@ -131,24 +131,24 @@ const Page = () => {
     });
 
     if (convocatoryQuery.isLoading) {
-        return <AdminsLayout>Cargando...</AdminsLayout>;
+        return <AdminLayout>Cargando...</AdminLayout>;
     }
 
     if (convocatoryQuery.isError) {
-        return <AdminsLayout>Ocurrió un error</AdminsLayout>;
+        return <AdminLayout>Ocurrió un error</AdminLayout>;
     }
 
     if (!convocatoryQuery.data?.convocatoryById) {
-        return <AdminsLayout>Convocatoria no encontrada</AdminsLayout>;
+        return <AdminLayout>Convocatoria no encontrada</AdminLayout>;
     }
 
     return (
-        <AdminsLayout>
+        <AdminLayout>
             <ContentDisplayer
                 convocatory={convocatoryQuery.data.convocatoryById}
                 id={parseInt(id as string, 10)}
             />
-        </AdminsLayout>
+        </AdminLayout>
     );
 };
 

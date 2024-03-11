@@ -43,6 +43,7 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import routesBuilder from '@/lib/routes';
 import { useUrlFilters } from '@/hooks/useUrlFilters';
+import { DashboardContentSafeSpace } from '../../shared/dashboard-content-safe-space';
 
 type Application = NonNullable<
     AdminApplicationsTableQuery['applications']['edges'][number]
@@ -423,13 +424,13 @@ const Filters = ({ filters, setFilter, queryResult }: FiltersProps) => {
 
 const Wrapper = ({ children }: PropsWithChildren) => {
     return (
-        <div className="px-6 pb-8 pt-6">
+        <DashboardContentSafeSpace>
             <div className="mb-4 flex items-center justify-between">
                 <TypographyAdminH1>Postulaciones</TypographyAdminH1>
             </div>
 
             {children}
-        </div>
+        </DashboardContentSafeSpace>
     );
 };
 

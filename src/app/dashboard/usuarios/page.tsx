@@ -1,11 +1,11 @@
-import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
+import { AdminLayout } from '@/screens/dashboard/admin/shared/layout';
 import { AdminUsersTableContainer } from '@/screens/dashboard/admin/users/table';
 
 const Page = () => {
     return (
-        <AdminsLayout>
+        <AdminLayout>
             <AdminUsersTableContainer />
-        </AdminsLayout>
+        </AdminLayout>
     );
 };
 

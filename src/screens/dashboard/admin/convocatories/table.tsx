@@ -57,6 +57,7 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 import routesBuilder from '@/lib/routes';
+import { DashboardContentSafeSpace } from '../../shared/dashboard-content-safe-space';
 
 type Convocatory = AdminConvocatoriesTableQuery['convocatories'][0];
 
@@ -354,7 +355,7 @@ export const AdminConvocatoriesTable = () => {
 
     if (query.isPending) {
         return (
-            <div className="px-6 pb-8 pt-6">
+            <DashboardContentSafeSpace>
                 <div className="mb-4 flex items-center justify-between">
                     <TypographyAdminH1>Convocatorias</TypographyAdminH1>
 
@@ -394,13 +395,13 @@ export const AdminConvocatoriesTable = () => {
                         </TableBody>
                     </Table>
                 </div>
-            </div>
+            </DashboardContentSafeSpace>
         );
     }
 
     if (query.isError) {
         return (
-            <div className="px-6 pb-8 pt-6">
+            <DashboardContentSafeSpace>
                 <div className="mb-4 flex items-center justify-between">
                     <TypographyAdminH1>Convocatorias</TypographyAdminH1>
 
@@ -420,12 +421,12 @@ export const AdminConvocatoriesTable = () => {
                         })}
                     />
                 </div>
-            </div>
+            </DashboardContentSafeSpace>
         );
     }
 
     return (
-        <div className="px-6 pb-8 pt-6">
+        <DashboardContentSafeSpace>
             <div className="mb-4 flex items-center justify-between">
                 <TypographyAdminH1>
                     Convocatorias ({query.data.convocatories.length})
@@ -437,6 +438,6 @@ export const AdminConvocatoriesTable = () => {
             </div>
 
             <MyTable data={query.data.convocatories} />
-        </div>
+        </DashboardContentSafeSpace>
     );
 };

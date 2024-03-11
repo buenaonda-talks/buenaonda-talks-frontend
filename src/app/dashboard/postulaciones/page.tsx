@@ -1,11 +1,11 @@
 import { AdminApplicationsTableContainer } from '@/screens/dashboard/admin/applications/table';
-import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
+import { AdminLayout } from '@/screens/dashboard/admin/shared/layout';
 
 const Page = () => {
     return (
-        <AdminsLayout>
+        <AdminLayout>
             <AdminApplicationsTableContainer />
-        </AdminsLayout>
+        </AdminLayout>
     );
 };
 

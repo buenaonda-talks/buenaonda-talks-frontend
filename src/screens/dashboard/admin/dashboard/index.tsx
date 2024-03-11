@@ -671,7 +671,7 @@ export const DashboardAdminsPageContent: React.FC = () => {
                     }, 0);
 
                 return (
-                    <div className="flex h-screen flex-col overflow-hidden">
+                    <div className="flex h-screen min-w-0 flex-col overflow-hidden">
                         <div className="border-b border-gray-200 py-4 shadow-sm xl:pl-6">
                             <div className="container flex space-x-4 xl:mx-0 xl:max-w-full xl:px-0">
                                 <Label className="font-bold">Filtros:</Label>

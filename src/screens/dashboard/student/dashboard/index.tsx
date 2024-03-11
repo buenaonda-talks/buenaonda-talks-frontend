@@ -25,6 +25,7 @@ import { TrackerStep7DevFForm } from './step-7-devf-form';
 import { TrackerStep8DevFApplicationSent } from './step-8-devf-application-sent';
 import { TrackerStep9DevFApplicationReceived } from './step-9-devf-application-received';
 import { TrackerStep10DevFGranted } from './step-10-devf-granted';
+import { DashboardContentSafeSpace } from '../../shared/dashboard-content-safe-space';
 
 enum TabValue {
     PLATZI = 'platzi',
@@ -138,8 +139,8 @@ export const DashboardStudentsHome: React.FC = () => {
     );
 
     return (
-        <div className="flex min-h-screen">
-            <div className="w-6/12 border-r px-6 pt-6">
+        <DashboardContentSafeSpace containerClassName="flex lg:flex-row flex-col">
+            <div className="order-2 border-t pt-6 lg:order-1 lg:w-6/12 lg:border-r lg:border-t-0 lg:pr-6 lg:pt-0">
                 <Tabs defaultValue={TabValue.PLATZI}>
                     <div className="flex items-center">
                         <h2 className="mb-4 text-lg font-bold">Sigue tu proceso</h2>
@@ -200,7 +201,7 @@ export const DashboardStudentsHome: React.FC = () => {
                 </Tabs>
             </div>
 
-            <div className="w-6/12 px-6 pt-6">
+            <div className="order-1 pb-6 lg:order-2 lg:w-6/12 lg:pb-0 lg:pl-6">
                 {currentStep === null && <TrackerStep1NoTalkAvailable />}
 
                 {currentStep === TrackerStepNumber.STEP_1_PLATZI_TALK &&
@@ -293,6 +294,6 @@ export const DashboardStudentsHome: React.FC = () => {
                         />
                     )}
             </div>
-        </div>
+        </DashboardContentSafeSpace>
     );
 };

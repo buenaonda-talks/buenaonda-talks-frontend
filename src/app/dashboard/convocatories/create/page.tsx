@@ -1,6 +1,6 @@
 'use client';
 
-import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
+import { AdminLayout } from '@/screens/dashboard/admin/shared/layout';
 import { TypographyAdminH1 } from '@/components/typography';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -51,9 +51,9 @@ const ContentDisplayer = () => {
 
 const Page = () => {
     return (
-        <AdminsLayout>
+        <AdminLayout>
             <ContentDisplayer />
-        </AdminsLayout>
+        </AdminLayout>
     );
 };
 

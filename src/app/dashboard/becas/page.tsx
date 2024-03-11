@@ -1,11 +1,11 @@
 import { AdminScholarshipsTableContainer } from '@/screens/dashboard/admin/scholarships/table';
-import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
+import { AdminLayout } from '@/screens/dashboard/admin/shared/layout';
 
 const Page = () => {
     return (
-        <AdminsLayout>
+        <AdminLayout>
             <AdminScholarshipsTableContainer />
-        </AdminsLayout>
+        </AdminLayout>
     );
 };
 

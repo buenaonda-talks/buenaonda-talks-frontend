@@ -1,6 +1,6 @@
 import { fetchUserServer } from '@/api/query/fetch-user-server';
 import { DashboardAdminsPageContent } from '@/screens/dashboard/admin/dashboard';
-import { AdminsLayout } from '@/screens/dashboard/admin/shared/layout';
+import { AdminLayout } from '@/screens/dashboard/admin/shared/layout';
 import { DashboardStudentsHome } from '@/screens/dashboard/student/dashboard';
 import { StudentsLayout } from '@/screens/dashboard/student/shared/layout';
 import { TeacherLayout } from '@/screens/dashboard/teacher/shared/layout';
@@ -12,9 +12,9 @@ const Page = async () => {
 
     if (user?.user?.isAdmin) {
         return (
-            <AdminsLayout>
+            <AdminLayout>
                 <DashboardAdminsPageContent />
-            </AdminsLayout>
+            </AdminLayout>
         );
     }
 

@@ -1,0 +1,37 @@
+query adminTeachersTable(
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+    $filter: TeachersFilter!
+) {
+    teachers(
+        after: $after
+        before: $before
+        first: $first
+        last: $last
+        filter: $filter
+    ) {
+        pageInfo {
+            hasNextPage
+            hasPreviousPage
+            endCursor
+        }
+        edges {
+            cursor
+            node {
+                id
+                dateJoined
+                email
+                firstName
+                lastName
+                teacherProfile {
+                    colleges {
+                        id
+                        name
+                    }
+                }
+            }
+        }
+    }
+}

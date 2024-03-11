@@ -158,7 +158,7 @@ export type AssistToTalkLink = {
 export type College = {
     __typename?: 'College';
     /** The commune where the college is located */
-    communeid: Maybe<Scalars['ID']>;
+    communeId: Maybe<Scalars['ID']>;
     hideFromSelection: Scalars['Boolean'];
     id: Scalars['ID'];
     name: Scalars['String'];
@@ -175,6 +175,12 @@ export type CollegeTeacherRelation = {
     rol: Scalars['String'];
     /** The teacher */
     teacherid: Scalars['ID'];
+};
+
+export type CollegesFilter = {
+    communeIDs: InputMaybe<Array<Scalars['Int']>>;
+    query: InputMaybe<Scalars['String']>;
+    regionsIDs: InputMaybe<Array<Scalars['Int']>>;
 };
 
 /** Representation of a commune */
@@ -222,6 +228,15 @@ export type ConvocatoryInput = {
     maximumWithdrawalDate: InputMaybe<Scalars['Date']>;
     order: Scalars['Int'];
     privateLabel: Scalars['String'];
+};
+
+export type DeleteCollege = ApiError | DeleteCollegeSuccess;
+
+/** The link to assist to a talk */
+export type DeleteCollegeSuccess = {
+    __typename?: 'DeleteCollegeSuccess';
+    /** The ID of the deleted college */
+    id: Scalars['Int'];
 };
 
 /** Representation of a scholarship form */
@@ -338,6 +353,7 @@ export type Mutation = {
     createTalk: Talk;
     createTeacher: Teacher;
     createTestConvocatory: Scalars['Boolean'];
+    deleteCollege: DeleteCollege;
     deleteConvocatory: Scalars['Int'];
     signUpToTalk: SignUpToTalk;
     updateConvocatory: Convocatory;
@@ -379,6 +395,10 @@ export type MutationCreateTeacherArgs = {
     communeId: Scalars['Int'];
     newCollegeName: InputMaybe<Scalars['String']>;
     role: Scalars['String'];
+};
+
+export type MutationDeleteCollegeArgs = {
+    id: Scalars['Int'];
 };
 
 export type MutationDeleteConvocatoryArgs = {
@@ -435,6 +455,7 @@ export type Query = {
     applications: QueryApplicationsConnection;
     colleges: Array<College>;
     collegesByCommune: Array<College>;
+    collegesCursor: QueryCollegesCursorConnection;
     communes: Array<Commune>;
     communesByRegion: Array<Commune>;
     convocatories: Array<Convocatory>;
@@ -449,6 +470,7 @@ export type Query = {
     students: QueryStudentsConnection;
     talkById: Maybe<Talk>;
     talks: Array<Talk>;
+    teachers: QueryTeachersConnection;
     trackerCurrentStep: TrackerCurrentStep;
     user: Maybe<User>;
     users: QueryUsersConnection;
@@ -478,6 +500,14 @@ export type QueryApplicationsArgs = {
 
 export type QueryCollegesByCommuneArgs = {
     communeId: Scalars['Int'];
+};
+
+export type QueryCollegesCursorArgs = {
+    after: InputMaybe<Scalars['String']>;
+    before: InputMaybe<Scalars['String']>;
+    filter: CollegesFilter;
+    first: InputMaybe<Scalars['Int']>;
+    last: InputMaybe<Scalars['Int']>;
 };
 
 export type QueryCommunesByRegionArgs = {
@@ -519,6 +549,14 @@ export type QueryTalkByIdArgs = {
     id: Scalars['Int'];
 };
 
+export type QueryTeachersArgs = {
+    after: InputMaybe<Scalars['String']>;
+    before: InputMaybe<Scalars['String']>;
+    filter: TeachersFilter;
+    first: InputMaybe<Scalars['Int']>;
+    last: InputMaybe<Scalars['Int']>;
+};
+
 export type QueryUsersArgs = {
     after: InputMaybe<Scalars['String']>;
     before: InputMaybe<Scalars['String']>;
@@ -537,6 +575,18 @@ export type QueryApplicationsConnectionEdge = {
     __typename?: 'QueryApplicationsConnectionEdge';
     cursor: Scalars['String'];
     node: Application;
+};
+
+export type QueryCollegesCursorConnection = {
+    __typename?: 'QueryCollegesCursorConnection';
+    edges: Array<Maybe<QueryCollegesCursorConnectionEdge>>;
+    pageInfo: PageInfo;
+};
+
+export type QueryCollegesCursorConnectionEdge = {
+    __typename?: 'QueryCollegesCursorConnectionEdge';
+    cursor: Scalars['String'];
+    node: College;
 };
 
 export type QueryMyStudentsConnection = {
@@ -571,6 +621,18 @@ export type QueryStudentsConnection = {
 
 export type QueryStudentsConnectionEdge = {
     __typename?: 'QueryStudentsConnectionEdge';
+    cursor: Scalars['String'];
+    node: User;
+};
+
+export type QueryTeachersConnection = {
+    __typename?: 'QueryTeachersConnection';
+    edges: Array<Maybe<QueryTeachersConnectionEdge>>;
+    pageInfo: PageInfo;
+};
+
+export type QueryTeachersConnectionEdge = {
+    __typename?: 'QueryTeachersConnectionEdge';
     cursor: Scalars['String'];
     node: User;
 };
@@ -730,8 +792,13 @@ export enum TalkType {
 /** Representation of a teacher */
 export type Teacher = {
     __typename?: 'Teacher';
+    colleges: Array<College>;
     id: Scalars['ID'];
     user: User;
+};
+
+export type TeachersFilter = {
+    query: InputMaybe<Scalars['String']>;
 };
 
 /** Representation of the current step of the user */
@@ -761,6 +828,7 @@ export type User = {
     phoneCode: Maybe<Scalars['String']>;
     phoneNumber: Maybe<Scalars['String']>;
     studentProfile: Student;
+    teacherProfile: Teacher;
 };
 
 export type UsersFilter = {
@@ -1118,6 +1186,100 @@ export type AdminApplicationsTableFilterOptionsQuery = {
         form: { __typename?: 'Form'; id: string } | null;
     }>;
     colleges: Array<{ __typename?: 'College'; id: string; name: string }>;
+};
+
+export type AdminTeachersTableQueryVariables = Exact<{
+    after: InputMaybe<Scalars['String']>;
+    before: InputMaybe<Scalars['String']>;
+    first: InputMaybe<Scalars['Int']>;
+    last: InputMaybe<Scalars['Int']>;
+    filter: TeachersFilter;
+}>;
+
+export type AdminTeachersTableQuery = {
+    __typename?: 'Query';
+    teachers: {
+        __typename?: 'QueryTeachersConnection';
+        pageInfo: {
+            __typename?: 'PageInfo';
+            hasNextPage: boolean;
+            hasPreviousPage: boolean;
+            endCursor: string | null;
+        };
+        edges: Array<{
+            __typename?: 'QueryTeachersConnectionEdge';
+            cursor: string;
+            node: {
+                __typename?: 'User';
+                id: string;
+                dateJoined: string;
+                email: string;
+                firstName: string;
+                lastName: string;
+                teacherProfile: {
+                    __typename?: 'Teacher';
+                    colleges: Array<{ __typename?: 'College'; id: string; name: string }>;
+                };
+            };
+        } | null>;
+    };
+};
+
+export type DeleteCollegeMutationVariables = Exact<{
+    id: Scalars['Int'];
+}>;
+
+export type DeleteCollegeMutation = {
+    __typename?: 'Mutation';
+    deleteCollege:
+        | { __typename: 'ApiError'; message: string }
+        | { __typename: 'DeleteCollegeSuccess'; id: number };
+};
+
+export type AdminCollegesTableQueryVariables = Exact<{
+    after: InputMaybe<Scalars['String']>;
+    before: InputMaybe<Scalars['String']>;
+    first: InputMaybe<Scalars['Int']>;
+    last: InputMaybe<Scalars['Int']>;
+    filter: CollegesFilter;
+}>;
+
+export type AdminCollegesTableQuery = {
+    __typename?: 'Query';
+    collegesCursor: {
+        __typename?: 'QueryCollegesCursorConnection';
+        pageInfo: {
+            __typename?: 'PageInfo';
+            hasNextPage: boolean;
+            hasPreviousPage: boolean;
+            endCursor: string | null;
+        };
+        edges: Array<{
+            __typename?: 'QueryCollegesCursorConnectionEdge';
+            cursor: string;
+            node: {
+                __typename?: 'College';
+                id: string;
+                name: string;
+                communeId: string | null;
+            };
+        } | null>;
+    };
+};
+
+export type AdminCollegesTableFilterOptionsQueryVariables = Exact<{
+    [key: string]: never;
+}>;
+
+export type AdminCollegesTableFilterOptionsQuery = {
+    __typename?: 'Query';
+    regions: Array<{ __typename?: 'Region'; id: string; name: string }>;
+    communes: Array<{
+        __typename?: 'Commune';
+        id: string;
+        name: string;
+        regionId: string;
+    }>;
 };
 
 export type DeleteConvocatoryMutationVariables = Exact<{
@@ -3699,6 +3861,563 @@ export const AdminApplicationsTableFilterOptionsDocument = {
 } as unknown as DocumentNode<
     AdminApplicationsTableFilterOptionsQuery,
     AdminApplicationsTableFilterOptionsQueryVariables
+>;
+export const AdminTeachersTableDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'adminTeachersTable' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'after' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'before' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'first' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'filter' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: {
+                            kind: 'NamedType',
+                            name: { kind: 'Name', value: 'TeachersFilter' },
+                        },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teachers' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'after' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'after' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'before' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'before' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'first' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'first' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'last' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'last' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'filter' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'filter' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'pageInfo' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'hasNextPage',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'hasPreviousPage',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'endCursor',
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'edges' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'cursor' },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'node' },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'id',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'dateJoined',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'email',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'firstName',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'lastName',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'teacherProfile',
+                                                            },
+                                                            selectionSet: {
+                                                                kind: 'SelectionSet',
+                                                                selections: [
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: {
+                                                                            kind: 'Name',
+                                                                            value: 'colleges',
+                                                                        },
+                                                                        selectionSet: {
+                                                                            kind: 'SelectionSet',
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: 'Field',
+                                                                                    name: {
+                                                                                        kind: 'Name',
+                                                                                        value: 'id',
+                                                                                    },
+                                                                                },
+                                                                                {
+                                                                                    kind: 'Field',
+                                                                                    name: {
+                                                                                        kind: 'Name',
+                                                                                        value: 'name',
+                                                                                    },
+                                                                                },
+                                                                            ],
+                                                                        },
+                                                                    },
+                                                                ],
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<AdminTeachersTableQuery, AdminTeachersTableQueryVariables>;
+export const DeleteCollegeDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'deleteCollege' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'deleteCollege' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'id' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'id' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                        kind: 'NamedType',
+                                        name: {
+                                            kind: 'Name',
+                                            value: 'DeleteCollegeSuccess',
+                                        },
+                                    },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: '__typename',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'id' },
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                        kind: 'NamedType',
+                                        name: { kind: 'Name', value: 'ApiError' },
+                                    },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: '__typename',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'message' },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<DeleteCollegeMutation, DeleteCollegeMutationVariables>;
+export const AdminCollegesTableDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'adminCollegesTable' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'after' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'before' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'first' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'filter' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: {
+                            kind: 'NamedType',
+                            name: { kind: 'Name', value: 'CollegesFilter' },
+                        },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'collegesCursor' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'after' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'after' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'before' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'before' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'first' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'first' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'last' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'last' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'filter' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'filter' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'pageInfo' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'hasNextPage',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'hasPreviousPage',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'endCursor',
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'edges' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'cursor' },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'node' },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'id',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'name',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'communeId',
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<AdminCollegesTableQuery, AdminCollegesTableQueryVariables>;
+export const AdminCollegesTableFilterOptionsDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'adminCollegesTableFilterOptions' },
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'regions' },
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                            ],
+                        },
+                    },
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'communes' },
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'regionId' },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<
+    AdminCollegesTableFilterOptionsQuery,
+    AdminCollegesTableFilterOptionsQueryVariables
 >;
 export const DeleteConvocatoryDocument = {
     kind: 'Document',

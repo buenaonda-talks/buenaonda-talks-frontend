@@ -1,0 +1,12 @@
+mutation deleteCollege($id: Int!) {
+    deleteCollege(id: $id) {
+        ... on DeleteCollegeSuccess {
+            __typename
+            id
+        }
+        ... on ApiError {
+            __typename
+            message
+        }
+    }
+}

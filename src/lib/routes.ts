@@ -5,6 +5,13 @@ export const routesBuilder = {
     dashboard: '/dashboard',
     theProcess: '/becas-y-procesos',
 
+    colleges: '/dashboard/instituciones-educativas',
+    collegeById: (id: string) => `/dashboard/instituciones-educativas/${id}`,
+
+    teachers: '/dashboard/representantes-instituciones-educativas',
+    teacherById: (id: string) =>
+        `/dashboard/representantes-instituciones-educativas/${id}`,
+
     teacherUpcomingTalk: '/dashboard/proxima-charla',
 
     signupStudent: '/dashboard?signup=student',

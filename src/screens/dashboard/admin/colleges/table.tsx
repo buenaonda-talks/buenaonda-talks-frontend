@@ -18,8 +18,8 @@ import {
     CellContext as TanCellContext,
 } from '@tanstack/react-table';
 import {
-    useAdminStudentsTableFilterOptionsQuery,
-    useAdminStudentsTableInfiniteQuery,
+    useAdminEducationalInstitutionsTableFilterOptionsQuery,
+    useAdminEducationalInstitutionsTableInfiniteQuery,
 } from './query';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -28,8 +28,8 @@ import {
     AdminTableWrapper,
 } from '../shared/table';
 import {
-    AdminStudentsTableFilterOptionsQuery,
-    AdminStudentsTableQuery,
+    AdminCollegesTableFilterOptionsQuery,
+    AdminCollegesTableQuery,
 } from '@/api/graphql';
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
@@ -37,112 +37,80 @@ import { Input } from '@/components/ui/input';
 
 import throttle from 'lodash/throttle';
 import { AdminTableFilter } from '../shared/table-filter';
-import { format } from 'date-fns';
 import Link from 'next/link';
 import routesBuilder from '@/lib/routes';
 import { useUrlFilters } from '@/hooks/useUrlFilters';
 import { DashboardContentSafeSpace } from '../../shared/dashboard-content-safe-space';
 
-type Student = NonNullable<AdminStudentsTableQuery['students']['edges'][number]>['node'];
+type College = NonNullable<
+    NonNullable<AdminCollegesTableQuery['collegesCursor']>['edges'][number]
+>['node'];
 
-type CellContext<TData extends Student, TValue> = TanCellContext<TData, TValue> & {
-    convocatories: AdminStudentsTableFilterOptionsQuery['convocatories'];
-    colleges: AdminStudentsTableFilterOptionsQuery['colleges'];
+type CellContext<TData extends College, TValue> = TanCellContext<TData, TValue> & {
+    regions: AdminCollegesTableFilterOptionsQuery['regions'];
+    communes: AdminCollegesTableFilterOptionsQuery['communes'];
 };
 
-const columnHelper = createColumnHelper<Student>();
+const columnHelper = createColumnHelper<College>();
 const columns = [
     columnHelper.accessor('id', {
-        header: 'Estudiante',
+        header: 'Colegio',
         cell: (props) => {
-            const studentUser = props.row.original;
-            const { firstName, lastName, email } = studentUser;
+            const college = props.row.original;
 
             return (
                 <Link
-                    href={routesBuilder.studentById(studentUser.id)}
+                    href={routesBuilder.collegeById(college.id)}
                     className="block hover:underline"
                 >
-                    <span className="block text-sm font-semibold">
-                        {firstName} {lastName}
-                    </span>
-
-                    <span className="block text-sm text-muted-foreground">{email}</span>
+                    {college.name}
                 </Link>
             );
         },
+        size: 333,
     }),
-    columnHelper.accessor('phoneCode', {
-        header: 'Teléfono',
+    columnHelper.accessor('communeId', {
+        id: 'region',
+        header: 'Región',
         cell: (props) => {
-            const studentUser = props.row.original;
-            const { phoneCode, phoneNumber } = studentUser;
+            const scholarship = props.row.original;
+            const context = props as CellContext<College, string>;
 
-            if (!phoneCode || !phoneNumber) {
-                return '-';
-            }
-
-            return (
-                <div>
-                    <p className="text-sm font-semibold">
-                        +{phoneCode}
-                        {phoneNumber}
-                    </p>
-                </div>
+            const commune = context.communes.find(
+                (commune) => commune.id === scholarship.communeId,
             );
-        },
-    }),
-    columnHelper.accessor('studentProfile.collegeId', {
-        header: 'Colegio',
-        cell: (props) => {
-            const value = props.getValue();
-
-            if (!value) {
-                return '-';
-            }
-
-            const context = props as CellContext<Student, string | null>;
-            const college = context.colleges.find((college) => college.id === value);
-
-            return <div>{college?.name || '-'}</div>;
-        },
-    }),
-    columnHelper.accessor('studentProfile.convocatoryId', {
-        header: 'Convocatoria',
-        cell: (props) => {
-            const convocatoryId = props.getValue();
-            const context = props as CellContext<Student, string>;
-            const convocatory = context.convocatories.find(
-                (convocatory) => convocatory.id === convocatoryId,
+            const region = context.regions.find(
+                (region) => region.id === commune?.regionId,
             );
 
-            return <div>{convocatory?.privateLabel || '-'}</div>;
+            return <div>{region?.name || '-'}</div>;
         },
+        size: 333,
     }),
-
-    columnHelper.accessor('dateJoined', {
-        header: 'Se unió el',
+    columnHelper.accessor('communeId', {
+        id: 'commune',
+        header: 'Comuna',
         cell: (props) => {
-            const value = props.getValue();
-            return (
-                <div>
-                    <p>{format(value, 'dd/MM/yyyy')}</p>
-                    <p className="text-muted-foreground">
-                        a las {format(value, 'HH:mm')}
-                    </p>
-                </div>
+            const scholarship = props.row.original;
+            const context = props as CellContext<College, string>;
+
+            const commune = context.communes.find(
+                (commune) => commune.id === scholarship.communeId,
             );
+
+            return <div>{commune?.name || '-'}</div>;
         },
+        size: 333,
     }),
 ];
 
 type TableProps = {
-    data: Student[];
-    convocatories: AdminStudentsTableFilterOptionsQuery['convocatories'];
-    colleges: AdminStudentsTableFilterOptionsQuery['colleges'];
+    data: College[];
+    regions: AdminCollegesTableFilterOptionsQuery['regions'];
+    communes: AdminCollegesTableFilterOptionsQuery['communes'];
 };
 
-const StudentsTable = ({ data, convocatories, colleges }: TableProps) => {
+const CollegesTable = ({ data, communes, regions }: TableProps) => {
     const table = useReactTable({
         data,
         columns,
@@ -182,8 +150,8 @@ const StudentsTable = ({ data, convocatories, colleges }: TableProps) => {
                                 <TableCell key={cell.id}>
                                     {flexRender(cell.column.columnDef.cell, {
                                         ...cell.getContext(),
-                                        convocatories,
-                                        colleges,
+                                        regions,
+                                        communes,
                                     })}
                                 </TableCell>
                             ))}
@@ -201,17 +169,18 @@ const StudentsTable = ({ data, convocatories, colleges }: TableProps) => {
     );
 };
 
-const useStudentsFilters = () => {
+const useTableFilters = () => {
     return useUrlFilters({
         query: { type: 'string' },
-        status: { type: 'multiple-string' },
-        convocatory: { type: 'multiple-int' },
-        college: { type: 'multiple-int' },
+        communes: { type: 'multiple-int' },
+        regions: { type: 'multiple-int' },
     });
 };
 
-type FiltersProps = ReturnType<typeof useStudentsFilters> & {
-    queryResult: ReturnType<typeof useAdminStudentsTableFilterOptionsQuery>;
+type FiltersProps = ReturnType<typeof useTableFilters> & {
+    queryResult: ReturnType<
+        typeof useAdminEducationalInstitutionsTableFilterOptionsQuery
+    >;
 };
 
 const Filters = ({ filters, setFilter, queryResult }: FiltersProps) => {
@@ -219,7 +188,7 @@ const Filters = ({ filters, setFilter, queryResult }: FiltersProps) => {
         return (
             <div className="mb-4 flex space-x-2">
                 <Input
-                    placeholder="Buscar por email, nombre, apellido o teléfono"
+                    placeholder="Buscar por nombre"
                     value={filters.query || ''}
                     onChange={(e) => {
                         setFilter('query', e.target.value);
@@ -240,7 +209,7 @@ const Filters = ({ filters, setFilter, queryResult }: FiltersProps) => {
         return (
             <div className="mb-4 flex space-x-2">
                 <Input
-                    placeholder="Buscar por email, nombre, apellido o teléfono"
+                    placeholder="Buscar por nombre"
                     value={filters.query || ''}
                     onChange={(e) => {
                         setFilter('query', e.target.value);
@@ -251,7 +220,7 @@ const Filters = ({ filters, setFilter, queryResult }: FiltersProps) => {
         );
     }
 
-    const { convocatories, colleges } = queryResult.data;
+    const { communes, regions } = queryResult.data;
 
     return (
         <div className="mb-4 flex space-x-2">
@@ -265,43 +234,45 @@ const Filters = ({ filters, setFilter, queryResult }: FiltersProps) => {
             />
 
             <AdminTableFilter
-                title="Filtrar por convocatoria"
-                options={convocatories.map((convocatory) => {
+                title="Filtrar por región"
+                options={regions.map((region) => {
                     return {
-                        value: convocatory.id,
-                        label: convocatory.privateLabel,
+                        value: region.id,
+                        label: region.name,
                     };
                 })}
                 onSelect={(values) => {
                     setFilter(
-                        'convocatory',
+                        'regions',
                         values.map((x) => parseInt(x, 10)),
                     );
                 }}
-                selectedValues={filters.convocatory?.map((x) => x.toString())}
-                onClear={() => {
-                    setFilter('convocatory', []);
-                }}
+                selectedValues={filters.regions?.map((x) => x.toString())}
             />
 
             <AdminTableFilter
-                title="Filtrar por colegio"
-                options={colleges.map((college) => {
-                    return {
-                        value: college.id,
-                        label: college.name,
-                    };
-                })}
+                title="Filtrar por comuna"
+                options={communes
+                    .filter((commune) => {
+                        if (filters.regions) {
+                            return filters.regions.includes(parseInt(commune.regionId));
+                        }
+
+                        return true;
+                    })
+                    .map((commune) => {
+                        return {
+                            value: commune.id,
+                            label: commune.name,
+                        };
+                    })}
                 onSelect={(values) => {
                     setFilter(
-                        'college',
+                        'communes',
                         values.map((x) => parseInt(x, 10)),
                     );
                 }}
-                selectedValues={filters.college?.map((x) => x.toString())}
-                onClear={() => {
-                    setFilter('college', []);
-                }}
+                selectedValues={filters.communes?.map((x) => x.toString())}
             />
         </div>
     );
@@ -311,7 +282,7 @@ const Wrapper = ({ children }: PropsWithChildren) => {
     return (
         <DashboardContentSafeSpace>
             <div className="mb-4 flex items-center justify-between">
-                <TypographyAdminH1>Estudiantes</TypographyAdminH1>
+                <TypographyAdminH1>Instituciones Educativas</TypographyAdminH1>
             </div>
 
             {children}
@@ -319,20 +290,20 @@ const Wrapper = ({ children }: PropsWithChildren) => {
     );
 };
 
-export const AdminStudentsTableContainer = () => {
-    const studentUserFilters = useStudentsFilters();
-    const { filters } = studentUserFilters;
+export const AdminCollegesTableContainer = () => {
+    const tableFilters = useTableFilters();
+    const { filters } = tableFilters;
 
     const [queryToSearch, setQueryToSearch] = useState<string | null>(null);
 
     const [ref, inView] = useInView();
 
-    const query = useAdminStudentsTableInfiniteQuery({
+    const query = useAdminEducationalInstitutionsTableInfiniteQuery({
         query: queryToSearch && queryToSearch.length > 3 ? queryToSearch : null,
-        collegeIDs: filters.college || null,
-        convocatoryIDs: filters.convocatory || null,
+        communeIDs: filters.communes || null,
+        regionsIDs: filters.regions || null,
     });
-    const filterOptionsQuery = useAdminStudentsTableFilterOptionsQuery();
+    const filterOptionsQuery = useAdminEducationalInstitutionsTableFilterOptionsQuery();
 
     const { hasNextPage, fetchNextPage, isFetchingNextPage } = query;
 
@@ -359,7 +330,7 @@ export const AdminStudentsTableContainer = () => {
     if (query.isPending || filterOptionsQuery.isPending) {
         return (
             <Wrapper>
-                <Filters {...studentUserFilters} queryResult={filterOptionsQuery} />
+                <Filters {...tableFilters} queryResult={filterOptionsQuery} />
 
                 <AdminTableWrapper>
                     <Table>
@@ -397,7 +368,7 @@ export const AdminStudentsTableContainer = () => {
     if (query.isError || filterOptionsQuery.isError) {
         return (
             <Wrapper>
-                <Filters {...studentUserFilters} queryResult={filterOptionsQuery} />
+                <Filters {...tableFilters} queryResult={filterOptionsQuery} />
 
                 <AdminTableWrapper>
                     <AdminTableError
@@ -414,14 +385,16 @@ export const AdminStudentsTableContainer = () => {
 
     return (
         <Wrapper>
-            <Filters {...studentUserFilters} queryResult={filterOptionsQuery} />
+            <Filters {...tableFilters} queryResult={filterOptionsQuery} />
 
             <AdminTableWrapper>
-                <StudentsTable
-                    convocatories={filterOptionsQuery.data.convocatories}
-                    colleges={filterOptionsQuery.data.colleges}
+                <CollegesTable
+                    communes={filterOptionsQuery.data.communes}
+                    regions={filterOptionsQuery.data.regions}
                     data={query.data.pages
-                        .map((page) => page.students.edges.map((edge) => edge!.node))
+                        .map((page) =>
+                            page.collegesCursor.edges.map((edge) => edge!.node),
+                        )
                         .flat()}
                 />
             </AdminTableWrapper>

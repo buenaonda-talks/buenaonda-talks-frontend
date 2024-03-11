@@ -15,52 +15,39 @@ import {
     getCoreRowModel,
     getSortedRowModel,
     useReactTable,
-    CellContext as TanCellContext,
 } from '@tanstack/react-table';
-import {
-    useAdminStudentsTableFilterOptionsQuery,
-    useAdminStudentsTableInfiniteQuery,
-} from './query';
+import { useAdminTeachersTableInfiniteQuery } from './query';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
     AdminTableError,
     AdminTableInifiteQueryLoader,
     AdminTableWrapper,
 } from '../shared/table';
-import {
-    AdminStudentsTableFilterOptionsQuery,
-    AdminStudentsTableQuery,
-} from '@/api/graphql';
+import { AdminTeachersTableQuery } from '@/api/graphql';
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Input } from '@/components/ui/input';
 
 import throttle from 'lodash/throttle';
-import { AdminTableFilter } from '../shared/table-filter';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import routesBuilder from '@/lib/routes';
 import { useUrlFilters } from '@/hooks/useUrlFilters';
-import { DashboardContentSafeSpace } from '../../shared/dashboard-content-safe-space';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 
-type Student = NonNullable<AdminStudentsTableQuery['students']['edges'][number]>['node'];
+type Teacher = NonNullable<AdminTeachersTableQuery['teachers']['edges'][number]>['node'];
 
-type CellContext<TData extends Student, TValue> = TanCellContext<TData, TValue> & {
-    convocatories: AdminStudentsTableFilterOptionsQuery['convocatories'];
-    colleges: AdminStudentsTableFilterOptionsQuery['colleges'];
-};
-
-const columnHelper = createColumnHelper<Student>();
+const columnHelper = createColumnHelper<Teacher>();
 const columns = [
     columnHelper.accessor('id', {
-        header: 'Estudiante',
+        header: 'Usuario',
         cell: (props) => {
-            const studentUser = props.row.original;
-            const { firstName, lastName, email } = studentUser;
+            const teacher = props.row.original;
+            const { firstName, lastName, email } = teacher;
 
             return (
                 <Link
-                    href={routesBuilder.studentById(studentUser.id)}
+                    href={routesBuilder.teacherById(teacher.id)}
                     className="block hover:underline"
                 >
                     <span className="block text-sm font-semibold">
@@ -72,54 +59,32 @@ const columns = [
             );
         },
     }),
-    columnHelper.accessor('phoneCode', {
-        header: 'Teléfono',
+    columnHelper.accessor('teacherProfile.colleges', {
+        header: 'Colegios',
         cell: (props) => {
-            const studentUser = props.row.original;
-            const { phoneCode, phoneNumber } = studentUser;
+            const value = props.getValue();
 
-            if (!phoneCode || !phoneNumber) {
-                return '-';
+            if (!value.length) {
+                return <div className="text-muted-foreground">No asignado</div>;
             }
 
             return (
-                <div>
-                    <p className="text-sm font-semibold">
-                        +{phoneCode}
-                        {phoneNumber}
-                    </p>
+                <div className="-ml-4 -mt-2 flex flex-wrap">
+                    {value.map((college) => {
+                        return (
+                            <Badge
+                                key={college.id}
+                                className="ml-4 mt-2"
+                                variant="outline"
+                            >
+                                {college.name}
+                            </Badge>
+                        );
+                    })}
                 </div>
             );
         },
     }),
-    columnHelper.accessor('studentProfile.collegeId', {
-        header: 'Colegio',
-        cell: (props) => {
-            const value = props.getValue();
-
-            if (!value) {
-                return '-';
-            }
-
-            const context = props as CellContext<Student, string | null>;
-            const college = context.colleges.find((college) => college.id === value);
-
-            return <div>{college?.name || '-'}</div>;
-        },
-    }),
-    columnHelper.accessor('studentProfile.convocatoryId', {
-        header: 'Convocatoria',
-        cell: (props) => {
-            const convocatoryId = props.getValue();
-            const context = props as CellContext<Student, string>;
-            const convocatory = context.convocatories.find(
-                (convocatory) => convocatory.id === convocatoryId,
-            );
-
-            return <div>{convocatory?.privateLabel || '-'}</div>;
-        },
-    }),
-
     columnHelper.accessor('dateJoined', {
         header: 'Se unió el',
         cell: (props) => {
@@ -136,13 +101,34 @@ const columns = [
     }),
 ];
 
-type TableProps = {
-    data: Student[];
-    convocatories: AdminStudentsTableFilterOptionsQuery['convocatories'];
-    colleges: AdminStudentsTableFilterOptionsQuery['colleges'];
+const useStudentsFilters = () => {
+    return useUrlFilters({
+        query: { type: 'string' },
+    });
 };
 
-const StudentsTable = ({ data, convocatories, colleges }: TableProps) => {
+type FiltersProps = ReturnType<typeof useStudentsFilters>;
+
+const Filters = ({ filters, setFilter }: FiltersProps) => {
+    return (
+        <div className="mb-4 flex space-x-2">
+            <Input
+                placeholder="Buscar por email, nombre, apellido o teléfono"
+                value={filters.query || ''}
+                onChange={(e) => {
+                    setFilter('query', e.target.value);
+                }}
+                className="max-w-xs"
+            />
+        </div>
+    );
+};
+
+type TableProps = {
+    data: Teacher[];
+};
+
+const TeachersTable = ({ data }: TableProps) => {
     const table = useReactTable({
         data,
         columns,
@@ -182,8 +168,6 @@ const StudentsTable = ({ data, convocatories, colleges }: TableProps) => {
                                 <TableCell key={cell.id}>
                                     {flexRender(cell.column.columnDef.cell, {
                                         ...cell.getContext(),
-                                        convocatories,
-                                        colleges,
                                     })}
                                 </TableCell>
                             ))}
@@ -201,7 +185,7 @@ const StudentsTable = ({ data, convocatories, colleges }: TableProps) => {
     );
 };
 
-const useStudentsFilters = () => {
+const useTeachersFilters = () => {
     return useUrlFilters({
         query: { type: 'string' },
         status: { type: 'multiple-string' },
@@ -210,129 +194,29 @@ const useStudentsFilters = () => {
     });
 };
 
-type FiltersProps = ReturnType<typeof useStudentsFilters> & {
-    queryResult: ReturnType<typeof useAdminStudentsTableFilterOptionsQuery>;
-};
-
-const Filters = ({ filters, setFilter, queryResult }: FiltersProps) => {
-    if (queryResult.isPending) {
-        return (
-            <div className="mb-4 flex space-x-2">
-                <Input
-                    placeholder="Buscar por email, nombre, apellido o teléfono"
-                    value={filters.query || ''}
-                    onChange={(e) => {
-                        setFilter('query', e.target.value);
-                    }}
-                    className="max-w-xs"
-                />
-
-                <Skeleton className="h-10 w-40" />
-
-                <Skeleton className="h-10 w-40" />
-
-                <Skeleton className="h-10 w-40" />
-            </div>
-        );
-    }
-
-    if (queryResult.isError) {
-        return (
-            <div className="mb-4 flex space-x-2">
-                <Input
-                    placeholder="Buscar por email, nombre, apellido o teléfono"
-                    value={filters.query || ''}
-                    onChange={(e) => {
-                        setFilter('query', e.target.value);
-                    }}
-                    className="max-w-xs"
-                />
-            </div>
-        );
-    }
-
-    const { convocatories, colleges } = queryResult.data;
-
+const Wrapper = ({ children }: PropsWithChildren) => {
     return (
-        <div className="mb-4 flex space-x-2">
-            <Input
-                placeholder="Buscar por email, nombre, apellido o teléfono"
-                value={filters.query || ''}
-                onChange={(e) => {
-                    setFilter('query', e.target.value);
-                }}
-                className="max-w-xs"
-            />
+        <div className="px-6 pb-8 pt-6">
+            <div className="mb-4 flex items-center justify-between">
+                <TypographyAdminH1>Usuarios</TypographyAdminH1>
+            </div>
 
-            <AdminTableFilter
-                title="Filtrar por convocatoria"
-                options={convocatories.map((convocatory) => {
-                    return {
-                        value: convocatory.id,
-                        label: convocatory.privateLabel,
-                    };
-                })}
-                onSelect={(values) => {
-                    setFilter(
-                        'convocatory',
-                        values.map((x) => parseInt(x, 10)),
-                    );
-                }}
-                selectedValues={filters.convocatory?.map((x) => x.toString())}
-                onClear={() => {
-                    setFilter('convocatory', []);
-                }}
-            />
-
-            <AdminTableFilter
-                title="Filtrar por colegio"
-                options={colleges.map((college) => {
-                    return {
-                        value: college.id,
-                        label: college.name,
-                    };
-                })}
-                onSelect={(values) => {
-                    setFilter(
-                        'college',
-                        values.map((x) => parseInt(x, 10)),
-                    );
-                }}
-                selectedValues={filters.college?.map((x) => x.toString())}
-                onClear={() => {
-                    setFilter('college', []);
-                }}
-            />
+            {children}
         </div>
     );
 };
 
-const Wrapper = ({ children }: PropsWithChildren) => {
-    return (
-        <DashboardContentSafeSpace>
-            <div className="mb-4 flex items-center justify-between">
-                <TypographyAdminH1>Estudiantes</TypographyAdminH1>
-            </div>
-
-            {children}
-        </DashboardContentSafeSpace>
-    );
-};
-
-export const AdminStudentsTableContainer = () => {
-    const studentUserFilters = useStudentsFilters();
-    const { filters } = studentUserFilters;
+export const AdminTeachersTableContainer = () => {
+    const teacherFilters = useTeachersFilters();
+    const { filters } = teacherFilters;
 
     const [queryToSearch, setQueryToSearch] = useState<string | null>(null);
 
     const [ref, inView] = useInView();
 
-    const query = useAdminStudentsTableInfiniteQuery({
+    const query = useAdminTeachersTableInfiniteQuery({
         query: queryToSearch && queryToSearch.length > 3 ? queryToSearch : null,
-        collegeIDs: filters.college || null,
-        convocatoryIDs: filters.convocatory || null,
     });
-    const filterOptionsQuery = useAdminStudentsTableFilterOptionsQuery();
 
     const { hasNextPage, fetchNextPage, isFetchingNextPage } = query;
 
@@ -356,10 +240,10 @@ export const AdminStudentsTableContainer = () => {
         }
     }, [filters.query, triggerSearch]);
 
-    if (query.isPending || filterOptionsQuery.isPending) {
+    if (query.isPending) {
         return (
             <Wrapper>
-                <Filters {...studentUserFilters} queryResult={filterOptionsQuery} />
+                <Filters {...teacherFilters} />
 
                 <AdminTableWrapper>
                     <Table>
@@ -394,10 +278,10 @@ export const AdminStudentsTableContainer = () => {
         );
     }
 
-    if (query.isError || filterOptionsQuery.isError) {
+    if (query.isError) {
         return (
             <Wrapper>
-                <Filters {...studentUserFilters} queryResult={filterOptionsQuery} />
+                <Filters {...teacherFilters} />
 
                 <AdminTableWrapper>
                     <AdminTableError
@@ -414,14 +298,12 @@ export const AdminStudentsTableContainer = () => {
 
     return (
         <Wrapper>
-            <Filters {...studentUserFilters} queryResult={filterOptionsQuery} />
+            <Filters {...teacherFilters} />
 
             <AdminTableWrapper>
-                <StudentsTable
-                    convocatories={filterOptionsQuery.data.convocatories}
-                    colleges={filterOptionsQuery.data.colleges}
+                <TeachersTable
                     data={query.data.pages
-                        .map((page) => page.students.edges.map((edge) => edge!.node))
+                        .map((page) => page.teachers.edges.map((edge) => edge!.node))
                         .flat()}
                 />
             </AdminTableWrapper>

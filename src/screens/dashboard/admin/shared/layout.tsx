@@ -8,6 +8,8 @@ import {
     PanelsTopLeftIcon,
     MegaphoneIcon,
     UserIcon,
+    BuildingIcon,
+    BookUserIcon,
 } from 'lucide-react';
 import routesBuilder from '@/lib/routes';
 import { PropsWithChildren } from 'react';
@@ -17,7 +19,7 @@ import {
 } from '../../shared/base-dashboard-layout';
 import { useUserQuery } from '@/api/query/fetch-user-client';
 
-const ADMIN_DASHBOARD_LINKS: DashboardLinkType[] = [
+const ADMINS_LINKS_1: DashboardLinkType[] = [
     {
         icon: GraduationCapIcon,
         href: routesBuilder.students,
@@ -32,6 +34,19 @@ const ADMIN_DASHBOARD_LINKS: DashboardLinkType[] = [
         icon: Trophy,
         href: routesBuilder.scholarships,
         label: 'Becas',
+    },
+];
+
+const ADMINS_LINKS_2: DashboardLinkType[] = [
+    {
+        icon: BuildingIcon,
+        href: routesBuilder.colleges,
+        label: 'Instituciones educativas',
+    },
+    {
+        icon: BookUserIcon,
+        href: routesBuilder.teachers,
+        label: 'Representantes',
     },
 ];
 
@@ -52,7 +67,17 @@ const TopLinks = () => {
                 <p className="text-sm font-bold">Estudiantes</p>
 
                 <div className="space-y-1">
-                    {ADMIN_DASHBOARD_LINKS.map((link) => (
+                    {ADMINS_LINKS_1.map((link) => (
+                        <DashboardButtonLink key={link.href} link={link} />
+                    ))}
+                </div>
+            </div>
+
+            <div className="space-y-2">
+                <p className="text-sm font-bold">Instituciones educativas</p>
+
+                <div className="space-y-1">
+                    {ADMINS_LINKS_2.map((link) => (
                         <DashboardButtonLink key={link.href} link={link} />
                     ))}
                 </div>

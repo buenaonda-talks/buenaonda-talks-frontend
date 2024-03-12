@@ -1,5 +1,9 @@
-mutation CreateStudent($communeId: Int!, $collegeId: Int, $newCollegeName: String) {
-    createStudent(
+mutation CreateMyStudentProfile(
+    $communeId: Int!
+    $collegeId: Int
+    $newCollegeName: String
+) {
+    createMyStudentProfile(
         communeId: $communeId
         collegeId: $collegeId
         newCollegeName: $newCollegeName
@@ -8,13 +12,13 @@ mutation CreateStudent($communeId: Int!, $collegeId: Int, $newCollegeName: Strin
     }
 }
 
-mutation CreateTeacher(
+mutation CreateMyTeacherProfile(
     $communeId: Int!
     $role: String!
     $collegeId: Int
     $newCollegeName: String
 ) {
-    createTeacher(
+    createMyTeacherProfile(
         communeId: $communeId
         role: $role
         collegeId: $collegeId

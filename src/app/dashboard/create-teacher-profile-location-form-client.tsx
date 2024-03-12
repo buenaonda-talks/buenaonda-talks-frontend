@@ -1,8 +1,8 @@
 import { fetchClient } from '@/api/fetch-client';
 import {
-    CreateTeacherDocument,
-    CreateTeacherMutationVariables,
-    CreateTeacherMutation,
+    CreateMyTeacherProfileDocument,
+    CreateMyTeacherProfileMutationVariables,
+    CreateMyTeacherProfileMutation,
 } from '@/api/graphql';
 import { useAuth } from '@clerk/nextjs';
 import { useMutation } from '@tanstack/react-query';
@@ -73,9 +73,13 @@ const useCollegesByCommune = (communeId: number | undefined | null) => {
 
 const useCreateTeacher = () => {
     const { getToken } = useAuth();
-    return useMutation<CreateTeacherMutation, Error, CreateTeacherMutationVariables>({
+    return useMutation<
+        CreateMyTeacherProfileMutation,
+        Error,
+        CreateMyTeacherProfileMutationVariables
+    >({
         mutationFn: (data) => {
-            return fetchClient(CreateTeacherDocument, data, {
+            return fetchClient(CreateMyTeacherProfileDocument, data, {
                 getToken,
             });
         },

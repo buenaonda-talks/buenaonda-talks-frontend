@@ -165,6 +165,11 @@ export type College = {
     normalizedName: Scalars['String'];
 };
 
+export type CollegeInput = {
+    communeId: Scalars['Int'];
+    name: Scalars['String'];
+};
+
 /** Representation of a college-teacher relation */
 export type CollegeTeacherRelation = {
     __typename?: 'CollegeTeacherRelation';
@@ -347,19 +352,25 @@ export type Mutation = {
     __typename?: 'Mutation';
     applyToScholarship: ApplyToScholarship;
     assistToTalk: AssistToTalk;
+    createCollege: College;
     createConvocatory: Convocatory;
     createForm: Form;
-    createStudent: Student;
+    createMyStudentProfile: Student;
+    createMyTeacherProfile: Teacher;
     createTalk: Talk;
-    createTeacher: Teacher;
     createTestConvocatory: Scalars['Boolean'];
+    createVerifiedTeacherProfile: Teacher;
     deleteCollege: DeleteCollege;
     deleteConvocatory: Scalars['Int'];
+    mergeColleges: Scalars['Boolean'];
     signUpToTalk: SignUpToTalk;
+    updateCollege: College;
     updateConvocatory: Convocatory;
     updateForm: Form;
     updateScholarshipApplicationStatus: Application;
+    updateStudentCollege: Student;
     updateTalk: Talk;
+    updateTeacher: Teacher;
 };
 
 export type MutationApplyToScholarshipArgs = {
@@ -372,6 +383,10 @@ export type MutationAssistToTalkArgs = {
     talkUuid: Scalars['String'];
 };
 
+export type MutationCreateCollegeArgs = {
+    input: CollegeInput;
+};
+
 export type MutationCreateConvocatoryArgs = {
     input: ConvocatoryInput;
 };
@@ -380,21 +395,29 @@ export type MutationCreateFormArgs = {
     input: FormInput;
 };
 
-export type MutationCreateStudentArgs = {
+export type MutationCreateMyStudentProfileArgs = {
     collegeId: InputMaybe<Scalars['Int']>;
     communeId: Scalars['Int'];
     newCollegeName: InputMaybe<Scalars['String']>;
+};
+
+export type MutationCreateMyTeacherProfileArgs = {
+    collegeId: InputMaybe<Scalars['Int']>;
+    communeId: Scalars['Int'];
+    newCollegeName: InputMaybe<Scalars['String']>;
+    role: Scalars['String'];
 };
 
 export type MutationCreateTalkArgs = {
     input: TalkInput;
 };
 
-export type MutationCreateTeacherArgs = {
+export type MutationCreateVerifiedTeacherProfileArgs = {
     collegeId: InputMaybe<Scalars['Int']>;
     communeId: Scalars['Int'];
     newCollegeName: InputMaybe<Scalars['String']>;
     role: Scalars['String'];
+    userId: Scalars['Int'];
 };
 
 export type MutationDeleteCollegeArgs = {
@@ -405,8 +428,18 @@ export type MutationDeleteConvocatoryArgs = {
     id: Scalars['Int'];
 };
 
+export type MutationMergeCollegesArgs = {
+    sourceCollegeId: Scalars['Int'];
+    targetCollegeId: Scalars['Int'];
+};
+
 export type MutationSignUpToTalkArgs = {
     talkUuid: Scalars['String'];
+};
+
+export type MutationUpdateCollegeArgs = {
+    id: Scalars['Int'];
+    input: CollegeInput;
 };
 
 export type MutationUpdateConvocatoryArgs = {
@@ -427,9 +460,22 @@ export type MutationUpdateScholarshipApplicationStatusArgs = {
     status: ApplicationStatus;
 };
 
+export type MutationUpdateStudentCollegeArgs = {
+    collegeId: InputMaybe<Scalars['Int']>;
+    collegeInput: InputMaybe<CollegeInput>;
+    studentId: Scalars['Int'];
+};
+
 export type MutationUpdateTalkArgs = {
     id: Scalars['Int'];
     input: TalkInput;
+};
+
+export type MutationUpdateTeacherArgs = {
+    colleges: Array<UpdateTeacherCollegesInput>;
+    collegesToRemove: Array<Scalars['Int']>;
+    isVerified: InputMaybe<Scalars['Boolean']>;
+    teacherId: Scalars['Int'];
 };
 
 /** Representation of an organization */
@@ -813,6 +859,11 @@ export type TrackerCurrentStep = {
     platziTalk: Maybe<Talk>;
 };
 
+export type UpdateTeacherCollegesInput = {
+    collegeId: Scalars['Int'];
+    rol: Scalars['String'];
+};
+
 /** Representation of a user */
 export type User = {
     __typename?: 'User';
@@ -1023,27 +1074,27 @@ export type FormByUuidQuery = {
     } | null;
 };
 
-export type CreateStudentMutationVariables = Exact<{
+export type CreateMyStudentProfileMutationVariables = Exact<{
     communeId: Scalars['Int'];
     collegeId: InputMaybe<Scalars['Int']>;
     newCollegeName: InputMaybe<Scalars['String']>;
 }>;
 
-export type CreateStudentMutation = {
+export type CreateMyStudentProfileMutation = {
     __typename?: 'Mutation';
-    createStudent: { __typename?: 'Student'; id: string };
+    createMyStudentProfile: { __typename?: 'Student'; id: string };
 };
 
-export type CreateTeacherMutationVariables = Exact<{
+export type CreateMyTeacherProfileMutationVariables = Exact<{
     communeId: Scalars['Int'];
     role: Scalars['String'];
     collegeId: InputMaybe<Scalars['Int']>;
     newCollegeName: InputMaybe<Scalars['String']>;
 }>;
 
-export type CreateTeacherMutation = {
+export type CreateMyTeacherProfileMutation = {
     __typename?: 'Mutation';
-    createTeacher: { __typename?: 'Teacher'; id: string };
+    createMyTeacherProfile: { __typename?: 'Teacher'; id: string };
 };
 
 export type UpdateScholarshipApplicationStatusMutationVariables = Exact<{
@@ -2875,13 +2926,13 @@ export const FormByUuidDocument = {
         },
     ],
 } as unknown as DocumentNode<FormByUuidQuery, FormByUuidQueryVariables>;
-export const CreateStudentDocument = {
+export const CreateMyStudentProfileDocument = {
     kind: 'Document',
     definitions: [
         {
             kind: 'OperationDefinition',
             operation: 'mutation',
-            name: { kind: 'Name', value: 'CreateStudent' },
+            name: { kind: 'Name', value: 'CreateMyStudentProfile' },
             variableDefinitions: [
                 {
                     kind: 'VariableDefinition',
@@ -2916,7 +2967,7 @@ export const CreateStudentDocument = {
                 selections: [
                     {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'createStudent' },
+                        name: { kind: 'Name', value: 'createMyStudentProfile' },
                         arguments: [
                             {
                                 kind: 'Argument',
@@ -2954,14 +3005,17 @@ export const CreateStudentDocument = {
             },
         },
     ],
-} as unknown as DocumentNode<CreateStudentMutation, CreateStudentMutationVariables>;
-export const CreateTeacherDocument = {
+} as unknown as DocumentNode<
+    CreateMyStudentProfileMutation,
+    CreateMyStudentProfileMutationVariables
+>;
+export const CreateMyTeacherProfileDocument = {
     kind: 'Document',
     definitions: [
         {
             kind: 'OperationDefinition',
             operation: 'mutation',
-            name: { kind: 'Name', value: 'CreateTeacher' },
+            name: { kind: 'Name', value: 'CreateMyTeacherProfile' },
             variableDefinitions: [
                 {
                     kind: 'VariableDefinition',
@@ -3007,7 +3061,7 @@ export const CreateTeacherDocument = {
                 selections: [
                     {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'createTeacher' },
+                        name: { kind: 'Name', value: 'createMyTeacherProfile' },
                         arguments: [
                             {
                                 kind: 'Argument',
@@ -3053,7 +3107,10 @@ export const CreateTeacherDocument = {
             },
         },
     ],
-} as unknown as DocumentNode<CreateTeacherMutation, CreateTeacherMutationVariables>;
+} as unknown as DocumentNode<
+    CreateMyTeacherProfileMutation,
+    CreateMyTeacherProfileMutationVariables
+>;
 export const UpdateScholarshipApplicationStatusDocument = {
     kind: 'Document',
     definitions: [

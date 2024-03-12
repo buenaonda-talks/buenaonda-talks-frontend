@@ -1,13 +1,13 @@
 import { fetchClient } from '@/api/fetch-client';
-import {
-    CreateStudentDocument,
-    CreateStudentMutation,
-    CreateStudentMutationVariables,
-} from '@/api/graphql';
 import { useAuth } from '@clerk/nextjs';
 import { useMutation } from '@tanstack/react-query';
 
-import { CreateProfileRegionsQuery } from '@/api/graphql';
+import {
+    CreateMyStudentProfileDocument,
+    CreateMyStudentProfileMutation,
+    CreateMyStudentProfileMutationVariables,
+    CreateProfileRegionsQuery,
+} from '@/api/graphql';
 import { useToast } from '@/components/ui/use-toast';
 
 import { UserButton } from '@clerk/nextjs';
@@ -73,9 +73,13 @@ const useCollegesByCommune = (communeId: number | undefined | null) => {
 
 const useCreateStudent = () => {
     const { getToken } = useAuth();
-    return useMutation<CreateStudentMutation, Error, CreateStudentMutationVariables>({
+    return useMutation<
+        CreateMyStudentProfileMutation,
+        Error,
+        CreateMyStudentProfileMutationVariables
+    >({
         mutationFn: (data) => {
-            return fetchClient(CreateStudentDocument, data, {
+            return fetchClient(CreateMyStudentProfileDocument, data, {
                 getToken,
             });
         },

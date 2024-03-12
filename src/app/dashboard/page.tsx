@@ -28,7 +28,7 @@ const Page = async () => {
 
     if (user?.user?.isTeacher) {
         return (
-            <TeacherLayout>
+            <TeacherLayout requiresVerification={true} user={user.user}>
                 <TeacherStudentsTableContainer />
             </TeacherLayout>
         );

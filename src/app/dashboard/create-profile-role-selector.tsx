@@ -25,7 +25,7 @@ export const CreateProfileRoleSelector = ({ onContinue }: Props) => {
 
     return (
         <div className="flex min-h-screen items-center">
-            <div className="fixed inset-x-0 top-0 bg-white">
+            <div className="fixed inset-x-0 top-0 z-50 bg-white">
                 <div className="border-b border-gray-100 py-4 shadow-sm">
                     <div className="container">
                         <div className="flex items-center justify-between space-x-4">

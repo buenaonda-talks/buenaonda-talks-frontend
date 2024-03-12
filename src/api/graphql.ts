@@ -362,6 +362,7 @@ export type Mutation = {
     createVerifiedTeacherProfile: Teacher;
     deleteCollege: DeleteCollege;
     deleteConvocatory: Scalars['Int'];
+    deleteUser: Scalars['Boolean'];
     mergeColleges: Scalars['Boolean'];
     signUpToTalk: SignUpToTalk;
     updateCollege: College;
@@ -426,6 +427,10 @@ export type MutationDeleteCollegeArgs = {
 
 export type MutationDeleteConvocatoryArgs = {
     id: Scalars['Int'];
+};
+
+export type MutationDeleteUserArgs = {
+    userId: Scalars['Int'];
 };
 
 export type MutationMergeCollegesArgs = {
@@ -840,6 +845,7 @@ export type Teacher = {
     __typename?: 'Teacher';
     colleges: Array<College>;
     id: Scalars['ID'];
+    isVerified: Scalars['Boolean'];
     user: User;
 };
 
@@ -879,7 +885,7 @@ export type User = {
     phoneCode: Maybe<Scalars['String']>;
     phoneNumber: Maybe<Scalars['String']>;
     studentProfile: Student;
-    teacherProfile: Teacher;
+    teacherProfile: Maybe<Teacher>;
 };
 
 export type UsersFilter = {
@@ -900,6 +906,7 @@ export type UserQuery = {
         isTeacher: boolean;
         isAdmin: boolean;
         isSuperAdmin: boolean;
+        teacherProfile: { __typename?: 'Teacher'; isVerified: boolean } | null;
     } | null;
 };
 
@@ -1270,7 +1277,7 @@ export type AdminTeachersTableQuery = {
                 teacherProfile: {
                     __typename?: 'Teacher';
                     colleges: Array<{ __typename?: 'College'; id: string; name: string }>;
-                };
+                } | null;
             };
         } | null>;
     };
@@ -1617,6 +1624,12 @@ export type AdminTalksTableQuery = {
         convocatory: { __typename?: 'Convocatory'; privateLabel: string };
     }>;
 };
+
+export type DeleteUserMutationVariables = Exact<{
+    userId: Scalars['Int'];
+}>;
+
+export type DeleteUserMutation = { __typename?: 'Mutation'; deleteUser: boolean };
 
 export type AdminUsersTableQueryVariables = Exact<{
     after: InputMaybe<Scalars['String']>;
@@ -2013,6 +2026,22 @@ export const UserDocument = {
                                 {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'isSuperAdmin' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'teacherProfile' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'isVerified',
+                                                },
+                                            },
+                                        ],
+                                    },
                                 },
                             ],
                         },
@@ -6009,6 +6038,48 @@ export const AdminTalksTableDocument = {
         },
     ],
 } as unknown as DocumentNode<AdminTalksTableQuery, AdminTalksTableQueryVariables>;
+export const DeleteUserDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'DeleteUser' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'userId' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'deleteUser' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'userId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'userId' },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<DeleteUserMutation, DeleteUserMutationVariables>;
 export const AdminUsersTableDocument = {
     kind: 'Document',
     definitions: [

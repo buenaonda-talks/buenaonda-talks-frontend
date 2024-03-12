@@ -33,8 +33,115 @@ import Link from 'next/link';
 import routesBuilder from '@/lib/routes';
 import { useUrlFilters } from '@/hooks/useUrlFilters';
 import { Input } from '@/components/ui/input';
+import { useDeleteUser } from './mutation';
+import { useToast } from '@/components/ui/use-toast';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { MoreVerticalIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ButtonWithSpinner } from '@/components/button-with-spinner';
 
 type User = NonNullable<AdminUsersTableQuery['users']['edges'][number]>['node'];
+
+type ColumnActionsProps = {
+    user: User;
+};
+const ColumnActions = ({ user }: ColumnActionsProps) => {
+    const deleteMutation = useDeleteUser();
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+
+    return (
+        <Dialog
+            onOpenChange={(next) => {
+                if (deleteMutation.isPending) {
+                    return;
+                }
+
+                setOpen(next);
+            }}
+            open={open}
+        >
+            <DropdownMenu>
+                <DropdownMenuTrigger>
+                    <MoreVerticalIcon className="h-5 w-5" />
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent>
+                    <DialogTrigger asChild>
+                        <DropdownMenuItem>Eliminar</DropdownMenuItem>
+                    </DialogTrigger>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Confirmar eliminación</DialogTitle>
+                    <DialogDescription>
+                        ¿Estás seguro de que quieres eliminar el usuario &ldquo;
+                        <strong>
+                            <em>{user.email}</em>
+                        </strong>
+                        &rdquo;?
+                    </DialogDescription>
+                </DialogHeader>
+
+                <DialogFooter>
+                    <DialogClose asChild>
+                        <Button variant="secondary">Cancelar</Button>
+                    </DialogClose>
+
+                    <ButtonWithSpinner
+                        onClick={() => {
+                            deleteMutation.mutate(
+                                {
+                                    userId: parseInt(user.id, 10),
+                                },
+                                {
+                                    onSuccess: () => {
+                                        toast({
+                                            variant: 'default',
+                                            title: 'Usuario eliminado',
+                                            description: `El usuario "${user.email}" ha sido eliminado.`,
+                                        });
+
+                                        setOpen(false);
+                                    },
+                                    onError: () => {
+                                        toast({
+                                            variant: 'destructive',
+                                            title: 'Error',
+                                            description:
+                                                'No se pudo eliminar el usuario.',
+                                        });
+                                    },
+                                },
+                            );
+                        }}
+                        variant="destructive"
+                        showSpinner={deleteMutation.isPending}
+                    >
+                        Eliminar
+                    </ButtonWithSpinner>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+};
 
 const columnHelper = createColumnHelper<User>();
 const columns = [
@@ -68,6 +175,17 @@ const columns = [
                     <p className="text-muted-foreground">
                         a las {format(value, 'HH:mm')}
                     </p>
+                </div>
+            );
+        },
+    }),
+    columnHelper.display({
+        id: 'actions',
+        header: 'Acciones',
+        cell: (props) => {
+            return (
+                <div className="flex justify-end">
+                    <ColumnActions user={props.row.original} />
                 </div>
             );
         },

@@ -358,7 +358,6 @@ export type Mutation = {
     createMyStudentProfile: Student;
     createMyTeacherProfile: Teacher;
     createTalk: Talk;
-    createTestConvocatory: Scalars['Boolean'];
     createVerifiedTeacherProfile: Teacher;
     deleteCollege: DeleteCollege;
     deleteConvocatory: Scalars['Int'];
@@ -372,6 +371,7 @@ export type Mutation = {
     updateStudentCollege: Student;
     updateTalk: Talk;
     updateTeacher: Teacher;
+    verifyTeacher: Scalars['Boolean'];
 };
 
 export type MutationApplyToScholarshipArgs = {
@@ -483,6 +483,10 @@ export type MutationUpdateTeacherArgs = {
     teacherId: Scalars['Int'];
 };
 
+export type MutationVerifyTeacherArgs = {
+    teacherId: Scalars['Int'];
+};
+
 /** Representation of an organization */
 export type Organization = {
     __typename?: 'Organization';
@@ -521,6 +525,7 @@ export type Query = {
     students: QueryStudentsConnection;
     talkById: Maybe<Talk>;
     talks: Array<Talk>;
+    teacherUserById: User;
     teachers: QueryTeachersConnection;
     trackerCurrentStep: TrackerCurrentStep;
     user: Maybe<User>;
@@ -597,6 +602,10 @@ export type QueryStudentsArgs = {
 };
 
 export type QueryTalkByIdArgs = {
+    id: Scalars['Int'];
+};
+
+export type QueryTeacherUserByIdArgs = {
     id: Scalars['Int'];
 };
 
@@ -1246,43 +1255,6 @@ export type AdminApplicationsTableFilterOptionsQuery = {
     colleges: Array<{ __typename?: 'College'; id: string; name: string }>;
 };
 
-export type AdminTeachersTableQueryVariables = Exact<{
-    after: InputMaybe<Scalars['String']>;
-    before: InputMaybe<Scalars['String']>;
-    first: InputMaybe<Scalars['Int']>;
-    last: InputMaybe<Scalars['Int']>;
-    filter: TeachersFilter;
-}>;
-
-export type AdminTeachersTableQuery = {
-    __typename?: 'Query';
-    teachers: {
-        __typename?: 'QueryTeachersConnection';
-        pageInfo: {
-            __typename?: 'PageInfo';
-            hasNextPage: boolean;
-            hasPreviousPage: boolean;
-            endCursor: string | null;
-        };
-        edges: Array<{
-            __typename?: 'QueryTeachersConnectionEdge';
-            cursor: string;
-            node: {
-                __typename?: 'User';
-                id: string;
-                dateJoined: string;
-                email: string;
-                firstName: string;
-                lastName: string;
-                teacherProfile: {
-                    __typename?: 'Teacher';
-                    colleges: Array<{ __typename?: 'College'; id: string; name: string }>;
-                } | null;
-            };
-        } | null>;
-    };
-};
-
 export type DeleteCollegeMutationVariables = Exact<{
     id: Scalars['Int'];
 }>;
@@ -1625,6 +1597,44 @@ export type AdminTalksTableQuery = {
     }>;
 };
 
+export type AdminTeachersTableQueryVariables = Exact<{
+    after: InputMaybe<Scalars['String']>;
+    before: InputMaybe<Scalars['String']>;
+    first: InputMaybe<Scalars['Int']>;
+    last: InputMaybe<Scalars['Int']>;
+    filter: TeachersFilter;
+}>;
+
+export type AdminTeachersTableQuery = {
+    __typename?: 'Query';
+    teachers: {
+        __typename?: 'QueryTeachersConnection';
+        pageInfo: {
+            __typename?: 'PageInfo';
+            hasNextPage: boolean;
+            hasPreviousPage: boolean;
+            endCursor: string | null;
+        };
+        edges: Array<{
+            __typename?: 'QueryTeachersConnectionEdge';
+            cursor: string;
+            node: {
+                __typename?: 'User';
+                id: string;
+                dateJoined: string;
+                email: string;
+                firstName: string;
+                lastName: string;
+                teacherProfile: {
+                    __typename?: 'Teacher';
+                    isVerified: boolean;
+                    colleges: Array<{ __typename?: 'College'; id: string; name: string }>;
+                } | null;
+            };
+        } | null>;
+    };
+};
+
 export type DeleteUserMutationVariables = Exact<{
     userId: Scalars['Int'];
 }>;
@@ -1771,6 +1781,32 @@ export type TrackerCurrentStepFormFragment = {
     uuid: string;
     openDate: string | null;
     closeDate: string | null;
+};
+
+export type VerifyTeacherMutationVariables = Exact<{
+    teacherId: Scalars['Int'];
+}>;
+
+export type VerifyTeacherMutation = { __typename?: 'Mutation'; verifyTeacher: boolean };
+
+export type AdminTeacherUserByIdQueryVariables = Exact<{
+    id: Scalars['Int'];
+}>;
+
+export type AdminTeacherUserByIdQuery = {
+    __typename?: 'Query';
+    teacherUserById: {
+        __typename?: 'User';
+        email: string;
+        firstName: string;
+        lastName: string;
+        teacherProfile: {
+            __typename?: 'Teacher';
+            id: string;
+            isVerified: boolean;
+            colleges: Array<{ __typename?: 'College'; id: string; name: string }>;
+        } | null;
+    };
 };
 
 export type MyStudentsTableQueryVariables = Exact<{
@@ -3948,242 +3984,6 @@ export const AdminApplicationsTableFilterOptionsDocument = {
     AdminApplicationsTableFilterOptionsQuery,
     AdminApplicationsTableFilterOptionsQueryVariables
 >;
-export const AdminTeachersTableDocument = {
-    kind: 'Document',
-    definitions: [
-        {
-            kind: 'OperationDefinition',
-            operation: 'query',
-            name: { kind: 'Name', value: 'adminTeachersTable' },
-            variableDefinitions: [
-                {
-                    kind: 'VariableDefinition',
-                    variable: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'after' },
-                    },
-                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-                },
-                {
-                    kind: 'VariableDefinition',
-                    variable: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'before' },
-                    },
-                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-                },
-                {
-                    kind: 'VariableDefinition',
-                    variable: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'first' },
-                    },
-                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-                },
-                {
-                    kind: 'VariableDefinition',
-                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
-                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-                },
-                {
-                    kind: 'VariableDefinition',
-                    variable: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'filter' },
-                    },
-                    type: {
-                        kind: 'NonNullType',
-                        type: {
-                            kind: 'NamedType',
-                            name: { kind: 'Name', value: 'TeachersFilter' },
-                        },
-                    },
-                },
-            ],
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'teachers' },
-                        arguments: [
-                            {
-                                kind: 'Argument',
-                                name: { kind: 'Name', value: 'after' },
-                                value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'after' },
-                                },
-                            },
-                            {
-                                kind: 'Argument',
-                                name: { kind: 'Name', value: 'before' },
-                                value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'before' },
-                                },
-                            },
-                            {
-                                kind: 'Argument',
-                                name: { kind: 'Name', value: 'first' },
-                                value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'first' },
-                                },
-                            },
-                            {
-                                kind: 'Argument',
-                                name: { kind: 'Name', value: 'last' },
-                                value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'last' },
-                                },
-                            },
-                            {
-                                kind: 'Argument',
-                                name: { kind: 'Name', value: 'filter' },
-                                value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'filter' },
-                                },
-                            },
-                        ],
-                        selectionSet: {
-                            kind: 'SelectionSet',
-                            selections: [
-                                {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'pageInfo' },
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {
-                                                kind: 'Field',
-                                                name: {
-                                                    kind: 'Name',
-                                                    value: 'hasNextPage',
-                                                },
-                                            },
-                                            {
-                                                kind: 'Field',
-                                                name: {
-                                                    kind: 'Name',
-                                                    value: 'hasPreviousPage',
-                                                },
-                                            },
-                                            {
-                                                kind: 'Field',
-                                                name: {
-                                                    kind: 'Name',
-                                                    value: 'endCursor',
-                                                },
-                                            },
-                                        ],
-                                    },
-                                },
-                                {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'edges' },
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {
-                                                kind: 'Field',
-                                                name: { kind: 'Name', value: 'cursor' },
-                                            },
-                                            {
-                                                kind: 'Field',
-                                                name: { kind: 'Name', value: 'node' },
-                                                selectionSet: {
-                                                    kind: 'SelectionSet',
-                                                    selections: [
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {
-                                                                kind: 'Name',
-                                                                value: 'id',
-                                                            },
-                                                        },
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {
-                                                                kind: 'Name',
-                                                                value: 'dateJoined',
-                                                            },
-                                                        },
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {
-                                                                kind: 'Name',
-                                                                value: 'email',
-                                                            },
-                                                        },
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {
-                                                                kind: 'Name',
-                                                                value: 'firstName',
-                                                            },
-                                                        },
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {
-                                                                kind: 'Name',
-                                                                value: 'lastName',
-                                                            },
-                                                        },
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {
-                                                                kind: 'Name',
-                                                                value: 'teacherProfile',
-                                                            },
-                                                            selectionSet: {
-                                                                kind: 'SelectionSet',
-                                                                selections: [
-                                                                    {
-                                                                        kind: 'Field',
-                                                                        name: {
-                                                                            kind: 'Name',
-                                                                            value: 'colleges',
-                                                                        },
-                                                                        selectionSet: {
-                                                                            kind: 'SelectionSet',
-                                                                            selections: [
-                                                                                {
-                                                                                    kind: 'Field',
-                                                                                    name: {
-                                                                                        kind: 'Name',
-                                                                                        value: 'id',
-                                                                                    },
-                                                                                },
-                                                                                {
-                                                                                    kind: 'Field',
-                                                                                    name: {
-                                                                                        kind: 'Name',
-                                                                                        value: 'name',
-                                                                                    },
-                                                                                },
-                                                                            ],
-                                                                        },
-                                                                    },
-                                                                ],
-                                                            },
-                                                        },
-                                                    ],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
-        },
-    ],
-} as unknown as DocumentNode<AdminTeachersTableQuery, AdminTeachersTableQueryVariables>;
 export const DeleteCollegeDocument = {
     kind: 'Document',
     definitions: [
@@ -6038,6 +5838,249 @@ export const AdminTalksTableDocument = {
         },
     ],
 } as unknown as DocumentNode<AdminTalksTableQuery, AdminTalksTableQueryVariables>;
+export const AdminTeachersTableDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'adminTeachersTable' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'after' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'before' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'first' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'filter' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: {
+                            kind: 'NamedType',
+                            name: { kind: 'Name', value: 'TeachersFilter' },
+                        },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teachers' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'after' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'after' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'before' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'before' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'first' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'first' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'last' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'last' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'filter' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'filter' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'pageInfo' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'hasNextPage',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'hasPreviousPage',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'endCursor',
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'edges' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'cursor' },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'node' },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'id',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'dateJoined',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'email',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'firstName',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'lastName',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'teacherProfile',
+                                                            },
+                                                            selectionSet: {
+                                                                kind: 'SelectionSet',
+                                                                selections: [
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: {
+                                                                            kind: 'Name',
+                                                                            value: 'isVerified',
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: {
+                                                                            kind: 'Name',
+                                                                            value: 'colleges',
+                                                                        },
+                                                                        selectionSet: {
+                                                                            kind: 'SelectionSet',
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: 'Field',
+                                                                                    name: {
+                                                                                        kind: 'Name',
+                                                                                        value: 'id',
+                                                                                    },
+                                                                                },
+                                                                                {
+                                                                                    kind: 'Field',
+                                                                                    name: {
+                                                                                        kind: 'Name',
+                                                                                        value: 'name',
+                                                                                    },
+                                                                                },
+                                                                            ],
+                                                                        },
+                                                                    },
+                                                                ],
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<AdminTeachersTableQuery, AdminTeachersTableQueryVariables>;
 export const DeleteUserDocument = {
     kind: 'Document',
     definitions: [
@@ -6598,6 +6641,147 @@ export const TrackerCurrentStepDocument = {
         },
     ],
 } as unknown as DocumentNode<TrackerCurrentStepQuery, TrackerCurrentStepQueryVariables>;
+export const VerifyTeacherDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'verifyTeacher' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'teacherId' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'verifyTeacher' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'teacherId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'teacherId' },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<VerifyTeacherMutation, VerifyTeacherMutationVariables>;
+export const AdminTeacherUserByIdDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'AdminTeacherUserById' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teacherUserById' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'id' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'id' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'teacherProfile' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'id' },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'isVerified',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'colleges' },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'id',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'name',
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<
+    AdminTeacherUserByIdQuery,
+    AdminTeacherUserByIdQueryVariables
+>;
 export const MyStudentsTableDocument = {
     kind: 'Document',
     definitions: [

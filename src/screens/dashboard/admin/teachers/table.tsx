@@ -85,6 +85,28 @@ const columns = [
             );
         },
     }),
+    columnHelper.accessor('teacherProfile.isVerified', {
+        header: 'Verificado',
+        cell: (props) => {
+            const value = props.getValue();
+
+            if (!value) {
+                return (
+                    <Badge variant="outline">
+                        <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-full bg-red-500" />
+                        No verificado
+                    </Badge>
+                );
+            }
+
+            return (
+                <Badge variant="outline">
+                    <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-full bg-green-500" />
+                    Verificado
+                </Badge>
+            );
+        },
+    }),
     columnHelper.accessor('dateJoined', {
         header: 'Se unió el',
         cell: (props) => {
@@ -198,7 +220,7 @@ const Wrapper = ({ children }: PropsWithChildren) => {
     return (
         <div className="px-6 pb-8 pt-6">
             <div className="mb-4 flex items-center justify-between">
-                <TypographyAdminH1>Usuarios</TypographyAdminH1>
+                <TypographyAdminH1>Representantes</TypographyAdminH1>
             </div>
 
             {children}

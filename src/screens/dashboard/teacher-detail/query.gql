@@ -1,0 +1,16 @@
+query AdminTeacherUserById($id: Int!) {
+    teacherUserById(id: $id) {
+        email
+        firstName
+        lastName
+
+        teacherProfile {
+            id
+            isVerified
+            colleges {
+                id
+                name
+            }
+        }
+    }
+}

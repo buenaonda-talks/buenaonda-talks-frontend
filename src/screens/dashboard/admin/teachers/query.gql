@@ -26,6 +26,7 @@ query adminTeachersTable(
                 firstName
                 lastName
                 teacherProfile {
+                    isVerified
                     colleges {
                         id
                         name

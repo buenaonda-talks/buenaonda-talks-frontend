@@ -1,10 +1,10 @@
-import { AdminTeachersTableContainer } from '@/screens/dashboard/admin/teachers/table';
 import { AdminLayout } from '@/screens/dashboard/admin/shared/layout';
+import { AdminTeacherDetailPage } from '@/screens/dashboard/teacher-detail/page';
 
 const Page = () => {
     return (
         <AdminLayout>
-            <AdminTeachersTableContainer />
+            <AdminTeacherDetailPage />
         </AdminLayout>
     );
 };

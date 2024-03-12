@@ -2,11 +2,13 @@ import { LoadingSpinner } from '@/components/loading-spinner';
 
 const Loading = () => {
     return (
-        <div className="container">
-            <div className="flex min-h-screen items-center justify-center">
-                <LoadingSpinner />
+        <main>
+            <div className="container">
+                <div className="flex min-h-screen items-center justify-center">
+                    <LoadingSpinner />
+                </div>
             </div>
-        </div>
+        </main>
     );
 };
 

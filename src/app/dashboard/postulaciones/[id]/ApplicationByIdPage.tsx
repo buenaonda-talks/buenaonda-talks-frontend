@@ -7,8 +7,8 @@ import {
     FormFieldType,
     UpdateScholarshipApplicationStatusDocument,
     UpdateScholarshipApplicationStatusMutationVariables,
+    UserQuery,
 } from '@/api/graphql';
-import { fetchUserServer } from '@/api/query/fetch-user-server';
 import { ButtonWithSpinner } from '@/components/button-with-spinner';
 import { Button } from '@/components/ui/button';
 import {
@@ -45,7 +45,7 @@ import { useToast } from '@/components/ui/use-toast';
 import routesBuilder from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { ADMIN_APPLICATIONS_TABLE_KEY } from '@/screens/dashboard/admin/applications/query';
-import { UserButton, useAuth, useUser } from '@clerk/nextjs';
+import { UserButton, useAuth } from '@clerk/nextjs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -73,6 +73,7 @@ const fieldShouldBeVisible = (
 type FillableFormProps = {
     id: number;
     application: NonNullable<AdminApplicationByIdQuery['applicationById']>;
+    user?: UserQuery['user'];
 };
 
 const Header = () => {
@@ -101,8 +102,7 @@ const Header = () => {
     );
 };
 
-const FillableForm = async ({ application, id }: FillableFormProps) => {
-    const user = await fetchUserServer();
+const FillableForm = async ({ application, id, user }: FillableFormProps) => {
     const form = application.form;
     const answers = useMemo(() => {
         return application.answers.reduce(
@@ -339,7 +339,7 @@ const FillableForm = async ({ application, id }: FillableFormProps) => {
                 </div>
             </main>
 
-            {user?.user?.isAdmin && (
+            {user?.isAdmin && (
                 <div className="fixed inset-x-0 bottom-0 border-t border-gray-100 bg-muted py-4 text-muted-foreground">
                     <div className="container flex items-center justify-center space-x-2">
                         <p className="text-sm">
@@ -526,12 +526,12 @@ const FillableForm = async ({ application, id }: FillableFormProps) => {
 type Props = {
     data: AdminApplicationByIdQuery;
     id: number;
+    user: UserQuery['user'];
 };
 
-export const ApplicationByIdPage = ({ data, id }: Props) => {
+export const ApplicationByIdPage = ({ data, id, user }: Props) => {
     const { toast } = useToast();
     const router = useRouter();
-    const { user } = useUser();
 
     useEffect(() => {
         if (!user) {
@@ -582,5 +582,5 @@ export const ApplicationByIdPage = ({ data, id }: Props) => {
         );
     }
 
-    return <FillableForm application={data.applicationById} id={id} />;
+    return <FillableForm application={data.applicationById} id={id} user={user} />;
 };

@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/table';
 import { fetchClient } from '@/api/fetch-client';
 import {
+    AdminConvocatoriesDocument,
     AdminStatsDocument,
     AdminStatsQuery,
     ScholarshipConvocatoryKind,
@@ -43,8 +44,8 @@ import FetchedDataRenderer from '@/components/fetched-data-renderer';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DashboardAdminsChart } from './chart';
 import dayjs from 'dayjs';
-import { Combobox } from '@/components/combobox';
 import { useAuth } from '@clerk/nextjs';
+import { AdminTableFilter } from '../shared/table-filter';
 
 type AdminStatsItem = AdminStatsQuery['adminStats']['stats'][0];
 
@@ -62,6 +63,7 @@ const areTalkAssistansOkInTheBackend = (convocatoryLabel: string) => {
         '2023 Septiembre (Repechaje)',
         '2024 Enero',
         '2023 Enero',
+        '2024 Enero (Repechaje)',
     ].includes(convocatoryLabel);
 };
 
@@ -619,23 +621,32 @@ export function DataTable({ columns, data }: DataTableRow) {
     );
 }
 
-type FormValues = {
-    convocatory: string | null | undefined;
-};
+type FormValues = Partial<{
+    convocatoriesIds: number[] | null;
+}>;
 
 export const DashboardAdminsPageContent: React.FC = () => {
-    const form = useForm<FormValues>();
-    const convocatory = form.watch('convocatory') || null;
+    const form = useForm<FormValues>({
+        defaultValues: {
+            convocatoriesIds: null,
+        },
+    });
+    const watchedConvocatoriesIds = form.watch('convocatoriesIds') || null;
 
     const { getToken } = useAuth();
 
     const queryResult = useQuery({
-        queryKey: ['admins-stats', { convocatory }],
+        queryKey: [
+            'admins-stats',
+            {
+                convocatory: watchedConvocatoriesIds,
+            },
+        ],
         queryFn: () =>
             fetchClient(
                 AdminStatsDocument,
                 {
-                    convocatory: convocatory ? parseInt(convocatory as string, 10) : null,
+                    convocatoriesIds: watchedConvocatoriesIds || null,
                 },
                 {
                     getToken,
@@ -643,35 +654,33 @@ export const DashboardAdminsPageContent: React.FC = () => {
             ),
     });
 
+    const convocatoriesResult = useQuery({
+        queryKey: ['admins-stats-convocatories'],
+        queryFn: () =>
+            fetchClient(
+                AdminConvocatoriesDocument,
+                {},
+                {
+                    getToken,
+                },
+            ),
+    });
+
     return (
-        <FetchedDataRenderer
-            {...queryResult}
-            Loading={
-                <div className="p-6">
-                    <h1 className="mb-4 scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-3xl">
-                        Dashboard
-                    </h1>
-
-                    <Skeleton className="h-[300px]" />
-                </div>
-            }
-            Error={<p>Error</p>}
-        >
-            {({ adminStats, convocatories }) => {
-                const data: AdminStatsItem[] = adminStats.stats.sort((a, b) => {
-                    return b.convocatory.order - a.convocatory.order;
-                });
-
-                const devfScholarshipsNumber = adminStats.stats
-                    .filter((stat) => {
-                        return stat.convocatory.kind === ScholarshipConvocatoryKind.Devf;
-                    })
-                    .reduce((acc, next) => {
-                        return acc + next.scholarships;
-                    }, 0);
-
-                return (
-                    <div className="flex h-screen min-w-0 flex-col overflow-hidden">
+        <div className="flex h-screen min-w-0 flex-col overflow-hidden">
+            <FetchedDataRenderer
+                {...convocatoriesResult}
+                Loading={
+                    <div className="border-b border-gray-200 py-4 shadow-sm xl:pl-6">
+                        <div className="container flex space-x-4 xl:mx-0 xl:max-w-full xl:px-0">
+                            <Skeleton className="h-8 w-32" />
+                        </div>
+                    </div>
+                }
+                Error={<p>Error</p>}
+            >
+                {({ convocatories }) => {
+                    return (
                         <div className="border-b border-gray-200 py-4 shadow-sm xl:pl-6">
                             <div className="container flex space-x-4 xl:mx-0 xl:max-w-full xl:px-0">
                                 <Label className="font-bold">Filtros:</Label>
@@ -679,15 +688,35 @@ export const DashboardAdminsPageContent: React.FC = () => {
                                 <Form {...form}>
                                     <FormField
                                         control={form.control}
-                                        name="convocatory"
+                                        name="convocatoriesIds"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel className="block">
-                                                    Cohorte
+                                                    Cohortes
                                                 </FormLabel>
-                                                <Combobox
-                                                    {...field}
-                                                    placeholder="Cohorte"
+
+                                                <AdminTableFilter
+                                                    title="Cohorte"
+                                                    selectedValues={field.value?.map(
+                                                        (v) => v.toString(),
+                                                    )}
+                                                    onClear={() => {
+                                                        form.setValue(
+                                                            'convocatoriesIds',
+                                                            null,
+                                                        );
+                                                    }}
+                                                    onSelect={(val) => {
+                                                        if (val && val.length > 0) {
+                                                            field.onChange(
+                                                                val.map((v) =>
+                                                                    parseInt(v, 10),
+                                                                ),
+                                                            );
+                                                        } else {
+                                                            field.onChange(null);
+                                                        }
+                                                    }}
                                                     options={convocatories
                                                         .sort((a, b) => {
                                                             return b.order - a.order;
@@ -706,7 +735,39 @@ export const DashboardAdminsPageContent: React.FC = () => {
                                 </Form>
                             </div>
                         </div>
+                    );
+                }}
+            </FetchedDataRenderer>
 
+            <FetchedDataRenderer
+                {...queryResult}
+                Loading={
+                    <div className="p-6">
+                        <h1 className="mb-4 scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-3xl">
+                            Dashboard
+                        </h1>
+
+                        <Skeleton className="h-[300px]" />
+                    </div>
+                }
+                Error={<p>Error</p>}
+            >
+                {({ adminStats }) => {
+                    const data: AdminStatsItem[] = adminStats.stats.sort((a, b) => {
+                        return b.convocatory.order - a.convocatory.order;
+                    });
+
+                    const devfScholarshipsNumber = adminStats.stats
+                        .filter((stat) => {
+                            return (
+                                stat.convocatory.kind === ScholarshipConvocatoryKind.Devf
+                            );
+                        })
+                        .reduce((acc, next) => {
+                            return acc + next.scholarships;
+                        }, 0);
+
+                    return (
                         <div className="min-w-0 flex-1 overflow-y-scroll px-6 pb-12 pt-6">
                             <Alert className="mb-4">
                                 <AlertTitle>¡Información sobre los datos!</AlertTitle>
@@ -747,13 +808,14 @@ export const DashboardAdminsPageContent: React.FC = () => {
                                                 </HoverCardTrigger>
 
                                                 <HoverCardContent className="text-sm">
-                                                    {typeof convocatory === 'string' ? (
+                                                    {watchedConvocatoriesIds &&
+                                                    watchedConvocatoriesIds.length ? (
                                                         <p>
                                                             Este número incluye a los
                                                             estudiantes que se añadieron a
                                                             la plataforma y/o se
                                                             registraron en el período de
-                                                            la cohorte.
+                                                            las cohorte seleccionadas.
                                                         </p>
                                                     ) : (
                                                         <p>
@@ -965,9 +1027,9 @@ export const DashboardAdminsPageContent: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                );
-            }}
-        </FetchedDataRenderer>
+                    );
+                }}
+            </FetchedDataRenderer>
+        </div>
     );
 };

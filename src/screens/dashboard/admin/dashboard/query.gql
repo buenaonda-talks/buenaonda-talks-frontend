@@ -1,10 +1,13 @@
-query adminStats($convocatory: Int) {
+query adminConvocatories {
     convocatories {
         id
         privateLabel
         order
     }
-    adminStats(convocatory: $convocatory) {
+}
+
+query adminStats($convocatoriesIds: [Int!]) {
+    adminStats(convocatoriesIds: $convocatoriesIds) {
         maxPlatziScholarships
         maxDevfScholarships
         studentsCount

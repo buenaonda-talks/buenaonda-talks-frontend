@@ -533,7 +533,7 @@ export type Query = {
 };
 
 export type QueryAdminStatsArgs = {
-    convocatory: InputMaybe<Scalars['Int']>;
+    convocatoriesIds: InputMaybe<Array<Scalars['Int']>>;
 };
 
 export type QueryAdminStudentsCountByDateArgs = {
@@ -1377,11 +1377,9 @@ export type UpdateTalkMutation = {
     updateTalk: { __typename?: 'Talk'; id: string };
 };
 
-export type AdminStatsQueryVariables = Exact<{
-    convocatory: InputMaybe<Scalars['Int']>;
-}>;
+export type AdminConvocatoriesQueryVariables = Exact<{ [key: string]: never }>;
 
-export type AdminStatsQuery = {
+export type AdminConvocatoriesQuery = {
     __typename?: 'Query';
     convocatories: Array<{
         __typename?: 'Convocatory';
@@ -1389,6 +1387,14 @@ export type AdminStatsQuery = {
         privateLabel: string;
         order: number;
     }>;
+};
+
+export type AdminStatsQueryVariables = Exact<{
+    convocatoriesIds: InputMaybe<Array<Scalars['Int']>>;
+}>;
+
+export type AdminStatsQuery = {
+    __typename?: 'Query';
     adminStats: {
         __typename?: 'AdminStats';
         maxPlatziScholarships: number;
@@ -4690,23 +4696,13 @@ export const UpdateTalkDocument = {
         },
     ],
 } as unknown as DocumentNode<UpdateTalkMutation, UpdateTalkMutationVariables>;
-export const AdminStatsDocument = {
+export const AdminConvocatoriesDocument = {
     kind: 'Document',
     definitions: [
         {
             kind: 'OperationDefinition',
             operation: 'query',
-            name: { kind: 'Name', value: 'adminStats' },
-            variableDefinitions: [
-                {
-                    kind: 'VariableDefinition',
-                    variable: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'convocatory' },
-                    },
-                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-                },
-            ],
+            name: { kind: 'Name', value: 'adminConvocatories' },
             selectionSet: {
                 kind: 'SelectionSet',
                 selections: [
@@ -4725,16 +4721,50 @@ export const AdminStatsDocument = {
                             ],
                         },
                     },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<AdminConvocatoriesQuery, AdminConvocatoriesQueryVariables>;
+export const AdminStatsDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'adminStats' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'convocatoriesIds' },
+                    },
+                    type: {
+                        kind: 'ListType',
+                        type: {
+                            kind: 'NonNullType',
+                            type: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'Int' },
+                            },
+                        },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
                     {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'adminStats' },
                         arguments: [
                             {
                                 kind: 'Argument',
-                                name: { kind: 'Name', value: 'convocatory' },
+                                name: { kind: 'Name', value: 'convocatoriesIds' },
                                 value: {
                                     kind: 'Variable',
-                                    name: { kind: 'Name', value: 'convocatory' },
+                                    name: { kind: 'Name', value: 'convocatoriesIds' },
                                 },
                             },
                         ],

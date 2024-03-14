@@ -28,7 +28,7 @@ import {
     AdminStatsQuery,
     ScholarshipConvocatoryKind,
 } from '@/api/graphql';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     createColumnHelper,
     flexRender,
@@ -42,7 +42,6 @@ import { Form, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import FetchedDataRenderer from '@/components/fetched-data-renderer';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DashboardAdminsChart } from './chart';
 import dayjs from 'dayjs';
 import { useAuth } from '@clerk/nextjs';
 import { AdminTableFilter } from '../shared/table-filter';
@@ -634,6 +633,7 @@ export const DashboardAdminsPageContent: React.FC = () => {
     const watchedConvocatoriesIds = form.watch('convocatoriesIds') || null;
 
     const { getToken } = useAuth();
+    const queryClient = useQueryClient();
 
     const queryResult = useQuery({
         queryKey: [
@@ -707,6 +707,12 @@ export const DashboardAdminsPageContent: React.FC = () => {
                                                         );
                                                     }}
                                                     onSelect={(val) => {
+                                                        queryClient.cancelQueries({
+                                                            queryKey: [
+                                                                'admins-stats-convocatories',
+                                                            ],
+                                                        });
+
                                                         if (val && val.length > 0) {
                                                             field.onChange(
                                                                 val.map((v) =>
@@ -1016,8 +1022,6 @@ export const DashboardAdminsPageContent: React.FC = () => {
                             </div>
 
                             <div>
-                                <DashboardAdminsChart />
-
                                 <div className="flex flex-col justify-start">
                                     <h2 className="mb-4 text-xl font-bold">
                                         Estadísticas por cohorte

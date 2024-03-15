@@ -9,7 +9,7 @@ import {
 } from '@/api/graphql';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import { DashboardContentSafeSpace } from '../shared/dashboard-content-safe-space';
+import { DashboardContentSafeSpace } from '../../shared/dashboard-content-safe-space';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { useAuth } from '@clerk/nextjs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';

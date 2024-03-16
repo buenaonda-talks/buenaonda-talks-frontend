@@ -42,6 +42,7 @@ import Link from 'next/link';
 import routesBuilder from '@/lib/routes';
 import { useUrlFilters } from '@/hooks/useUrlFilters';
 import { DashboardContentSafeSpace } from '../../shared/dashboard-content-safe-space';
+import { Button } from '@/components/ui/button';
 
 type Student = NonNullable<AdminStudentsTableQuery['students']['edges'][number]>['node'];
 
@@ -312,6 +313,10 @@ const Wrapper = ({ children }: PropsWithChildren) => {
         <DashboardContentSafeSpace>
             <div className="mb-4 flex items-center justify-between">
                 <TypographyAdminH1>Estudiantes</TypographyAdminH1>
+
+                <Button asChild>
+                    <Link href={routesBuilder.addStudent}>+ Añadir estudiante</Link>
+                </Button>
             </div>
 
             {children}

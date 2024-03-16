@@ -19,6 +19,7 @@ export const routesBuilder = {
 
     students: '/dashboard/estudiantes',
     studentById: (id: string) => `/dashboard/estudiantes/${id}`,
+    addStudent: '/dashboard/estudiantes/crear',
 
     users: '/dashboard/usuarios',
     userById: (id: string) => `/dashboard/usuarios/${id}`,

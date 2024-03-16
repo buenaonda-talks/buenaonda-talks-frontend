@@ -357,17 +357,20 @@ export type Mutation = {
     createForm: Form;
     createMyStudentProfile: Student;
     createMyTeacherProfile: Teacher;
+    createStudent: Student;
     createTalk: Talk;
     createVerifiedTeacherProfile: Teacher;
     deleteCollege: DeleteCollege;
     deleteConvocatory: Scalars['Int'];
     deleteUser: Scalars['Boolean'];
+    importStudents: Scalars['Boolean'];
     mergeColleges: Scalars['Boolean'];
     signUpToTalk: SignUpToTalk;
     updateCollege: College;
     updateConvocatory: Convocatory;
     updateForm: Form;
     updateScholarshipApplicationStatus: Application;
+    updateStudent: Student;
     updateStudentCollege: Student;
     updateTalk: Talk;
     updateTeacher: Teacher;
@@ -409,6 +412,13 @@ export type MutationCreateMyTeacherProfileArgs = {
     role: Scalars['String'];
 };
 
+export type MutationCreateStudentArgs = {
+    collegeId: InputMaybe<Scalars['Int']>;
+    communeId: InputMaybe<Scalars['Int']>;
+    newCollegeName: InputMaybe<Scalars['String']>;
+    studentDetails: StudentInput;
+};
+
 export type MutationCreateTalkArgs = {
     input: TalkInput;
 };
@@ -431,6 +441,11 @@ export type MutationDeleteConvocatoryArgs = {
 
 export type MutationDeleteUserArgs = {
     userId: Scalars['Int'];
+};
+
+export type MutationImportStudentsArgs = {
+    collegeId: Scalars['Int'];
+    students: Array<StudentInput>;
 };
 
 export type MutationMergeCollegesArgs = {
@@ -463,6 +478,14 @@ export type MutationUpdateScholarshipApplicationStatusArgs = {
     observations: InputMaybe<Scalars['String']>;
     sendEmail: InputMaybe<Scalars['Boolean']>;
     status: ApplicationStatus;
+};
+
+export type MutationUpdateStudentArgs = {
+    collegeId: InputMaybe<Scalars['Int']>;
+    communeId: InputMaybe<Scalars['Int']>;
+    newCollegeName: InputMaybe<Scalars['String']>;
+    studentDetails: StudentInput;
+    userId: Scalars['Int'];
 };
 
 export type MutationUpdateStudentCollegeArgs = {
@@ -522,6 +545,7 @@ export type Query = {
     organizations: Array<Organization>;
     regions: Array<Region>;
     scholarships: QueryScholarshipsConnection;
+    studentUserById: User;
     students: QueryStudentsConnection;
     talkById: Maybe<Talk>;
     talks: Array<Talk>;
@@ -591,6 +615,10 @@ export type QueryScholarshipsArgs = {
     filter: ScholarshipsFilter;
     first: InputMaybe<Scalars['Int']>;
     last: InputMaybe<Scalars['Int']>;
+};
+
+export type QueryStudentUserByIdArgs = {
+    userId: Scalars['Int'];
 };
 
 export type QueryStudentsArgs = {
@@ -775,6 +803,7 @@ export type SignUpToTalk = ApiError | TalkInscription;
 /** Representation of a student */
 export type Student = {
     __typename?: 'Student';
+    college: Maybe<College>;
     collegeId: Maybe<Scalars['ID']>;
     convocatoryId: Maybe<Scalars['ID']>;
     id: Scalars['ID'];
@@ -782,6 +811,14 @@ export type Student = {
     lastPlatziApplication: Maybe<Application>;
     lastPlatziTalkInscription: Maybe<TalkInscription>;
     user: User;
+};
+
+export type StudentInput = {
+    email: Scalars['String'];
+    firstName: Scalars['String'];
+    lastName: Scalars['String'];
+    phoneCode: InputMaybe<Scalars['Int']>;
+    phoneNumber: InputMaybe<Scalars['Int']>;
 };
 
 export type StudentsFilter = {
@@ -1043,6 +1080,18 @@ export type CreateTalkFieldsQuery = {
         __typename?: 'Convocatory';
         id: string;
         privateLabel: string;
+    }>;
+};
+
+export type CreateStudentFieldsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type CreateStudentFieldsQuery = {
+    __typename?: 'Query';
+    regions: Array<{
+        __typename?: 'Region';
+        id: string;
+        name: string;
+        communes: Array<{ __typename?: 'Commune'; id: string; name: string }>;
     }>;
 };
 
@@ -1534,6 +1583,64 @@ export type AdminScholarshipsTableFilterOptionsQuery = {
     colleges: Array<{ __typename?: 'College'; id: string; name: string }>;
 };
 
+export type CreateStudentMutationVariables = Exact<{
+    studentDetails: StudentInput;
+    collegeId: InputMaybe<Scalars['Int']>;
+    newCollegeName: InputMaybe<Scalars['String']>;
+    communeId: InputMaybe<Scalars['Int']>;
+}>;
+
+export type CreateStudentMutation = {
+    __typename?: 'Mutation';
+    createStudent: { __typename?: 'Student'; id: string };
+};
+
+export type UpdateStudentMutationVariables = Exact<{
+    userId: Scalars['Int'];
+    studentDetails: StudentInput;
+    collegeId: InputMaybe<Scalars['Int']>;
+    newCollegeName: InputMaybe<Scalars['String']>;
+    communeId: InputMaybe<Scalars['Int']>;
+}>;
+
+export type UpdateStudentMutation = {
+    __typename?: 'Mutation';
+    updateStudent: { __typename?: 'Student'; id: string };
+};
+
+export type ImportStudentsMutationVariables = Exact<{
+    students: Array<StudentInput>;
+    collegeId: Scalars['Int'];
+}>;
+
+export type ImportStudentsMutation = { __typename?: 'Mutation'; importStudents: boolean };
+
+export type StudentUserByIdForUpdateQueryVariables = Exact<{
+    userId: Scalars['Int'];
+}>;
+
+export type StudentUserByIdForUpdateQuery = {
+    __typename?: 'Query';
+    studentUserById: {
+        __typename?: 'User';
+        firstName: string;
+        lastName: string;
+        email: string;
+        phoneCode: string | null;
+        phoneNumber: string | null;
+        studentProfile: {
+            __typename?: 'Student';
+            college: { __typename?: 'College'; id: string; name: string } | null;
+        };
+    };
+    regions: Array<{
+        __typename?: 'Region';
+        id: string;
+        name: string;
+        communes: Array<{ __typename?: 'Commune'; id: string; name: string }>;
+    }>;
+};
+
 export type AdminStudentsTableQueryVariables = Exact<{
     after: InputMaybe<Scalars['String']>;
     before: InputMaybe<Scalars['String']>;
@@ -1601,6 +1708,32 @@ export type AdminTalksTableQuery = {
         isVisible: boolean;
         convocatory: { __typename?: 'Convocatory'; privateLabel: string };
     }>;
+};
+
+export type VerifyTeacherMutationVariables = Exact<{
+    teacherId: Scalars['Int'];
+}>;
+
+export type VerifyTeacherMutation = { __typename?: 'Mutation'; verifyTeacher: boolean };
+
+export type AdminTeacherUserByIdQueryVariables = Exact<{
+    id: Scalars['Int'];
+}>;
+
+export type AdminTeacherUserByIdQuery = {
+    __typename?: 'Query';
+    teacherUserById: {
+        __typename?: 'User';
+        email: string;
+        firstName: string;
+        lastName: string;
+        teacherProfile: {
+            __typename?: 'Teacher';
+            id: string;
+            isVerified: boolean;
+            colleges: Array<{ __typename?: 'College'; id: string; name: string }>;
+        } | null;
+    };
 };
 
 export type AdminTeachersTableQueryVariables = Exact<{
@@ -1787,32 +1920,6 @@ export type TrackerCurrentStepFormFragment = {
     uuid: string;
     openDate: string | null;
     closeDate: string | null;
-};
-
-export type VerifyTeacherMutationVariables = Exact<{
-    teacherId: Scalars['Int'];
-}>;
-
-export type VerifyTeacherMutation = { __typename?: 'Mutation'; verifyTeacher: boolean };
-
-export type AdminTeacherUserByIdQueryVariables = Exact<{
-    id: Scalars['Int'];
-}>;
-
-export type AdminTeacherUserByIdQuery = {
-    __typename?: 'Query';
-    teacherUserById: {
-        __typename?: 'User';
-        email: string;
-        firstName: string;
-        lastName: string;
-        teacherProfile: {
-            __typename?: 'Teacher';
-            id: string;
-            isVerified: boolean;
-            colleges: Array<{ __typename?: 'College'; id: string; name: string }>;
-        } | null;
-    };
 };
 
 export type MyStudentsTableQueryVariables = Exact<{
@@ -2715,6 +2822,49 @@ export const CreateTalkFieldsDocument = {
         },
     ],
 } as unknown as DocumentNode<CreateTalkFieldsQuery, CreateTalkFieldsQueryVariables>;
+export const CreateStudentFieldsDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'createStudentFields' },
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'regions' },
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'communes' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'id' },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'name' },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<CreateStudentFieldsQuery, CreateStudentFieldsQueryVariables>;
 export const ApplyToScholarshipDocument = {
     kind: 'Document',
     definitions: [
@@ -5530,6 +5680,420 @@ export const AdminScholarshipsTableFilterOptionsDocument = {
     AdminScholarshipsTableFilterOptionsQuery,
     AdminScholarshipsTableFilterOptionsQueryVariables
 >;
+export const CreateStudentDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'createStudent' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'studentDetails' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: {
+                            kind: 'NamedType',
+                            name: { kind: 'Name', value: 'StudentInput' },
+                        },
+                    },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'collegeId' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'newCollegeName' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'communeId' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createStudent' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'studentDetails' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'studentDetails' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'collegeId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'collegeId' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'newCollegeName' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'newCollegeName' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'communeId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'communeId' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<CreateStudentMutation, CreateStudentMutationVariables>;
+export const UpdateStudentDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'updateStudent' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'userId' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'studentDetails' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: {
+                            kind: 'NamedType',
+                            name: { kind: 'Name', value: 'StudentInput' },
+                        },
+                    },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'collegeId' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'newCollegeName' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'communeId' },
+                    },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updateStudent' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'userId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'userId' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'studentDetails' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'studentDetails' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'collegeId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'collegeId' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'newCollegeName' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'newCollegeName' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'communeId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'communeId' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<UpdateStudentMutation, UpdateStudentMutationVariables>;
+export const ImportStudentsDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'importStudents' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'students' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: {
+                            kind: 'ListType',
+                            type: {
+                                kind: 'NonNullType',
+                                type: {
+                                    kind: 'NamedType',
+                                    name: { kind: 'Name', value: 'StudentInput' },
+                                },
+                            },
+                        },
+                    },
+                },
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'collegeId' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'importStudents' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'students' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'students' },
+                                },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'collegeId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'collegeId' },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<ImportStudentsMutation, ImportStudentsMutationVariables>;
+export const StudentUserByIdForUpdateDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'studentUserByIdForUpdate' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'userId' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'studentUserById' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'userId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'userId' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                },
+                                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'phoneCode' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'phoneNumber' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'studentProfile' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'college' },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'id',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'name',
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'regions' },
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'communes' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'id' },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'name' },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<
+    StudentUserByIdForUpdateQuery,
+    StudentUserByIdForUpdateQueryVariables
+>;
 export const AdminStudentsTableDocument = {
     kind: 'Document',
     definitions: [
@@ -5868,6 +6432,147 @@ export const AdminTalksTableDocument = {
         },
     ],
 } as unknown as DocumentNode<AdminTalksTableQuery, AdminTalksTableQueryVariables>;
+export const VerifyTeacherDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'verifyTeacher' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'teacherId' },
+                    },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'verifyTeacher' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'teacherId' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'teacherId' },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<VerifyTeacherMutation, VerifyTeacherMutationVariables>;
+export const AdminTeacherUserByIdDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'query',
+            name: { kind: 'Name', value: 'AdminTeacherUserById' },
+            variableDefinitions: [
+                {
+                    kind: 'VariableDefinition',
+                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+                    type: {
+                        kind: 'NonNullType',
+                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+                    },
+                },
+            ],
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teacherUserById' },
+                        arguments: [
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'id' },
+                                value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'id' },
+                                },
+                            },
+                        ],
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                },
+                                {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'teacherProfile' },
+                                    selectionSet: {
+                                        kind: 'SelectionSet',
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'id' },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: {
+                                                    kind: 'Name',
+                                                    value: 'isVerified',
+                                                },
+                                            },
+                                            {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'colleges' },
+                                                selectionSet: {
+                                                    kind: 'SelectionSet',
+                                                    selections: [
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'id',
+                                                            },
+                                                        },
+                                                        {
+                                                            kind: 'Field',
+                                                            name: {
+                                                                kind: 'Name',
+                                                                value: 'name',
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<
+    AdminTeacherUserByIdQuery,
+    AdminTeacherUserByIdQueryVariables
+>;
 export const AdminTeachersTableDocument = {
     kind: 'Document',
     definitions: [
@@ -6671,147 +7376,6 @@ export const TrackerCurrentStepDocument = {
         },
     ],
 } as unknown as DocumentNode<TrackerCurrentStepQuery, TrackerCurrentStepQueryVariables>;
-export const VerifyTeacherDocument = {
-    kind: 'Document',
-    definitions: [
-        {
-            kind: 'OperationDefinition',
-            operation: 'mutation',
-            name: { kind: 'Name', value: 'verifyTeacher' },
-            variableDefinitions: [
-                {
-                    kind: 'VariableDefinition',
-                    variable: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'teacherId' },
-                    },
-                    type: {
-                        kind: 'NonNullType',
-                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-                    },
-                },
-            ],
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'verifyTeacher' },
-                        arguments: [
-                            {
-                                kind: 'Argument',
-                                name: { kind: 'Name', value: 'teacherId' },
-                                value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'teacherId' },
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-    ],
-} as unknown as DocumentNode<VerifyTeacherMutation, VerifyTeacherMutationVariables>;
-export const AdminTeacherUserByIdDocument = {
-    kind: 'Document',
-    definitions: [
-        {
-            kind: 'OperationDefinition',
-            operation: 'query',
-            name: { kind: 'Name', value: 'AdminTeacherUserById' },
-            variableDefinitions: [
-                {
-                    kind: 'VariableDefinition',
-                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-                    type: {
-                        kind: 'NonNullType',
-                        type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-                    },
-                },
-            ],
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'teacherUserById' },
-                        arguments: [
-                            {
-                                kind: 'Argument',
-                                name: { kind: 'Name', value: 'id' },
-                                value: {
-                                    kind: 'Variable',
-                                    name: { kind: 'Name', value: 'id' },
-                                },
-                            },
-                        ],
-                        selectionSet: {
-                            kind: 'SelectionSet',
-                            selections: [
-                                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                                {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'firstName' },
-                                },
-                                {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'lastName' },
-                                },
-                                {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'teacherProfile' },
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {
-                                                kind: 'Field',
-                                                name: { kind: 'Name', value: 'id' },
-                                            },
-                                            {
-                                                kind: 'Field',
-                                                name: {
-                                                    kind: 'Name',
-                                                    value: 'isVerified',
-                                                },
-                                            },
-                                            {
-                                                kind: 'Field',
-                                                name: { kind: 'Name', value: 'colleges' },
-                                                selectionSet: {
-                                                    kind: 'SelectionSet',
-                                                    selections: [
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {
-                                                                kind: 'Name',
-                                                                value: 'id',
-                                                            },
-                                                        },
-                                                        {
-                                                            kind: 'Field',
-                                                            name: {
-                                                                kind: 'Name',
-                                                                value: 'name',
-                                                            },
-                                                        },
-                                                    ],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
-        },
-    ],
-} as unknown as DocumentNode<
-    AdminTeacherUserByIdQuery,
-    AdminTeacherUserByIdQueryVariables
->;
 export const MyStudentsTableDocument = {
     kind: 'Document',
     definitions: [

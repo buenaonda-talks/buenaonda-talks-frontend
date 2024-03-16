@@ -8,7 +8,7 @@ import {
 import { useAuth } from '@clerk/nextjs';
 import { InfiniteData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-export const ADMIN_STUDENTS_TABLE_KEY = 'admin-students-table';
+export const ADMIN_STUDENTS_TABLE_KEY = ['students', 'admin'];
 
 export const ADMIN_STUDENTS_TABLE_QUERY_KEY = (filters: StudentsFilter) => [
     ADMIN_STUDENTS_TABLE_KEY,

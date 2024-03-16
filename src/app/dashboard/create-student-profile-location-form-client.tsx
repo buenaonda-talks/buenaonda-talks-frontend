@@ -22,9 +22,7 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Combobox } from '@/components/combobox';
-import { CollegesByCommuneDocument } from '@/api/graphql';
 import { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -32,6 +30,7 @@ import { CreateProfileRole } from './create-profile-client';
 import { ButtonWithSpinner } from '@/components/button-with-spinner';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
+import { useCollegesByCommune } from '@/hooks/useCollegesByCommune';
 
 enum PlaceOfStudy {
     HIGH_SCHOOL = 'high_school',
@@ -52,23 +51,6 @@ type Props = {
     regions: CreateProfileRegionsQuery['regions'];
     role: CreateProfileRole.Student;
     onBack: () => void;
-};
-
-const useCollegesByCommune = (communeId: number | undefined | null) => {
-    const { getToken } = useAuth();
-    return useQuery({
-        queryKey: ['colleges', { communeId }],
-        queryFn: async () => {
-            return fetchClient(
-                CollegesByCommuneDocument,
-                {
-                    communeId: communeId as number,
-                },
-                { getToken },
-            );
-        },
-        enabled: !!communeId,
-    });
 };
 
 const useCreateStudent = () => {
@@ -281,113 +263,110 @@ export const CreateStudentProfileLocationFormClient = ({ regions, onBack }: Prop
                                 )}
                             />
 
-                            <>
-                                <FormField
-                                    control={formMethods.control}
-                                    name="region"
-                                    rules={{
-                                        required: 'Este campo es requerido',
-                                    }}
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-col items-start">
-                                            <FormLabel required>
-                                                {watchedPlaceOfStudy ===
-                                                PlaceOfStudy.HIGH_SCHOOL
-                                                    ? 'Región del colegio'
-                                                    : watchedPlaceOfStudy ===
-                                                        PlaceOfStudy.UNIVERSITY
-                                                      ? 'Región de la universidad'
-                                                      : 'Región de residencia'}
-                                            </FormLabel>
+                            <FormField
+                                control={formMethods.control}
+                                name="region"
+                                rules={{
+                                    required: 'Este campo es requerido',
+                                }}
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col items-start">
+                                        <FormLabel required>
+                                            {watchedPlaceOfStudy ===
+                                            PlaceOfStudy.HIGH_SCHOOL
+                                                ? 'Región del colegio'
+                                                : watchedPlaceOfStudy ===
+                                                    PlaceOfStudy.UNIVERSITY
+                                                  ? 'Región de la universidad'
+                                                  : 'Región de residencia'}
+                                        </FormLabel>
 
-                                            <FormControl>
-                                                <Combobox
-                                                    options={regions.map((region) => ({
-                                                        label: region.name,
-                                                        value: region,
-                                                        key: region.id,
-                                                    }))}
-                                                    onChange={field.onChange}
-                                                    value={field.value?.toString() || ''}
-                                                    noOptionsMessage="No hay regiones"
-                                                    placeholder="Selecciona una región"
-                                                />
-                                            </FormControl>
+                                        <FormControl>
+                                            <Combobox
+                                                options={regions.map((region) => ({
+                                                    label: region.name,
+                                                    value: region,
+                                                    key: region.id,
+                                                }))}
+                                                onChange={field.onChange}
+                                                value={field.value?.toString() || ''}
+                                                noOptionsMessage="No hay regiones"
+                                                placeholder="Selecciona una región"
+                                            />
+                                        </FormControl>
 
-                                            <FormDescription>
-                                                {watchedPlaceOfStudy ===
-                                                PlaceOfStudy.HIGH_SCHOOL
-                                                    ? 'Selecciona la región donde se encuentra el colegio'
-                                                    : watchedPlaceOfStudy ===
-                                                        PlaceOfStudy.UNIVERSITY
-                                                      ? 'Selecciona la región donde se encuentra la universidad'
-                                                      : 'Selecciona la región donde vives'}
-                                            </FormDescription>
+                                        <FormDescription>
+                                            {watchedPlaceOfStudy ===
+                                            PlaceOfStudy.HIGH_SCHOOL
+                                                ? 'Selecciona la región donde se encuentra el colegio'
+                                                : watchedPlaceOfStudy ===
+                                                    PlaceOfStudy.UNIVERSITY
+                                                  ? 'Selecciona la región donde se encuentra la universidad'
+                                                  : 'Selecciona la región donde vives'}
+                                        </FormDescription>
 
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                                <FormField
-                                    control={formMethods.control}
-                                    name="commune"
-                                    rules={{
-                                        required: 'Este campo es requerido',
-                                    }}
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-col items-start">
-                                            <FormLabel required>
-                                                {watchedPlaceOfStudy ===
-                                                PlaceOfStudy.HIGH_SCHOOL
-                                                    ? 'Comuna del colegio'
-                                                    : watchedPlaceOfStudy ===
-                                                        PlaceOfStudy.UNIVERSITY
-                                                      ? 'Comuna de la universidad'
-                                                      : 'Comuna de residencia'}
-                                            </FormLabel>
+                            <FormField
+                                control={formMethods.control}
+                                name="commune"
+                                rules={{
+                                    required: 'Este campo es requerido',
+                                }}
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col items-start">
+                                        <FormLabel required>
+                                            {watchedPlaceOfStudy ===
+                                            PlaceOfStudy.HIGH_SCHOOL
+                                                ? 'Comuna del colegio'
+                                                : watchedPlaceOfStudy ===
+                                                    PlaceOfStudy.UNIVERSITY
+                                                  ? 'Comuna de la universidad'
+                                                  : 'Comuna de residencia'}
+                                        </FormLabel>
 
-                                            <FormControl>
-                                                <Combobox
-                                                    options={
-                                                        regions
-                                                            .find((some) => {
-                                                                return (
-                                                                    some.id ===
-                                                                    watchedRegion
-                                                                );
-                                                            })
-                                                            ?.communes.map((commune) => ({
-                                                                label: commune.name,
-                                                                value: commune,
-                                                                key: commune.id,
-                                                            })) || []
-                                                    }
-                                                    onChange={(id) => {
-                                                        field.onChange(parseInt(id, 10));
-                                                    }}
-                                                    value={field.value?.toString() || ''}
-                                                    noOptionsMessage="No hay comunas"
-                                                    placeholder="Selecciona una comuna"
-                                                    disabled={!watchedRegion}
-                                                />
-                                            </FormControl>
+                                        <FormControl>
+                                            <Combobox
+                                                options={
+                                                    regions
+                                                        .find((some) => {
+                                                            return (
+                                                                some.id === watchedRegion
+                                                            );
+                                                        })
+                                                        ?.communes.map((commune) => ({
+                                                            label: commune.name,
+                                                            value: commune,
+                                                            key: commune.id,
+                                                        })) || []
+                                                }
+                                                onChange={(id) => {
+                                                    field.onChange(parseInt(id, 10));
+                                                }}
+                                                value={field.value?.toString() || ''}
+                                                noOptionsMessage="No hay comunas"
+                                                placeholder="Selecciona una comuna"
+                                                disabled={!watchedRegion}
+                                            />
+                                        </FormControl>
 
-                                            <FormDescription>
-                                                {watchedPlaceOfStudy ===
-                                                PlaceOfStudy.HIGH_SCHOOL
-                                                    ? 'Selecciona la comuna donde se encuentra el colegio'
-                                                    : watchedPlaceOfStudy ===
-                                                        PlaceOfStudy.UNIVERSITY
-                                                      ? 'Selecciona la comuna donde se encuentra la universidad'
-                                                      : 'Selecciona la comuna donde vives'}
-                                            </FormDescription>
+                                        <FormDescription>
+                                            {watchedPlaceOfStudy ===
+                                            PlaceOfStudy.HIGH_SCHOOL
+                                                ? 'Selecciona la comuna donde se encuentra el colegio'
+                                                : watchedPlaceOfStudy ===
+                                                    PlaceOfStudy.UNIVERSITY
+                                                  ? 'Selecciona la comuna donde se encuentra la universidad'
+                                                  : 'Selecciona la comuna donde vives'}
+                                        </FormDescription>
 
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
                             {watchedPlaceOfStudy &&
                                 watchedPlaceOfStudy !== PlaceOfStudy.NONE && (

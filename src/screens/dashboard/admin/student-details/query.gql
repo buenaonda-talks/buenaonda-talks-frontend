@@ -1,0 +1,23 @@
+query studentUserByIdForUpdate($userId: Int!) {
+    studentUserById(userId: $userId) {
+        firstName
+        lastName
+        email
+        phoneCode
+        phoneNumber
+        studentProfile {
+            college {
+                id
+                name
+            }
+        }
+    }
+    regions {
+        id
+        name
+        communes {
+            id
+            name
+        }
+    }
+}

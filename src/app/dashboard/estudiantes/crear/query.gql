@@ -1,0 +1,10 @@
+query createStudentFields {
+    regions {
+        id
+        name
+        communes {
+            id
+            name
+        }
+    }
+}

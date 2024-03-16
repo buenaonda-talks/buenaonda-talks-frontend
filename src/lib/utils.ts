@@ -55,3 +55,27 @@ export const readableFormatDateTime = (date: Date | null) => {
           )} a las ${getHours(date)}:${date.getMinutes()}`
         : '-';
 };
+
+type InputToNumberOptions = {
+    min?: number;
+    max?: number;
+};
+
+export const inputToNumber = (
+    input: string,
+    options: InputToNumberOptions = {},
+): number | null => {
+    const { min = 0, max = 1000000000 } = options;
+
+    const onlyDigits = input.replace(/[^0-9]/g, '');
+    if (onlyDigits === '') {
+        return null;
+    }
+
+    const asInt = parseInt(onlyDigits, 10);
+    if (isNaN(asInt)) {
+        return null;
+    }
+
+    return Math.min(Math.max(asInt, min), max);
+};

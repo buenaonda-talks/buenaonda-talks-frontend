@@ -1,0 +1,37 @@
+mutation createStudent(
+    $studentDetails: StudentInput!
+    $collegeId: Int
+    $newCollegeName: String
+    $communeId: Int
+) {
+    createStudent(
+        studentDetails: $studentDetails
+        collegeId: $collegeId
+        newCollegeName: $newCollegeName
+        communeId: $communeId
+    ) {
+        id
+    }
+}
+
+mutation updateStudent(
+    $userId: Int!
+    $studentDetails: StudentInput!
+    $collegeId: Int
+    $newCollegeName: String
+    $communeId: Int
+) {
+    updateStudent(
+        userId: $userId
+        studentDetails: $studentDetails
+        collegeId: $collegeId
+        newCollegeName: $newCollegeName
+        communeId: $communeId
+    ) {
+        id
+    }
+}
+
+mutation importStudents($students: [StudentInput!]!, $collegeId: Int!) {
+    importStudents(students: $students, collegeId: $collegeId)
+}

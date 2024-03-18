@@ -10,10 +10,35 @@ import { UserButton } from '@clerk/nextjs';
 import { Building, Check, GraduationCap } from 'lucide-react';
 import { useState } from 'react';
 import { CreateProfileRole } from './create-profile-client';
-import { Button } from '@/components/ui/button';
+import { useAuth } from '@clerk/nextjs';
+import { fetchClient } from '@/api/fetch-client';
+import { useMutation } from '@tanstack/react-query';
+import { useToast } from '@/components/ui/use-toast';
+
+import {
+    CreateMyStudentProfileDocument,
+    CreateMyStudentProfileMutation,
+    CreateMyStudentProfileMutationVariables,
+} from '@/api/graphql';
+import { ButtonWithSpinner } from '@/components/button-with-spinner';
 
 type Props = {
     onContinue: (role: CreateProfileRole) => void;
+};
+
+const useCreateMyStudentProfile = () => {
+    const { getToken } = useAuth();
+    return useMutation<
+        CreateMyStudentProfileMutation,
+        Error,
+        CreateMyStudentProfileMutationVariables
+    >({
+        mutationFn: (data) => {
+            return fetchClient(CreateMyStudentProfileDocument, data, {
+                getToken,
+            });
+        },
+    });
 };
 
 export const CreateProfileRoleSelector = ({ onContinue }: Props) => {
@@ -22,6 +47,27 @@ export const CreateProfileRoleSelector = ({ onContinue }: Props) => {
     const handleRoleChange = (role: CreateProfileRole) => {
         setRole(role);
     };
+
+    const createMyStudentProfile = useCreateMyStudentProfile();
+    const { toast } = useToast();
+
+    if (createMyStudentProfile.isSuccess) {
+        return (
+            <div className="flex min-h-screen items-center">
+                <div className="container w-full text-center">
+                    <div className="mx-auto space-y-8 lg:w-8/12">
+                        <div className="space-y-1">
+                            <h1 className="text-3xl font-bold">Perfil creado</h1>
+
+                            <p className="text-muted-foreground">
+                                Te estamos redirigiendo a tu perfil...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex min-h-screen items-center">
@@ -133,15 +179,47 @@ export const CreateProfileRoleSelector = ({ onContinue }: Props) => {
                 </div>
 
                 <div className="flex justify-center">
-                    <Button
+                    <ButtonWithSpinner
                         onClick={() => {
                             if (!role) return;
-                            onContinue(role);
+
+                            if (role === CreateProfileRole.Student) {
+                                createMyStudentProfile.mutate(
+                                    {},
+                                    {
+                                        onSuccess: () => {
+                                            toast({
+                                                variant: 'success',
+                                                title: 'Perfil creado',
+                                                description:
+                                                    'Tu perfil de estudiante ha sido creado exitosamente.',
+                                            });
+
+                                            window.setTimeout(() => {
+                                                window.location.reload();
+                                            }, 1000);
+                                        },
+                                        onError: () => {
+                                            toast({
+                                                variant: 'destructive',
+                                                title: 'Error al crear perfil',
+                                                description:
+                                                    'Ocurrió un error al crear tu perfil de estudiante. Por favor, intenta de nuevo.',
+                                            });
+                                        },
+                                    },
+                                );
+                            } else {
+                                onContinue(role);
+                            }
                         }}
+                        showSpinner={createMyStudentProfile.isPending}
                         disabled={!role}
                     >
-                        Continuar
-                    </Button>
+                        {role === CreateProfileRole.Student || !role
+                            ? 'Crear perfil'
+                            : 'Siguiente paso'}
+                    </ButtonWithSpinner>
                 </div>
             </main>
         </div>

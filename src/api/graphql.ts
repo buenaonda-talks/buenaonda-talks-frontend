@@ -352,6 +352,7 @@ export type Mutation = {
     __typename?: 'Mutation';
     applyToScholarship: ApplyToScholarship;
     assistToTalk: AssistToTalk;
+    completeMyStudentProfile: Student;
     createCollege: College;
     createConvocatory: Convocatory;
     createForm: Form;
@@ -387,6 +388,12 @@ export type MutationAssistToTalkArgs = {
     talkUuid: Scalars['String'];
 };
 
+export type MutationCompleteMyStudentProfileArgs = {
+    collegeId: InputMaybe<Scalars['Int']>;
+    communeId: Scalars['Int'];
+    newCollegeName: InputMaybe<Scalars['String']>;
+};
+
 export type MutationCreateCollegeArgs = {
     input: CollegeInput;
 };
@@ -397,12 +404,6 @@ export type MutationCreateConvocatoryArgs = {
 
 export type MutationCreateFormArgs = {
     input: FormInput;
-};
-
-export type MutationCreateMyStudentProfileArgs = {
-    collegeId: InputMaybe<Scalars['Int']>;
-    communeId: Scalars['Int'];
-    newCollegeName: InputMaybe<Scalars['String']>;
 };
 
 export type MutationCreateMyTeacherProfileArgs = {
@@ -805,6 +806,7 @@ export type Student = {
     __typename?: 'Student';
     college: Maybe<College>;
     collegeId: Maybe<Scalars['ID']>;
+    completedProfile: Scalars['Boolean'];
     convocatoryId: Maybe<Scalars['ID']>;
     id: Scalars['ID'];
     lastDevfApplication: Maybe<Application>;
@@ -1139,15 +1141,22 @@ export type FormByUuidQuery = {
     } | null;
 };
 
-export type CreateMyStudentProfileMutationVariables = Exact<{
+export type CreateMyStudentProfileMutationVariables = Exact<{ [key: string]: never }>;
+
+export type CreateMyStudentProfileMutation = {
+    __typename?: 'Mutation';
+    createMyStudentProfile: { __typename?: 'Student'; id: string };
+};
+
+export type CompleteMyStudentProfileMutationVariables = Exact<{
     communeId: Scalars['Int'];
     collegeId: InputMaybe<Scalars['Int']>;
     newCollegeName: InputMaybe<Scalars['String']>;
 }>;
 
-export type CreateMyStudentProfileMutation = {
+export type CompleteMyStudentProfileMutation = {
     __typename?: 'Mutation';
-    createMyStudentProfile: { __typename?: 'Student'; id: string };
+    completeMyStudentProfile: { __typename?: 'Student'; id: string };
 };
 
 export type CreateMyTeacherProfileMutationVariables = Exact<{
@@ -3158,6 +3167,34 @@ export const CreateMyStudentProfileDocument = {
             kind: 'OperationDefinition',
             operation: 'mutation',
             name: { kind: 'Name', value: 'CreateMyStudentProfile' },
+            selectionSet: {
+                kind: 'SelectionSet',
+                selections: [
+                    {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createMyStudentProfile' },
+                        selectionSet: {
+                            kind: 'SelectionSet',
+                            selections: [
+                                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+} as unknown as DocumentNode<
+    CreateMyStudentProfileMutation,
+    CreateMyStudentProfileMutationVariables
+>;
+export const CompleteMyStudentProfileDocument = {
+    kind: 'Document',
+    definitions: [
+        {
+            kind: 'OperationDefinition',
+            operation: 'mutation',
+            name: { kind: 'Name', value: 'CompleteMyStudentProfile' },
             variableDefinitions: [
                 {
                     kind: 'VariableDefinition',
@@ -3192,7 +3229,7 @@ export const CreateMyStudentProfileDocument = {
                 selections: [
                     {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'createMyStudentProfile' },
+                        name: { kind: 'Name', value: 'completeMyStudentProfile' },
                         arguments: [
                             {
                                 kind: 'Argument',
@@ -3231,8 +3268,8 @@ export const CreateMyStudentProfileDocument = {
         },
     ],
 } as unknown as DocumentNode<
-    CreateMyStudentProfileMutation,
-    CreateMyStudentProfileMutationVariables
+    CompleteMyStudentProfileMutation,
+    CompleteMyStudentProfileMutationVariables
 >;
 export const CreateMyTeacherProfileDocument = {
     kind: 'Document',

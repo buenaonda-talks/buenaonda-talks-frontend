@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { CreateProfileRegionsQuery } from '@/api/graphql';
 import { CreateProfileRoleSelector } from './create-profile-role-selector';
-import { CreateStudentProfileLocationFormClient } from './create-student-profile-location-form-client';
+import { CompleteStudentProfileLocationFormClient } from './complete-student-profile-location-form-client';
 import { CreateInstitutionProfileLocationFormClient } from './create-teacher-profile-location-form-client';
 
 type Props = {
@@ -39,7 +39,7 @@ export const CreateProfileClient = ({ regions }: Props) => {
     if (step === Step.STEP_2_LOCATION && role) {
         if (role === CreateProfileRole.Student) {
             return (
-                <CreateStudentProfileLocationFormClient
+                <CompleteStudentProfileLocationFormClient
                     onBack={() => {
                         setStep(Step.STEP_1_ROLE);
                     }}

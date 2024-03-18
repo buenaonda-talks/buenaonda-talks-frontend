@@ -38,7 +38,7 @@ const Item: React.FC<TechLeadersTestimonialItemProps> = ({
         <div className="mb-4 w-8/12 lg:mb-0 lg:w-[45%]">
             <div className="flex justify-center lg:w-4/5">
                 <Image
-                    quality={100}
+                    quality={80}
                     src={person.image}
                     width={322}
                     height={303}

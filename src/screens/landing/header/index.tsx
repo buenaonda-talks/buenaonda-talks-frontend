@@ -6,9 +6,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-import styles from './index.module.scss';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import routesBuilder from '@/lib/routes';
+import { cn } from '@/lib/utils';
 
 const LandingHeader = () => {
     const pathname = usePathname();
@@ -83,17 +83,28 @@ const LandingHeader = () => {
                 </div>
 
                 <button
-                    className={clsx(
-                        styles['hamburger-menu'],
-                        isMenuOpen && styles['is-active'],
-                        'relative z-50 flex flex-col space-y-2 lg:hidden',
-                    )}
+                    className={clsx('relative z-50 flex flex-col space-y-2 lg:hidden')}
                     onClick={toggleMenu}
                     type="button"
                 >
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span
+                        className={cn(
+                            'block h-[2px] w-8 rounded-full bg-white transition-all duration-200',
+                            isMenuOpen && 'translate-y-[10px] rotate-45 transform',
+                        )}
+                    ></span>
+                    <span
+                        className={cn(
+                            'block h-[2px] w-8 rounded-full bg-white transition-all duration-200',
+                            isMenuOpen && 'w-0',
+                        )}
+                    ></span>
+                    <span
+                        className={cn(
+                            'block h-[2px] w-8 rounded-full bg-white transition-all duration-200',
+                            isMenuOpen && '-translate-y-[10px] -rotate-45 transform',
+                        )}
+                    ></span>
                 </button>
             </div>
         </header>

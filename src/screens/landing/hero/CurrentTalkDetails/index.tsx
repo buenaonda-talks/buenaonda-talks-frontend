@@ -11,7 +11,6 @@ type CurrentTalkDetailsProps = {
 };
 
 export const LandingHeroCurrentTalkDetails = ({ talk }: CurrentTalkDetailsProps) => {
-    console.log('talk', talk);
     const countdownStart = useCountdown({
         targetDate: new Date(talk.startDate),
     });

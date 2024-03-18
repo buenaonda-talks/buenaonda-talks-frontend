@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { Inter, Poppins, Roboto } from 'next/font/google';
 import '../styles/globals.scss';
-import { ClerkLoaded, ClerkProvider } from '@clerk/nextjs';
+import { ClerkProvider } from '@clerk/nextjs';
 import AppClientProviders from './layout-client-providers';
 import { esES } from '@clerk/localizations';
 import { Toaster } from '@/components/ui/toaster';
@@ -47,10 +47,8 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
                 <body
                     className={`${inter.variable} ${poppins.variable} ${roboto.variable} font-sans`}
                 >
-                    <ClerkLoaded>
-                        <AppClientProviders>{children}</AppClientProviders>
-                        <Toaster />
-                    </ClerkLoaded>
+                    <AppClientProviders>{children}</AppClientProviders>
+                    <Toaster />
                 </body>
             </html>
         </ClerkProvider>

@@ -21,13 +21,29 @@ type Options = {
 };
 
 export const useCountdown = ({ targetDate }: Options): UseCountdownResult => {
-    const [countdown, setCountdown] = useState<UseCountdownResult>({
-        seconds: 0,
-        minutes: 0,
-        hours: 0,
-        days: 0,
-        months: 0,
-        isTimeUp: false,
+    const [countdown, setCountdown] = useState<UseCountdownResult>(() => {
+        const now = new Date();
+        const timeDifference = targetDate.getTime() - now.getTime();
+
+        if (timeDifference <= 0) {
+            return {
+                seconds: 0,
+                minutes: 0,
+                hours: 0,
+                days: 0,
+                months: 0,
+                isTimeUp: true,
+            };
+        }
+
+        return {
+            seconds: differenceInSeconds(targetDate, now) % 60,
+            minutes: differenceInMinutes(targetDate, now) % 60,
+            hours: differenceInHours(targetDate, now) % 24,
+            days: differenceInDays(targetDate, now),
+            months: differenceInMonths(targetDate, now),
+            isTimeUp: false,
+        };
     });
 
     useEffect(() => {

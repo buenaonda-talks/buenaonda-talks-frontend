@@ -9,6 +9,7 @@ import { TypographyAdminH1 } from '@/components/typography';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { StudentTabGeneralBuilder } from '@/screens/dashboard/admin/student-details/GeneralTabContent';
+import routesBuilder from '@/lib/routes';
 
 type EditorProps = {
     data: NonNullable<CreateStudentFieldsQuery>;
@@ -22,25 +23,37 @@ enum Tab {
 
 const ContentDisplayer = ({ data }: EditorProps) => {
     return (
-        <div className="flex min-h-screen flex-col p-6">
-            <div className="mb-4">
-                <TypographyAdminH1 className="mb-1">Crear estudiante</TypographyAdminH1>
-            </div>
-
-            <Tabs defaultValue={Tab.GENERAL}>
+        <div className="flex h-screen flex-col overflow-hidden">
+            <div className="min-h-0 flex-1 overflow-scroll p-6">
                 <div className="mb-4">
-                    <TabsList>
-                        <TabsTrigger value={Tab.GENERAL}>General</TabsTrigger>
-                    </TabsList>
+                    <TypographyAdminH1 className="mb-1">
+                        Crear estudiante
+                    </TypographyAdminH1>
                 </div>
 
-                <StudentTabGeneralBuilder
-                    value={Tab.GENERAL}
-                    studentId={null}
-                    defaultValues={{}}
-                    regions={data.regions}
-                />
-            </Tabs>
+                <Tabs defaultValue={Tab.GENERAL}>
+                    <div className="mb-4">
+                        <TabsList>
+                            <TabsTrigger value={Tab.GENERAL}>General</TabsTrigger>
+                        </TabsList>
+                    </div>
+
+                    <StudentTabGeneralBuilder
+                        value={Tab.GENERAL}
+                        studentId={null}
+                        defaultValues={{}}
+                        regions={data.regions}
+                    />
+                </Tabs>
+            </div>
+
+            <div className="pr-container border-t border-border bg-muted py-4 pl-8 text-center text-sm text-muted-foreground">
+                ¿Quieres importar estudiantes desde un CSV?{' '}
+                <a className="underline" href={routesBuilder.importStudents}>
+                    Haz click aquí
+                </a>
+                .
+            </div>
         </div>
     );
 };

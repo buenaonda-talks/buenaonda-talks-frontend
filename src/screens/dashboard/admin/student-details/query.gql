@@ -8,7 +8,7 @@ query studentUserByIdForUpdate($userId: Int!) {
         studentProfile {
             college {
                 id
-                name
+                communeId
             }
         }
     }

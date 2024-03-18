@@ -1630,7 +1630,11 @@ export type StudentUserByIdForUpdateQuery = {
         phoneNumber: string | null;
         studentProfile: {
             __typename?: 'Student';
-            college: { __typename?: 'College'; id: string; name: string } | null;
+            college: {
+                __typename?: 'College';
+                id: string;
+                communeId: string | null;
+            } | null;
         };
     };
     regions: Array<{
@@ -6046,7 +6050,7 @@ export const StudentUserByIdForUpdateDocument = {
                                                             kind: 'Field',
                                                             name: {
                                                                 kind: 'Name',
-                                                                value: 'name',
+                                                                value: 'communeId',
                                                             },
                                                         },
                                                     ],

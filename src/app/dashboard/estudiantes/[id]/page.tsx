@@ -50,7 +50,10 @@ const ContentDisplayer = ({ data, id }: EditorProps) => {
                 <StudentTabGeneralBuilder
                     value={Tab.GENERAL}
                     studentId={id}
-                    defaultValues={studentToStudentBuilder(data.studentUserById)}
+                    defaultValues={studentToStudentBuilder(
+                        data.studentUserById,
+                        data.regions,
+                    )}
                     regions={data.regions}
                 />
             </Tabs>

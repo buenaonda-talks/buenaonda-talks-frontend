@@ -102,10 +102,15 @@ const Header = () => {
 };
 
 const LandingHero = () => (
-    <div
-        className="relative flex min-h-screen items-center bg-cover pt-16"
-        style={{ backgroundImage: `url(${background.src})` }}
-    >
+    <div className="relative flex min-h-screen items-center bg-cover pt-16">
+        <Image
+            className="absolute inset-0 h-full w-full object-cover"
+            src={background}
+            width={2560}
+            height={1664}
+            alt=""
+        />
+
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white"></div>
 
         <Header />
@@ -155,6 +160,9 @@ const LandingHero = () => (
                             placeholder="blur"
                             src={photoBenja}
                             alt="Benjamín Quezada"
+                            width={80}
+                            height={80}
+                            priority
                         />
 
                         <Image
@@ -162,6 +170,9 @@ const LandingHero = () => (
                             placeholder="blur"
                             src={photoDreyco}
                             alt="Dreyco Román"
+                            width={80}
+                            height={80}
+                            priority
                         />
 
                         <Image
@@ -169,6 +180,9 @@ const LandingHero = () => (
                             placeholder="blur"
                             src={photoMary}
                             alt="Mary Avril"
+                            width={80}
+                            height={80}
+                            priority
                         />
                     </div>
 

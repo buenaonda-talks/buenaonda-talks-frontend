@@ -43,9 +43,9 @@ const Testimonial = ({ testimonial }: TestimonialProps) => {
                 <Image
                     src={testimonial.photo}
                     alt={testimonial.name}
-                    width={100}
-                    height={100}
-                    className="h-10 w-10 rounded-full"
+                    width={42}
+                    height={42}
+                    className="h-10 w-10 rounded-full border border-dark"
                 />
 
                 <div className="flex flex-col leading-tight">

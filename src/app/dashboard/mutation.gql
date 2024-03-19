@@ -1,9 +1,15 @@
-mutation CreateMyStudentProfile(
+mutation CreateMyStudentProfile {
+    createMyStudentProfile {
+        id
+    }
+}
+
+mutation CompleteMyStudentProfile(
     $communeId: Int!
     $collegeId: Int
     $newCollegeName: String
 ) {
-    createMyStudentProfile(
+    completeMyStudentProfile(
         communeId: $communeId
         collegeId: $collegeId
         newCollegeName: $newCollegeName

@@ -3,9 +3,9 @@ import { useAuth } from '@clerk/nextjs';
 import { useMutation } from '@tanstack/react-query';
 
 import {
-    CreateMyStudentProfileDocument,
-    CreateMyStudentProfileMutation,
-    CreateMyStudentProfileMutationVariables,
+    CompleteMyStudentProfileDocument,
+    CompleteMyStudentProfileMutation,
+    CompleteMyStudentProfileMutationVariables,
     CreateProfileRegionsQuery,
 } from '@/api/graphql';
 import { useToast } from '@/components/ui/use-toast';
@@ -53,22 +53,22 @@ type Props = {
     onBack: () => void;
 };
 
-const useCreateStudent = () => {
+const useCompleteMyStudentProfile = () => {
     const { getToken } = useAuth();
     return useMutation<
-        CreateMyStudentProfileMutation,
+        CompleteMyStudentProfileMutation,
         Error,
-        CreateMyStudentProfileMutationVariables
+        CompleteMyStudentProfileMutationVariables
     >({
         mutationFn: (data) => {
-            return fetchClient(CreateMyStudentProfileDocument, data, {
+            return fetchClient(CompleteMyStudentProfileDocument, data, {
                 getToken,
             });
         },
     });
 };
 
-export const CreateStudentProfileLocationFormClient = ({ regions, onBack }: Props) => {
+export const CompleteStudentProfileLocationFormClient = ({ regions, onBack }: Props) => {
     const formMethods = useForm<CreateProfileLocationFormValues>({
         defaultValues: {
             placeOfStudy: PlaceOfStudy.HIGH_SCHOOL,
@@ -107,7 +107,7 @@ export const CreateStudentProfileLocationFormClient = ({ regions, onBack }: Prop
     }, [watch, setValue]);
 
     const { toast } = useToast();
-    const createStudent = useCreateStudent();
+    const createStudent = useCompleteMyStudentProfile();
     const creatingSomeRole = createStudent.isPending;
 
     const handleSave = (values: CreateProfileLocationFormValues) => {

@@ -74,27 +74,36 @@ export const TrackerStep1TalkAvailable: React.FC<Props> = ({ talk }) => {
                 />
             </div>
 
-            <div>
+            <div className="space-y-1">
                 <h3 className="font-bold">Te estamos esperando</h3>
-                <div className="text-muted-foreground">
+                <div className="space-y-2 text-muted-foreground">
+                    <div>
+                        <p>
+                            Acompáñanos este{' '}
+                            <span className="font-bold">
+                                {getDayName(startDate)} {getDate(startDate)} de{' '}
+                                {getMonthName(startDate)} a las{' '}
+                                {getHHMM12FormatText(startDate)}
+                            </span>{' '}
+                            (hora de Santiago).
+                        </p>
+                        <p>
+                            No te pierdas esta oportunidad. ¡El primer paso para obtener
+                            tu beca!
+                        </p>
+                    </div>
+
+                    <p>La charla dura aproximadamente 1 hora y podrás hacer preguntas.</p>
+
                     <p>
-                        Acompáñanos este{' '}
-                        <span className="font-bold">
-                            {getDayName(startDate)} {getDate(startDate)} de{' '}
-                            {getMonthName(startDate)} a las{' '}
-                            {getHHMM12FormatText(startDate)} PM
-                        </span>{' '}
-                        (hora de Santiago).
-                    </p>
-                    <p>
-                        No te pierdas esta oportunidad. ¡El primer paso para obtener tu
-                        beca!
+                        Podrás ingresar a la charla 10 minutos antes de que comience con
+                        el botón de abajo.
                     </p>
                 </div>
             </div>
 
             {inscription && (
-                <div className="flex flex-col items-center rounded bg-gray-100 px-4 py-8">
+                <div className="mt-4 flex flex-col items-center rounded bg-gray-100 px-4 py-8">
                     <DeprecatedCountdownTimer {...countdownTillStart} />
 
                     <div className="pt-4">

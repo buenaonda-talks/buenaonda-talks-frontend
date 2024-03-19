@@ -1,14 +1,12 @@
 'use client';
 
-import clsx from 'clsx';
-
-import { LoadingSpinner } from '@/components/loading-spinner';
 import { padNumber } from '@/lib/utils';
 import { getDate, getYear } from 'date-fns';
 import { TrackerCurrentStep, TrackerCurrentStepQuery } from '@/api/graphql';
 import { useToast } from '@/components/ui/use-toast';
 import { useSignUpToTalkMutation } from '../../../../mutation';
 import { getMonthName } from '@/lib/date-fns';
+import { ButtonWithSpinner } from '@/components/button-with-spinner';
 
 type TicketDetailsProps = {
     startDate: Date;
@@ -68,6 +66,12 @@ const UnconfirmedTicket: React.FC<
     const { toast } = useToast();
 
     const { mutate, isPending } = useSignUpToTalkMutation({
+        onSuccess: () => {
+            toast({
+                variant: 'success',
+                description: 'Tu asistencia ha sido confirmada.',
+            });
+        },
         onError: () => {
             toast({
                 variant: 'destructive',
@@ -98,24 +102,13 @@ const UnconfirmedTicket: React.FC<
                 {Details}
 
                 <div className="flex justify-center">
-                    <button
+                    <ButtonWithSpinner
                         aria-label="Confirmar asistencia"
                         onClick={confirmAssistance}
-                        className="bg-primary-v2 font-headings hover:bg-primary-v2-hover relative rounded px-6 py-3 font-bold text-white"
+                        showSpinner={isPending}
                     >
-                        <span className={clsx(isPending && 'invisible')}>
-                            Confirmar asistencia
-                        </span>
-
-                        <div
-                            className={clsx(
-                                'absolute inset-0 flex items-center justify-center',
-                                !isPending && 'hidden',
-                            )}
-                        >
-                            <LoadingSpinner />
-                        </div>
-                    </button>
+                        Confirmar asistencia
+                    </ButtonWithSpinner>
                 </div>
             </div>
         </div>

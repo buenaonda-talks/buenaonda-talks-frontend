@@ -56,7 +56,7 @@ const determineCurrentStep = (
     }
 
     if (
-        trackerData.platziPostulation?.currentStatus?.status !==
+        trackerData.platziPostulation?.currentStatus?.status ===
         ApplicationStatus.Submitted
     ) {
         return TrackerStepNumber.STEP_4_PLATZI_APPLICATION_RECEIVED;

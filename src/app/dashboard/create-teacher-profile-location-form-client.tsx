@@ -157,7 +157,9 @@ export const CreateInstitutionProfileLocationFormClient = ({
                             'Tu perfil de institución educativa ha sido creado exitosamente.',
                     });
 
-                    window.location.reload();
+                    window.setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
                 },
                 onError: () => {
                     toast({

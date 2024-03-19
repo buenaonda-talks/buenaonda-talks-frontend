@@ -1,9 +1,7 @@
 import { Metadata } from 'next';
 import { Poppins, Roboto_Flex } from 'next/font/google';
 import '../styles/globals.scss';
-import { ClerkLoaded, ClerkProvider } from '@clerk/nextjs';
 import AppClientProviders from './layout-client-providers';
-import { esES } from '@clerk/localizations';
 import { Toaster } from '@/components/ui/toaster';
 
 const poppins = Poppins({
@@ -35,20 +33,16 @@ export const dynamic = 'force-dynamic';
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
     return (
-        <ClerkProvider localization={esES}>
-            <html lang="es">
-                <head />
+        <html lang="es">
+            <head />
 
-                <body
-                    className={`${poppins.variable} ${roboto.variable} font-sans text-dark`}
-                >
-                    <ClerkLoaded>
-                        <AppClientProviders>{children}</AppClientProviders>
-                        <Toaster />
-                    </ClerkLoaded>
-                </body>
-            </html>
-        </ClerkProvider>
+            <body
+                className={`${poppins.variable} ${roboto.variable} font-sans text-dark`}
+            >
+                <AppClientProviders>{children}</AppClientProviders>
+                <Toaster />
+            </body>
+        </html>
     );
 };
 

@@ -1,26 +1,21 @@
 import { Metadata } from 'next';
-import { Inter, Poppins, Roboto } from 'next/font/google';
+import { Poppins, Roboto_Flex } from 'next/font/google';
 import '../styles/globals.scss';
 import { ClerkLoaded, ClerkProvider } from '@clerk/nextjs';
 import AppClientProviders from './layout-client-providers';
 import { esES } from '@clerk/localizations';
 import { Toaster } from '@/components/ui/toaster';
 
-const inter = Inter({
-    variable: '--font-inter',
-    subsets: ['latin'],
-});
-
 const poppins = Poppins({
     variable: '--font-poppins',
     subsets: ['latin'],
-    weight: ['400', '700', '800'],
+    weight: ['400', '600'],
 });
 
-const roboto = Roboto({
+const roboto = Roboto_Flex({
     variable: '--font-roboto',
     subsets: ['latin'],
-    weight: ['300', '400', '700'],
+    weight: ['400', '700'],
 });
 
 export const metadata: Metadata = {
@@ -45,7 +40,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
                 <head />
 
                 <body
-                    className={`${inter.variable} ${poppins.variable} ${roboto.variable} font-sans`}
+                    className={`${poppins.variable} ${roboto.variable} font-sans text-dark`}
                 >
                     <ClerkLoaded>
                         <AppClientProviders>{children}</AppClientProviders>

@@ -18,6 +18,12 @@ module.exports = {
         },
         extend: {
             colors: {
+                brand: {
+                    primary: '#6614EE',
+                    muted: '#F6F6F6',
+                    'muted-foreground': '#C6C6C6',
+                },
+                dark: '#212121',
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
                 ring: 'hsl(var(--ring))',
@@ -74,6 +80,10 @@ module.exports = {
             animation: {
                 'accordion-down': 'accordion-down 0.2s ease-out',
                 'accordion-up': 'accordion-up 0.2s ease-out',
+            },
+            fontFamily: {
+                headings: ['var(--font-poppins)', 'sans-serif'],
+                sans: ['var(--font-roboto)', 'sans-serif'],
             },
         },
     },

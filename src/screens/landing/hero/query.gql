@@ -1,6 +1,0 @@
-query landingHero {
-    currentPlatziTalk {
-        startDate
-        endDate
-    }
-}

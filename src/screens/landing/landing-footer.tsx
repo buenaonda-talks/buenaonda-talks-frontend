@@ -1,37 +1,5 @@
-'use client';
-
-import { WHATSAPP_HREF } from '@/constants';
 import { getYear } from 'date-fns';
 import Link from 'next/link';
-
-const WhatsappButton = () => (
-    <a
-        className="group pointer-events-auto relative z-20 flex items-center rounded-full p-3 text-xs text-white sm:text-base"
-        style={{
-            background: 'linear-gradient(90deg, #00B09B 0%, #96C93D 100%)',
-        }}
-        href={WHATSAPP_HREF}
-        target="_blank"
-        rel="noreferrer noopener"
-    >
-        <svg
-            width="30"
-            height="31"
-            viewBox="0 0 30 31"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M21.8735 18.0641C21.4992 17.8769 19.6642 16.9751 19.3225 16.8495C18.9809 16.7252 18.7322 16.6636 18.4823 17.0379C18.2336 17.4097 17.5189 18.2512 17.3016 18.4999C17.0831 18.7498 16.8658 18.78 16.4927 18.5941C16.1197 18.4057 14.9164 18.0126 13.4909 16.7415C12.3818 15.7517 11.632 14.5296 11.4147 14.1553C11.1974 13.7823 11.3908 13.5801 11.578 13.3942C11.7463 13.2271 11.951 12.9584 12.1381 12.7411C12.3253 12.5225 12.3868 12.3668 12.5112 12.1168C12.6368 11.8681 12.574 11.6509 12.4798 11.4637C12.3868 11.2766 11.6408 9.43901 11.3293 8.69168C11.0266 7.96445 10.7188 8.06367 10.4902 8.05111C10.2717 8.04106 10.023 8.03855 9.77431 8.03855C9.52562 8.03855 9.12118 8.1315 8.77955 8.50579C8.43666 8.87882 7.47329 9.7819 7.47329 11.6195C7.47329 13.4557 8.80969 15.2305 8.99684 15.4804C9.18398 15.7291 11.6282 19.4997 15.3724 21.1162C16.2641 21.5005 16.9587 21.7304 17.5001 21.9012C18.3943 22.1863 19.2082 22.1461 19.8513 22.0494C20.5673 21.9426 22.0594 21.1463 22.3709 20.2747C22.6811 19.403 22.6811 18.6556 22.5882 18.4999C22.4952 18.3442 22.2465 18.2512 21.8723 18.0641H21.8735ZM15.0634 27.3623H15.0584C12.8345 27.3628 10.6515 26.7649 8.7381 25.6316L8.28593 25.3628L3.58592 26.5962L4.84068 22.0142L4.54552 21.5445C3.30224 19.5654 2.64428 17.275 2.64768 14.9378C2.65019 8.09256 8.21936 2.52339 15.0684 2.52339C18.3843 2.52339 21.5017 3.81708 23.8455 6.16332C25.0015 7.31456 25.9177 8.6836 26.5412 10.1912C27.1647 11.6989 27.4831 13.3152 27.4778 14.9466C27.4753 21.7919 21.9062 27.3623 15.0634 27.3623ZM25.629 4.38103C24.2451 2.98802 22.5985 1.88349 20.7847 1.13147C18.9708 0.379448 17.0257 -0.00511983 15.0621 5.14684e-05C6.83021 5.14684e-05 0.128114 6.70089 0.125602 14.9366C0.121787 17.5576 0.809344 20.1332 2.1189 22.4036L0 30.1444L7.91792 28.067C10.1083 29.2603 12.5628 29.8856 15.0571 29.8857H15.0634C23.2953 29.8857 29.9974 23.1848 29.9999 14.9479C30.006 12.9851 29.6228 11.0406 28.8726 9.22678C28.1223 7.41301 27.0199 5.766 25.629 4.38103Z"
-                fill="white"
-            />
-        </svg>
-
-        <div className="pointer-events-none absolute inset-0 rounded-full bg-black opacity-0 transition-opacity duration-200 group-hover:opacity-20"></div>
-    </a>
-);
 
 const Logo = () => (
     <svg
@@ -120,18 +88,6 @@ const LandingFooter = () => {
                     <div className="order-1 flex flex-col space-y-5 font-bold lg:order-2 lg:w-[60%] lg:items-end">
                         <div className="w-4/12 md:w-2/12 lg:w-3/12">
                             <Logo />
-                        </div>
-
-                        <div className="pointer-events-none fixed inset-x-0 bottom-12 z-50">
-                            <div className="container pointer-events-none">
-                                <div className="pointer-events-none flex justify-end">
-                                    <div className="pointer-events-none ml-4 w-[70%]">
-                                        <div className="pointer-events-none flex justify-end xl:-mr-16">
-                                            <WhatsappButton />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

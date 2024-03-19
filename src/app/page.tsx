@@ -1,40 +1,27 @@
-import LandingHabilities from '@/screens/landing/habilities';
 import LandingHero from '@/screens/landing/hero';
-import LandingHeader from '@/screens/landing/header';
+import { LandingFAQ } from '@/screens/landing/landing-faq';
 import LandingFooter from '@/screens/landing/landing-footer';
-import LandingStudentsInspiration from '@/screens/landing/students-inspiration';
-import LandingStats from '@/screens/landing/stats';
-import LandingTheyTalkAboutUs from '@/screens/landing/they-talk-about-us';
-import { LandingHeroDocument } from '@/api/graphql';
-import { fetchServer } from '@/api/fetch-server';
-import { LandingTechLeadersTestimonials } from '@/screens/landing/tech-leaders-testimonials';
+import { LandingPath } from '@/screens/landing/landing-path';
+import { LandingPress } from '@/screens/landing/landing-press';
+import { LandingSteps } from '@/screens/landing/landing-steps';
+import { LandingStudentTestimonials } from '@/screens/landing/landing-student-testimonials';
+import { LandingTechTestimonials } from '@/screens/landing/landing-tech-testimonials';
+import { LandingWhyBoTalks } from '@/screens/landing/landing-why-botalks';
 
-const getCurrentPlatziTalk = async () => {
-    try {
-        const response = await fetchServer(LandingHeroDocument, {});
-        return response.currentPlatziTalk;
-    } catch (error) {
-        return null;
-    }
-};
+const Page = () => (
+    <main className="space-y-40">
+        <LandingHero />
 
-const Page = async () => {
-    const currentPlatziTalk = await getCurrentPlatziTalk();
+        <LandingWhyBoTalks />
+        <LandingTechTestimonials />
+        <LandingPath />
+        <LandingSteps />
+        <LandingStudentTestimonials />
+        <LandingPress />
+        <LandingFAQ />
 
-    return (
-        <main>
-            <LandingHeader />
-
-            <LandingHero currentPlatziTalk={currentPlatziTalk} />
-            <LandingStats />
-            <LandingHabilities />
-            <LandingTechLeadersTestimonials />
-            <LandingTheyTalkAboutUs />
-            <LandingStudentsInspiration />
-
-            <LandingFooter />
-        </main>
-    );
-};
+        <LandingFooter />
+    </main>
+);
 
 export default Page;

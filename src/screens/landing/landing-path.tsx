@@ -68,7 +68,7 @@ export const LandingPath = () => {
                                         value={`item-${index}`}
                                     >
                                         <AccordionPrimitive.Header className="flex">
-                                            <AccordionPrimitive.Trigger className="transition duration-100 data-[state=closed]:opacity-30 data-[state=closed]:hover:opacity-70">
+                                            <AccordionPrimitive.Trigger className="text-left transition duration-100 data-[state=closed]:opacity-30 data-[state=closed]:hover:opacity-70">
                                                 <span className="font-headings text-lg font-semibold">
                                                     {benefit.title}
                                                 </span>

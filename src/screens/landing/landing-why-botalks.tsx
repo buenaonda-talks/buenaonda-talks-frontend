@@ -45,7 +45,7 @@ const BENEFITS: BenefitType[] = [
 
 export const LandingWhyBoTalks = () => {
     return (
-        <section className="container space-y-10">
+        <section className="container !mt-20 space-y-10">
             <div className="space-y-1 text-center">
                 <h3 className="text-[#5522AB]">Beneficios</h3>
                 <h2 className="text-3xl font-semibold">

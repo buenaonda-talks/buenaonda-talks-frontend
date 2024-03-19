@@ -2,7 +2,8 @@
 
 import Image from 'next/image';
 import botalksPathImage from './botalks-path.jpg';
-import { cn } from '@/lib/utils';
+import { Accordion, AccordionContent, AccordionItem } from '@/components/ui/accordion';
+import * as AccordionPrimitive from '@radix-ui/react-accordion';
 
 type PathItemType = {
     title: string;
@@ -17,23 +18,23 @@ const PATHS: PathItemType[] = [
     },
     {
         title: 'Curso de programación básica',
-        description: '',
+        description: 'Lorem ipsum',
     },
     {
         title: 'Introducción a la Web',
-        description: '',
+        description: 'Lorem ipsum',
     },
     {
         title: 'Computer Science',
-        description: '',
+        description: 'Lorem ipsum',
     },
     {
         title: 'Frontend avanzado',
-        description: '',
+        description: 'Lorem ipsum',
     },
     {
         title: 'Crea tu portafolio y demuestra de lo que eres capaz',
-        description: '',
+        description: 'Lorem ipsum',
     },
 ];
 
@@ -54,27 +55,34 @@ export const LandingPath = () => {
                         <div className="flex items-stretch space-x-5">
                             <div className="w-[2px] bg-gradient-to-b from-brand-primary to-transparent"></div>
 
-                            <div className="min-w-0 flex-1 space-y-5">
+                            <Accordion
+                                type="single"
+                                collapsible
+                                className="min-w-0 flex-1 space-y-5"
+                                defaultValue="item-0"
+                            >
                                 {PATHS.map((benefit, index) => (
-                                    <div
+                                    <AccordionItem
                                         key={index}
-                                        className={cn(
-                                            'space-y-2',
-                                            index !== 0 && 'opacity-30',
-                                        )}
+                                        className="space-y-2 border-0"
+                                        value={`item-${index}`}
                                     >
-                                        <div className="space-y-1">
-                                            <span className="font-headings text-lg font-semibold">
-                                                {benefit.title}
-                                            </span>
-                                        </div>
+                                        <AccordionPrimitive.Header className="flex">
+                                            <AccordionPrimitive.Trigger className="transition duration-100 data-[state=closed]:opacity-30 data-[state=closed]:hover:opacity-70">
+                                                <span className="font-headings text-lg font-semibold">
+                                                    {benefit.title}
+                                                </span>
+                                            </AccordionPrimitive.Trigger>
+                                        </AccordionPrimitive.Header>
 
-                                        <p className="text-muted-foreground">
-                                            {benefit.description}
-                                        </p>
-                                    </div>
+                                        <AccordionContent className="p-0">
+                                            <p className="text-muted-foreground">
+                                                {benefit.description}
+                                            </p>
+                                        </AccordionContent>
+                                    </AccordionItem>
                                 ))}
-                            </div>
+                            </Accordion>
                         </div>
                     </div>
 
@@ -91,9 +99,12 @@ export const LandingPath = () => {
                 </div>
 
                 <div className="flex pl-5">
-                    <span className="pl-[2px] text-center font-headings text-brand-primary sm:text-left sm:text-lg">
+                    <a
+                        href="#"
+                        className="pl-[2px] text-center font-headings text-brand-primary sm:text-left sm:text-lg"
+                    >
                         Ver la ruta de aprendizaje completa →
-                    </span>
+                    </a>
                 </div>
             </div>
         </section>

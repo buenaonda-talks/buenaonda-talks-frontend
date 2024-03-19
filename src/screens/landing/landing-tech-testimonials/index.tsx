@@ -132,9 +132,9 @@ export const LandingTechTestimonials: React.FC = () => {
                                     api?.scrollTo(index);
                                 }}
                                 className={cn(
-                                    'h-4 w-4 rounded-full',
+                                    'h-5 w-5 rounded-full',
                                     isSelected && 'bg-dark',
-                                    !isSelected && 'bg-brand-muted',
+                                    !isSelected && 'bg-muted',
                                 )}
                             />
                         </li>

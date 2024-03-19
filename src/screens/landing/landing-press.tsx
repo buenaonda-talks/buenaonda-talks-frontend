@@ -95,7 +95,7 @@ export const LandingPress = () => {
     return (
         <section className="container space-y-10">
             <div className="space-y-1 text-center">
-                <h3 className="text-[#5522AB]">¿Cómo funciona?</h3>
+                <h3 className="text-[#5522AB]">Prensa</h3>
                 <h2 className="text-3xl font-semibold">
                     <span className="text-brand-primary">BuenaOnda Talks</span> en los
                     medios

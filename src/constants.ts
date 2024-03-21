@@ -1,4 +1,4 @@
-export const DISCORD_HREF = 'https://discord.gg/8v6Y5s3';
+export const DISCORD_HREF = 'https://discord.gg/Sbt252RQ';
 export const WHATSAPP_HREF = 'https://wa.me/56966716128';
 
 export type DashboardLinkType = {

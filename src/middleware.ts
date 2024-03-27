@@ -11,6 +11,7 @@ export default authMiddleware({
         '/graphql',
         '/admin',
         '/becas-y-procesos',
+        '/terminos-y-condiciones',
     ],
 });
 

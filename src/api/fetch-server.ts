@@ -5,6 +5,9 @@ import { print } from 'graphql/language/printer';
 const API_URL = process.env.NEXT_PUBLIC_GRAPHQL_API_URL;
 
 export const fetchServer = async <T, V>(query: TypedDocumentNode<T, V>, variables: V) => {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 7000);
+
     const { getToken } = auth();
     const token = await getToken({ template: 'supabase' });
 
@@ -30,6 +33,7 @@ export const fetchServer = async <T, V>(query: TypedDocumentNode<T, V>, variable
             variables: variables || undefined,
         }),
         cache: 'no-cache',
+        signal: controller.signal,
     });
 
     const json = await res.json();

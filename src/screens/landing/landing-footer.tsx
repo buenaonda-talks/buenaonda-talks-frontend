@@ -140,16 +140,27 @@ const LandingFooter = () => {
             <div className="bg-[#2B2B2B] py-6 text-sm">
                 <div className="container lg:flex lg:items-center lg:justify-between">
                     <div>
-                        <span className="mb-4 block text-xs text-gray-300 lg:mb-0">
+                        <span className="mb-4 block text-xs text-gray-300 lg:mb-2">
                             Av. Los Conquistadores 1700, Piso 16, Providencia
                         </span>
 
-                        <Link
-                            href="/terminos-y-condiciones"
-                            className="text-xs text-gray-300 underline lg:mb-0"
-                        >
-                            Términos y Condiciones
-                        </Link>
+                        <div className="flex space-x-4">
+                            <a
+                                href="https://github.com/buenaonda-talks/code-of-conduct/blob/main/politica-de-privacidad.md"
+                                className="text-xs text-gray-300 underline lg:mb-0"
+                                target="_blank"
+                                rel="noreferrer noopener"
+                            >
+                                Política de privacidad
+                            </a>
+
+                            <Link
+                                href="/terminos-y-condiciones"
+                                className="text-xs text-gray-300 underline lg:mb-0"
+                            >
+                                Términos y condiciones
+                            </Link>
+                        </div>
                     </div>
 
                     <span>

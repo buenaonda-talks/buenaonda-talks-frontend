@@ -12,6 +12,7 @@ export default authMiddleware({
         '/admin',
         '/becas-y-procesos',
         '/terminos-y-condiciones',
+        '/politica-de-privacidad',
     ],
 });
 

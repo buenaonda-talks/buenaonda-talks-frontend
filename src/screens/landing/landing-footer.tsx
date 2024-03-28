@@ -145,14 +145,14 @@ const LandingFooter = () => {
                         </span>
 
                         <div className="flex space-x-4">
-                            <a
-                                href="https://github.com/buenaonda-talks/code-of-conduct/blob/main/politica-de-privacidad.md"
+                            <Link
+                                href="/politica-de-privacidad"
                                 className="text-xs text-gray-300 underline lg:mb-0"
                                 target="_blank"
                                 rel="noreferrer noopener"
                             >
                                 Política de privacidad
-                            </a>
+                            </Link>
 
                             <Link
                                 href="/terminos-y-condiciones"
